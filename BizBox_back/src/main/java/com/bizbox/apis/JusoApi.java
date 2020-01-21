@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -174,6 +176,7 @@ public class JusoApi {
 	
 	public String findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
+		Map<String, Integer> storecount = new HashMap<>();
 		while(true) {
 			String str = findStore(xy, radius, String.valueOf(idx));			
 			idx++;
@@ -193,16 +196,7 @@ public class JusoApi {
 				for (int i = 0; i < itemsArray.size(); i++) {
 					JSONObject items = (JSONObject) itemsArray.get(i);
 					temp.append(items.get("admCd"));
-					temp.append(",");
-					temp.append(items.get("rnMgtSn"));
-					temp.append(",");
-					temp.append(items.get("udrtYn"));
-					temp.append(",");
-					temp.append(items.get("buldMnnm"));
-					temp.append(",");
-					temp.append(items.get("buldSlno"));
-					temp.append(",");
-					temp.append(items.get("admCd"));
+					
 					
 				}
 				
