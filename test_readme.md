@@ -1,2 +1,4 @@
-# 이것은 깃에대한 테스트 입니다
+# BizBox 
+SSAFY 서울 2기 7조 
 
+## backend
