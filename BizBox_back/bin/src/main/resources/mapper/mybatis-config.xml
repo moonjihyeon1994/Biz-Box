@@ -6,12 +6,9 @@
  
   <typeAliases> <!-- mapper에서 참조할 bean의 예명 등록 -->
   	<!-- <typeAlias type="com.ssafy.vo.Food" alias="food"/> -->
-  	<typeAlias type="com.bizbox.vo.PopulationByTime"  alias="pobt"/>
-  	<typeAlias type="com.bizbox.vo.PopulationByLocation"  alias="pobl"/>
   </typeAliases>
   
   <mappers>
    <!-- <mapper resource="mapper/foodmapper.xml"/> -->
-   <mapper resource="mapper/populationByMapper.xml" />
   </mappers>
 </configuration>
