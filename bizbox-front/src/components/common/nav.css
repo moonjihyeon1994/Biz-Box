@@ -1,0 +1,23 @@
+#nav {
+    padding: 30px;
+    background: #3c2f2f;
+}
+
+#nav a {
+    font-weight: bold;
+    color: #be9b7b;
+}
+
+#nav a.router-link-exact-active {
+    color: #fff4e6;
+}
+
+a.link-1 {
+    transition: 0.3s ease;
+    background: #3fa46a;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 20px 0;
+    margin: 0 20px;
+    text-transform: uppercase;
+}
