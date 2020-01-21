@@ -2,11 +2,15 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bizbox.mapper.FoodMapper">
+<mapper namespace="com.bizbox.mapper.populationByTimeMapper">
 
 	<!-- <select id="searchCode" parameterType="int" resultType="food">
 		select *
 		from foodinfo where code=#{no};
 	</select>  -->
+	
+	<select id="selectByAdress" parameterType="String" resultType="pobt">
+		select * from population_time where f like concat('%',#{address},'%')  order by a DESC  limit 1
+	</select>
 	
 </mapper>
