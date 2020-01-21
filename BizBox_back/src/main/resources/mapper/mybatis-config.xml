@@ -8,10 +8,12 @@
   	<!-- <typeAlias type="com.ssafy.vo.Food" alias="food"/> -->
   	<typeAlias type="com.bizbox.vo.PopulationByTime"  alias="pobt"/>
   	<typeAlias type="com.bizbox.vo.PopulationByLocation"  alias="pobl"/>
+  	<typeAlias type="com.bizbox.vo.Changebusiness"  alias="change"/>
   </typeAliases>
   
   <mappers>
    <!-- <mapper resource="mapper/foodmapper.xml"/> -->
    <mapper resource="mapper/populationByMapper.xml" />
+   <mapper resource="mapper/changebusinessMapper.xml" />
   </mappers>
 </configuration>
