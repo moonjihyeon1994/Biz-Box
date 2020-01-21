@@ -1,25 +1,41 @@
 <template>
+<v-col cols="6">
   <v-list>
     <v-list-item>
-      <v-icon>mdi-home</v-icon>
+      <v-icon large>mdi-home-variant-outline</v-icon>: {{ info.major01 }}
     </v-list-item>
-    <v-icon>mdi-event</v-icon>
+    <v-list-item>
+      <v-icon large>mdi-store</v-icon>: {{ info.major02 }}
+    </v-list-item>
+    <v-list-item>
+      <v-icon large>mdi-hospital-box-outline</v-icon>: {{ info.major03 }}
+    </v-list-item>
+    <v-list-item>
+      <v-icon large>mdi-office-building</v-icon>: {{ info.major04 }}
+    </v-list-item>
+    <v-list-item>
+      <v-icon large>mdi-silverware-fork-knife</v-icon>: {{ info.major05 }}
+    </v-list-item>
+    <v-list-item>
+      <v-icon large>mdi-target</v-icon>: {{ info.target }}
+    </v-list-item>
   </v-list>
-</template>
+</v-col>
+  </template>
 
 <script>
-// axios.get()
 
 export default {
   name: 'resultList',
   data () {
     return {
       info: {
-        'g': '521112',
-        'h': '307888',
-        'i': '213230',
-        'j': '27767',
-        'k': '93477'
+        'major01': '521112',
+        'major02': '307888',
+        'major03': '213230',
+        'major04': '27767',
+        'major05': '93477',
+        'target': '323'
       }
     }
   }
