@@ -1,5 +1,6 @@
 package com.bizbox.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,9 +34,9 @@ public class StoreCountController {
 	public String countasdfasd() throws IOException {
 		String num = api.getAddressByName("경인로248-14");
 		String xy = api.getAddressByXY(num);
-		String total = api.findAllStore(xy, "500");
+		JSONObject total = api.findAllStore(xy, "500");
 		System.out.println(1);
-		return total;
+		return total.toString();
 	}
 	
 }

@@ -77,8 +77,6 @@ public class JusoApi {
 			temp.append(",");
 			temp.append(personObject.get("buldSlno"));
 			temp.append(",");
-			temp.append(personObject.get("admCd"));
-			temp.append(",");
 			temp.append(personObject.get("emdNm"));
 		}catch (Exception e) {
 			// TODO: handle exception
@@ -174,14 +172,12 @@ public class JusoApi {
 		return sb.toString();
 	}
 	
-	public String findAllStore(String xy, String radius) throws IOException {
+	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
 		Map<String, Integer> storecount = new HashMap<>();
 		while(true) {
 			String str = findStore(xy, radius, String.valueOf(idx));			
 			idx++;
-			
-			Gson gson = new Gson();
 			StringBuilder temp = new StringBuilder();
 			try {
 				JSONParser jsonParse = new JSONParser();
@@ -195,8 +191,12 @@ public class JusoApi {
 				
 				for (int i = 0; i < itemsArray.size(); i++) {
 					JSONObject items = (JSONObject) itemsArray.get(i);
-					temp.append(items.get("admCd"));
-					
+					String name = (String) items.get("indsMclsNm");
+					if(storecount.containsKey(name)) {
+						storecount.put(name, storecount.get(name)+1);
+					}else {
+						storecount.put(name, 1);
+					}
 					
 				}
 				
@@ -205,7 +205,13 @@ public class JusoApi {
 				e.printStackTrace();
 			}
 		}
-		
-		return "";
+		JSONObject jsonObject = new JSONObject();
+        for( Map.Entry<String, Integer> entry : storecount.entrySet() ) {
+            String key = entry.getKey();
+            int value = entry.getValue();
+            jsonObject.put(key, value);
+        }
+        
+		return jsonObject;
 	}
 }
