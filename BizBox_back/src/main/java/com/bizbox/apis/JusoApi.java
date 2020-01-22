@@ -1,5 +1,6 @@
 package com.bizbox.apis;
 
+import java.awt.List;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,16 +8,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
 
@@ -30,14 +30,6 @@ public class JusoApi {
 		String resultType = "json";
 		String confmKey = "devU01TX0FVVEgyMDIwMDEyMDE2MjcwNjEwOTQwNzE=";
 		String keyword = name;
-		/*
-		 * 
-		 http://www.juso.go.kr/addrlink/addrLinkApi.do?currentPage=0&countPerPage=100&
-		 keyword=경인로248-14&confmKey=devU01TX0FVVEgyMDIwMDEyMDE2MjcwNjEwOTQwNzE=&
-		 resultType=json
-		 * 
-		 */
-
 		String apiUrl = "http://www.juso.go.kr/addrlink/addrLinkApi.do?" + "currentPage=" + currentPage
 				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey="
 				+ confmKey + "&resultType=" + resultType;
@@ -54,9 +46,6 @@ public class JusoApi {
 		}
 		br.close();
 		
-		/////////////json체인지
-		
-		Gson gson = new Gson();
 		StringBuilder temp = new StringBuilder();
 		try {
 			JSONParser jsonParse = new JSONParser();
@@ -91,7 +80,6 @@ public class JusoApi {
 			e.printStackTrace();
 			
 		}
-		System.out.println(temp.toString());
 		return temp.toString();
 	}
 	
@@ -130,19 +118,15 @@ public class JusoApi {
 		Point2D.Double srcProjec = null;
 		Point2D.Double dstProjec = null;
 		Projection proj = ProjectionFactory.fromPROJ4Specification(proj4_w);
-//		srcProjec = new Point2D.Double(132, 37);
-//		dstProjec = proj.transform(srcProjec, new Point2D.Double());
-//		System.out.println("TM : +dstProjec"+dstProjec);
-		// TM : Point2D.Double[644904.399587292, 400717.8948938238]
 		srcProjec = new Point2D.Double(942382.1170934895 ,1944406.216968163);
 		dstProjec = proj.inverseTransform(srcProjec, new Point2D.Double());
-		System.out.println("WGS84 : +dstProjec"+dstProjec);
 		StringBuilder temp = new StringBuilder();
 		temp.append(dstProjec.x);
 		temp.append(",");
 		temp.append(dstProjec.y);
 		return temp.toString();
 	}
+	
 //	반경내 상가업소 조회
 	public String findStore(String xy, String radius, String pageNo) throws IOException{
 		String[] cxcy = xy.split(",");
@@ -156,14 +140,10 @@ public class JusoApi {
 		urlBuilder.append("&" + URLEncoder.encode("type","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*파라미터설명*/
 		urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("300", "UTF-8")); /*파라미터설명*/
 		
-		/*
-         http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius?ServiceKey=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D&radius=100&cx=126.847741&cy=37.497257&type=json&numOfRows=200
-		 */
 		URL url = new URL(urlBuilder.toString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
-//		System.out.println("Response code: " + conn.getResponseCode());
 		BufferedReader rd;
 		if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -181,14 +161,14 @@ public class JusoApi {
 		return sb.toString();
 	}
 	
-	public String findAllStore(String xy, String radius) throws IOException {
+	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
+		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		java.util.List<String> names = new ArrayList<String>();
 		while(true) {
 			String str = findStore(xy, radius, String.valueOf(idx));			
 			idx++;
-			
-			Gson gson = new Gson();
-			StringBuilder temp = new StringBuilder();
 			try {
 				JSONParser jsonParse = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParse.parse(str);
@@ -201,18 +181,27 @@ public class JusoApi {
 				
 				for (int i = 0; i < itemsArray.size(); i++) {
 					JSONObject items = (JSONObject) itemsArray.get(i);
-					temp.append(items.get("admCd"));
-					temp.append(",");
-					temp.append(items.get("rnMgtSn"));
-					temp.append(",");
-					temp.append(items.get("udrtYn"));
-					temp.append(",");
-					temp.append(items.get("buldMnnm"));
-					temp.append(",");
-					temp.append(items.get("buldSlno"));
-					temp.append(",");
-					temp.append(items.get("admCd"));
+					String indsLclsNm = (String) items.get("indsLclsNm"); //대분류
+					String indsMclsNm = (String) items.get("indsMclsNm"); //중분류
+					String indsSclsNm = (String) items.get("indsSclsNm"); //소분류
 					
+					if(LNm.containsKey(indsLclsNm)) { //대분류 당 갯수
+						LNm.put(indsLclsNm, LNm.get(indsLclsNm)+1);
+					}else {
+						LNm.put(indsLclsNm, 1);
+					}
+					
+					
+					if(storecount.containsKey(indsMclsNm)) {
+						if(storecount.get(indsMclsNm).containsKey(indsSclsNm)) {
+							storecount.get(indsMclsNm).put(indsSclsNm, storecount.get(indsMclsNm).get(indsSclsNm)+1);
+						}else {
+							storecount.get(indsMclsNm).put(indsSclsNm, 1);
+						}
+					}else {
+						names.add(indsMclsNm);
+						storecount.put(indsMclsNm, new HashMap<String, Integer>());
+					}	
 				}
 				
 			}catch (Exception e) {
@@ -220,7 +209,32 @@ public class JusoApi {
 				e.printStackTrace();
 			}
 		}
+		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject1 = new JSONObject();
+		JSONObject jsonObject2 = new JSONObject();
+		for (int i = 0; i < storecount.size(); i++) {
+			String key1 = names.get(i);
+			JSONObject data = new JSONObject();
+			for( Map.Entry<String, Integer> entry : storecount.get(names.get(i)).entrySet() ) {
+	            String key2 = entry.getKey();
+	            int value2 = entry.getValue();
+	            data.put(key2, value2);
+	        }
+			JSONArray array = new JSONArray();
+            array.add(data);
+            
+            jsonObject1.put(key1, array);
+		}
+		jsonObject.put("small", jsonObject1);
 		
-		return "";
+		for(Map.Entry<String, Integer> entry : LNm.entrySet()) {
+			String key = entry.getKey();
+			int value = entry.getValue();
+			jsonObject2.put(key, value);
+		}
+		
+		jsonObject.put("large", jsonObject2);
+		
+		return jsonObject;
 	}
 }

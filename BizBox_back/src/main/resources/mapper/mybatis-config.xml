@@ -8,7 +8,11 @@
   	<!-- <typeAlias type="com.ssafy.vo.Food" alias="food"/> -->
   	<typeAlias type="com.bizbox.vo.PopulationByTime"  alias="pobt"/>
   	<typeAlias type="com.bizbox.vo.PopulationByLocation"  alias="pobl"/>
+<<<<<<< HEAD
   	<typeAlias type="com.bizbox.vo.Changebusiness"  alias="change"/>
+=======
+  	<typeAlias type="com.bizbox.vo.PopulationByDong"  alias="pobd"/>
+>>>>>>> a0071f3f4e3636dc236494199eeab779f1a3e0ce
   </typeAliases>
   
   <mappers>
