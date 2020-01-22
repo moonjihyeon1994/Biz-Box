@@ -1,9 +1,12 @@
 package com.bizbox.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bizbox.dao.PopulationByDAO;
+import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
 
@@ -26,6 +29,12 @@ public class PopulationByServiceImpl implements PopulationByService{
 	public PopulationByLocation populationByLocation(String address)  throws Exception{
 		log.trace("address",address);
 		return dao.populationByLocation(address);
+	}
+
+	@Override
+	public List<PopulationByDong> populationByDong(String address) throws Exception {
+		log.trace("address",address);
+		return dao.populationByDong(address);
 	}
 
 }
