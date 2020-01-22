@@ -177,13 +177,11 @@ public class JusoApi {
 					indsLclsNm = indsLclsNm.replace("/", "");
 					indsMclsNm = indsMclsNm.replace("/", "");
 					indsSclsNm = indsSclsNm.replace("/", "");
-					System.out.println(indsLclsNm);
 					if(LNm.containsKey(indsLclsNm)) { //대분류 당 갯수
 						LNm.put(indsLclsNm, LNm.get(indsLclsNm)+1);
 					}else {
 						LNm.put(indsLclsNm, 1);
 					}
-					
 					
 					if(storecount.containsKey(indsMclsNm)) {
 						if(storecount.get(indsMclsNm).containsKey(indsSclsNm)) {
