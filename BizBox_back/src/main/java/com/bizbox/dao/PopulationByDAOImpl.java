@@ -1,9 +1,12 @@
 package com.bizbox.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
 
@@ -25,5 +28,9 @@ public class PopulationByDAOImpl implements PopulationByDAO {
 	@Override
 	public PopulationByLocation populationByLocation(String address) throws Exception {
 		return session.selectOne(name+"populationByLocation",address);
+	}
+	@Override
+	public List<PopulationByDong> populationByDong(String address) throws Exception {
+		return session.selectList(name+"populationByDong", address);
 	}
 }
