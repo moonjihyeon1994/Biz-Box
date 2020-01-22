@@ -17,7 +17,8 @@ import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
 
 
-@CrossOrigin(origins = "*")
+
+@CrossOrigin({ "*" })
 @RestController
 @RequestMapping("/population")
 public class PopulationByController {
@@ -32,6 +33,7 @@ public class PopulationByController {
 			pbt = service.populationByTime(address);
 			return new ResponseEntity<Object>(pbt,HttpStatus.OK);
 		} catch (Exception e) {
+			
 			e.printStackTrace();
 			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
 		}
