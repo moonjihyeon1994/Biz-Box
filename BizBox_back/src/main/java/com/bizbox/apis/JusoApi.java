@@ -153,6 +153,7 @@ public class JusoApi {
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
 		java.util.List<String> names = new ArrayList<String>();
 		while(true) {
 			String str = findStore(xy, radius, String.valueOf(idx));			
@@ -171,15 +172,24 @@ public class JusoApi {
 					JSONObject items = (JSONObject) itemsArray.get(i);
 					String indsLclsNm = (String) items.get("indsLclsNm"); //대분류
 					String indsMclsNm = (String) items.get("indsMclsNm"); //중분류
-					if(storecount.containsKey(indsLclsNm)) {
-						if(storecount.get(indsLclsNm).containsKey(indsMclsNm)) {
-							storecount.get(indsLclsNm).put(indsMclsNm, storecount.get(indsLclsNm).get(indsMclsNm)+1);
+					String indsSclsNm = (String) items.get("indsSclsNm"); //소분류
+					
+					if(LNm.containsKey(indsLclsNm)) { //대분류 당 갯수
+						LNm.put(indsLclsNm, LNm.get(indsLclsNm)+1);
+					}else {
+						LNm.put(indsLclsNm, 1);
+					}
+					
+					
+					if(storecount.containsKey(indsMclsNm)) {
+						if(storecount.get(indsMclsNm).containsKey(indsSclsNm)) {
+							storecount.get(indsMclsNm).put(indsSclsNm, storecount.get(indsMclsNm).get(indsSclsNm)+1);
 						}else {
-							storecount.get(indsLclsNm).put(indsMclsNm, 1);
+							storecount.get(indsMclsNm).put(indsSclsNm, 1);
 						}
 					}else {
-						names.add(indsLclsNm);
-						storecount.put(indsLclsNm, new HashMap<String, Integer>());
+						names.add(indsMclsNm);
+						storecount.put(indsMclsNm, new HashMap<String, Integer>());
 					}	
 				}
 				
@@ -189,25 +199,31 @@ public class JusoApi {
 			}
 		}
 		JSONObject jsonObject = new JSONObject();
-		
+		JSONObject jsonObject1 = new JSONObject();
+		JSONObject jsonObject2 = new JSONObject();
 		for (int i = 0; i < storecount.size(); i++) {
 			String key1 = names.get(i);
 			JSONObject data = new JSONObject();
-			int count = 0;
 			for( Map.Entry<String, Integer> entry : storecount.get(names.get(i)).entrySet() ) {
 	            String key2 = entry.getKey();
 	            int value2 = entry.getValue();
 	            data.put(key2, value2);
-	            count += value2;
 	        }
 			JSONArray array = new JSONArray();
             array.add(data);
             
-            JSONObject countObject = new JSONObject();
-            countObject.put("count", count);
-            array.add(countObject);
-            jsonObject.put(key1, array);
+            jsonObject1.put(key1, array);
 		}
+		jsonObject.put("small", jsonObject1);
+		
+		for(Map.Entry<String, Integer> entry : LNm.entrySet()) {
+			String key = entry.getKey();
+			int value = entry.getValue();
+			jsonObject2.put(key, value);
+		}
+		
+		jsonObject.put("large", jsonObject2);
+		
 		return jsonObject;
 	}
 }
