@@ -9,7 +9,11 @@
 	</select>
 	
 	<select id="populationByLocation" parameterType="String" resultType="pobl">
-		select * from population_location where F like concat('%',#{address},'%')  order by a DESC  limit 1
+		select * from population_location where F like 	concat('%',#{address},'%')  order by a DESC  limit 1
+	</select>
+	
+	<select id="populationByDong" parameterType="String" resultType="pobd">
+		select * from local_people_dong where C like concat('%',#{address},'%') order by A, B
 	</select>
 	
 </mapper>

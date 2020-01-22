@@ -1,11 +1,16 @@
 package com.bizbox.controller;
 
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.apis.JusoApi;
+import com.bizbox.vo.PopulationByTime;
 import com.google.gson.JsonParser;
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
@@ -29,13 +34,18 @@ public class StoreCountController {
 
 	JusoApi api = new JusoApi();
 	
-	@GetMapping("/storecount")
-	public String countasdfasd() throws IOException {
-		String num = api.getAddressByName("경인로248-14");
-		String xy = api.getAddressByXY(num);
-		String total = api.findAllStore(xy, "500");
-		System.out.println(1);
-		return total;
+	@GetMapping("/storecount/{address}/{range}")
+	public ResponseEntity<Object> getStoreNumByCount(@PathVariable String address,@PathVariable String range){
+		PopulationByTime pbt;
+		try {
+			String num = api.getAddressByName(address);
+			String xy = api.getAddressByXY(num);
+			JSONObject total = api.findAllStore(xy, range);
+			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 }
