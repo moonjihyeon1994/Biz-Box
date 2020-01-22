@@ -34,7 +34,6 @@ public class NaverNewsCrawler {
 			jsonArray.add(temp);
 		}
 		jsonObject.put("headlines", jsonArray);
-		
 		return jsonObject.toString();
 	}
 }
