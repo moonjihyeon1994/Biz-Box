@@ -19,5 +19,11 @@ public class Changebusiness {
 	String h;
 	String i;
 	String j;
+	
+	public Changebusiness(String a) {
+		
+		this.a = a;
+	}
+	
 
 }
