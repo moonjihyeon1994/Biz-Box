@@ -30,3 +30,17 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES;
+
+-- businesschange --
+CREATE TABLE `businesschange` (
+  `a` varchar(45) DEFAULT NULL,
+  `b` varchar(45) DEFAULT NULL,
+  `c` varchar(45) DEFAULT NULL,
+  `d` varchar(45) DEFAULT NULL,
+  `e` varchar(45) DEFAULT NULL,
+  `f` varchar(45) DEFAULT NULL,
+  `g` varchar(45) DEFAULT NULL,
+  `h` varchar(45) DEFAULT NULL,
+  `i` varchar(45) DEFAULT NULL,
+  `j` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
