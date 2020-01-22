@@ -75,12 +75,21 @@ public class JusoApi {
 			temp.append(",");
 			temp.append(personObject.get("buldSlno"));
 			temp.append(",");
-			temp.append(personObject.get("admCd"));
-			temp.append(",");
 			temp.append(personObject.get("emdNm"));
+			temp.append(",");
+			temp.append(personObject.get("emdNo"));
+			temp.append(",");
+			temp.append(personObject.get("liNm"));
+			temp.append(",");
+			temp.append(personObject.get("Rn"));
+			temp.append(",");
+			temp.append(personObject.get("lnbrMnnm"));
+			temp.append(",");
+			temp.append(personObject.get("jibunAddr"));
 		}catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("해당주소가 존재하지않습니다.");
 			e.printStackTrace();
+			
 		}
 		System.out.println(temp.toString());
 		return temp.toString();
