@@ -174,9 +174,9 @@ public class JusoApi {
 					String indsMclsNm = (String) items.get("indsMclsNm"); //중분류
 					String indsSclsNm = (String) items.get("indsSclsNm"); //소분류
 					
-					indsLclsNm = indsLclsNm.replace("/", "-");
-					indsMclsNm = indsMclsNm.replace("/", "-");
-					indsSclsNm = indsSclsNm.replace("/", "-");
+					indsLclsNm = indsLclsNm.replace("/", "");
+					indsMclsNm = indsMclsNm.replace("/", "");
+					indsSclsNm = indsSclsNm.replace("/", "");
 					System.out.println(indsLclsNm);
 					if(LNm.containsKey(indsLclsNm)) { //대분류 당 갯수
 						LNm.put(indsLclsNm, LNm.get(indsLclsNm)+1);
