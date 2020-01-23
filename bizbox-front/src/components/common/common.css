@@ -2,6 +2,7 @@
     text-align: center;
     color: #3c2f2f;
     background-color: #E5FCC2;
+    height: 1000px;
 }
 
 * {
@@ -124,4 +125,9 @@ a {
 
 div.v-list.v-sheet.v-sheet--tile.theme--light {
     background-color: transparent;
+}
+
+div.v-slide-group__content.v-tabs-bar__content {
+    background-color:#9DE0AD;
+    color: #594F4F;
 }
