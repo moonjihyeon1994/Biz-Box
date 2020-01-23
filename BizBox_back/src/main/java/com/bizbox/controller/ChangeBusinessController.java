@@ -34,7 +34,6 @@ public class ChangeBusinessController {
 	
 	@GetMapping("/getHistory/{dong}")
 	public ResponseEntity<Object> getHistory(@PathVariable String dong){
-		Map<String, List<Changebusiness>> map=new HashMap<String, List<Changebusiness>>();
 		
 		int Point=0;
 		List<Changebusiness> precblist;
@@ -109,7 +108,7 @@ public class ChangeBusinessController {
 			jsonObject.put("point", Point);
 			
 			
-			return new ResponseEntity<Object>(jsonObject.toString(),HttpStatus.OK);
+			return new ResponseEntity<Object>(jsonObject,HttpStatus.OK);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
