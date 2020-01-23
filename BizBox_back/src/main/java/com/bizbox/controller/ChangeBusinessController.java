@@ -1,8 +1,11 @@
 package com.bizbox.controller;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +29,21 @@ import com.bizbox.apis.*;
 @RestController
 @RequestMapping("/change")
 public class ChangeBusinessController {
-
 	@Autowired
 	ChangeBusinessService service;
 	
 	@GetMapping("/getHistory/{dong}")
 	public ResponseEntity<Object> getHistory(@PathVariable String dong){
+		Map<String, List<Changebusiness>> map=new HashMap<String, List<Changebusiness>>();
+		
+		int Point=0;
 		List<Changebusiness> precblist;
 		List<Changebusiness> cblist = new LinkedList();
 		int live[] = new int[6];
 		int die[] = new int[6];
 		int averL[] = new int[6];
 		int averD[] = new int[6];
-		
+		int what[][]=new int[6][4];
 		
 		for(int i=0; i<6; i++) {
 			cblist.add(new Changebusiness((2014+i)+""));
@@ -51,7 +56,7 @@ public class ChangeBusinessController {
 			System.out.println(dongcode);
 			precblist = service.getChangeHistory(dongcode);
 			for (Changebusiness changebusiness : precblist) {
-
+				int index=0;
 			   live[Integer.parseInt(changebusiness.getA())-2014]+=
 				    Integer.parseInt(changebusiness.getG());
 				
@@ -63,6 +68,11 @@ public class ChangeBusinessController {
 				
 			  averD[Integer.parseInt(changebusiness.getA())-2014]+=
 					Integer.parseInt(changebusiness.getJ());
+			  if(changebusiness.getF().equals("정체")) {index=1;}
+			  if(changebusiness.getF().equals("다이나믹")) {index=2;}
+			  if(changebusiness.getF().equals("상권확장")) {index=3;}
+			  if(changebusiness.getF().equals("상권축소")) {index=0;}
+			  what[Integer.parseInt(changebusiness.getA())-2014][index]++;
 
 			}
 			for(int i=0; i<6; i++) {
@@ -73,17 +83,33 @@ public class ChangeBusinessController {
 				changebusiness.setI(averL[i]/8+"");
 				changebusiness.setJ(averD[i]/8+"");
 				changebusiness.setD(predongcode);
-				int Live=Integer.parseInt(changebusiness.getG());
-				int Die=Integer.parseInt(changebusiness.getH());
-				int AL=Integer.parseInt(changebusiness.getI());
-				int AD=Integer.parseInt(changebusiness.getJ());
-				if(Live<=AL && Die <AD) {changebusiness.setF("다이나믹");}
-				else if(Live<=AL && Die >AD) {changebusiness.setF("상권확장");}
-				else if(Live>=AL && Die <AD) {changebusiness.setF("상권축소");}
-				else if(Live>=AL && Die >AD) {changebusiness.setF("정체");}
+				int max=0;
+				int maxindex=0;
+				for(int j=0;j<4;j++) {
+					
+					if(max<what[i][j]){
+						maxindex=j;
+						max=what[i][j];
+					}
+	
+				}
+
+				if(maxindex==0) {changebusiness.setF("상권축소");}
+				else if(maxindex==1) {changebusiness.setF("정체");}
+				else if(maxindex==2) {changebusiness.setF("다이나믹");}
+				else if(maxindex==3) {changebusiness.setF("상권확장");}
 			}
+			JSONObject jsonObject = new JSONObject();
+			Changebusiness recChange = cblist.get(5);
+			if(recChange.getF().equals("상권축소")) {Point = 25;}
+			else if(recChange.getF().equals("정체")) {Point = 37;}
+			else if(recChange.getF().equals("다이나믹")){Point = 60;	}
+			else if(recChange.getF().equals("상권확장")) {Point = 85;	}
+			jsonObject.put("cblist", cblist);
+			jsonObject.put("point", Point);
 			
-			return new ResponseEntity<Object>(cblist,HttpStatus.OK);
+			
+			return new ResponseEntity<Object>(jsonObject.toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			
 			e.printStackTrace();

@@ -1,6 +1,8 @@
 package com.bizbox.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,9 @@ public class PopulationByController {
 	
 	@GetMapping("/getPopulationByTime/{address}")
 	public ResponseEntity<Object> getPopulationByTime(@PathVariable String address){
+		Map<Integer, PopulationByTime> map=new HashMap<Integer, PopulationByTime>();
 		PopulationByTime pbt;
+		int Point=0;
 		try {
 			pbt = service.populationByTime(address);
 			return new ResponseEntity<Object>(pbt,HttpStatus.OK);
