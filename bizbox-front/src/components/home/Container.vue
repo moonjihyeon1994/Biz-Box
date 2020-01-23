@@ -1,5 +1,6 @@
 <template>
   <div>
+      
       <div id='chartComp'>
         <chart></chart>
       </div>
