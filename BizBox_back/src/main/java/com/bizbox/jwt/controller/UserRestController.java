@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bizbox.jwt.dto.User;
+import com.bizbox.vo.User;
 import com.bizbox.jwt.service.JwtService;
 import com.bizbox.jwt.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 @Slf4j
 public class UserRestController {
 	@Autowired
@@ -30,7 +30,7 @@ public class UserRestController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping("/singin")
+	@PostMapping("/user/singin")
 	public ResponseEntity<Map<String, Object>> signin(@RequestBody User user, HttpServletResponse res){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
@@ -38,6 +38,8 @@ public class UserRestController {
 			User loginUser = userService.signin(user.getEmail(), user.getPassword());
 			String token = jwtService.create(loginUser);
 			res.setHeader("jwt-auth-token", token);
+
+			resultMap.put("auth_token", token);
 			resultMap.put("status", true);
 			resultMap.put("data", loginUser);
 			status = HttpStatus.ACCEPTED;
@@ -54,7 +56,7 @@ public class UserRestController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {
-			String  info = userService.getServerInfo();
+			String info = userService.getServerInfo();
 			resultMap.putAll(jwtService.get(req.getHeader("jwt-auth-token")));
 			
 			resultMap.put("status", true);
@@ -68,11 +70,4 @@ public class UserRestController {
 		}
 		return new ResponseEntity<Map<String,Object>>(resultMap, status);
 	}
-	
-	
-	
-	
-	
-	
-	
 }

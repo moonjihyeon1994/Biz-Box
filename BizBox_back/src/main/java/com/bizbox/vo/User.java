@@ -1,4 +1,4 @@
-package com.bizbox.jwt.dto;
+package com.bizbox.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
