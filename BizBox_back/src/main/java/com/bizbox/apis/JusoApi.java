@@ -53,7 +53,9 @@ public class JusoApi {
 			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
 			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
 		    size=jsonArray.size();
-			JSONObject personObject = (JSONObject) jsonArray.get(0);
+		    for(int i=0; i<size; i++) {
+		    temp = new StringBuilder();
+			JSONObject personObject = (JSONObject) jsonArray.get(i);
 			temp.append(personObject.get("admCd"));
 			temp.append(",");
 			temp.append(personObject.get("rnMgtSn"));
@@ -79,6 +81,8 @@ public class JusoApi {
 			temp.append(personObject.get("roadAddrPart1"));
 			System.out.println(size);
 			System.out.println(temp.toString());
+			if(personObject.get("emdNm").equals(name)) {break;}
+			}
 		}catch (Exception e) {
 			System.out.println("해당주소가 존재하지않습니다.");
 			e.printStackTrace();
