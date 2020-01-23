@@ -53,6 +53,7 @@ export default {
     axios.get('/storecount/%EA%B2%BD%EC%9D%B8%EB%A1%9C248-14/500')
       .then(res => {
         var jsonlarge = res.data.large
+        // console.log(res.data.large)
         this.info.소매 = jsonlarge.소매
         this.info.학문교육 = jsonlarge.학문교육
         this.info.숙박 = jsonlarge.숙박
@@ -61,8 +62,6 @@ export default {
         this.info.부동산 = jsonlarge.부동산
         this.info.의료 = jsonlarge.의료
         this.info.관광여가오락 = jsonlarge.관광여가오락
-        // console.log(res.data.small)
-        // this.info.선택업종 = res.data.small
       })
   }
 }
