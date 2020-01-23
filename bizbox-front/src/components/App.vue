@@ -1,20 +1,19 @@
 <template>
   <div id="app">
-    <v-tabs>
-      <v-tab link to="/" class="link1">BizBox</v-tab>
-      <v-tab link to="/result" class="link1">Result</v-tab>
-      <v-tab link to="/about" class="link1">About</v-tab>
-    </v-tabs>
+    <NavBar></NavBar>
     <div class="container">
       <router-view />
     </div>
   </div>
 </template>
 <script>
+import NavBar from '@/components/common/NavBar.vue'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    NavBar
+  }
 }
 </script>
 <style src="@/assets/css/reset.css"></style>
-<style src="@/components/common/nav.css"></style>
 <style src="@/components/common/common.css"></style>
