@@ -2,13 +2,12 @@
   <section class="hero is-success is-fullheight">
     <div class="hero-body">
       <div class="container">
+        <hello-world></hello-world>
+        <hr />
         <h1>Creating Beautiful Charts Using Vue.js Wrappers For Chart.js</h1>
         <ul>
           <li>
             <router-link to="/chartjs">vue-chartjs</router-link>
-          </li>
-          <li>
-            <router-link to="/charts">vue-charts</router-link>
           </li>
         </ul>
       </div>
@@ -18,13 +17,13 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/common/HelloWorld.vue";
+import HelloWorld from '@/components/common/HelloWorld.vue';
 
 export default {
-  name: "home",
-  components: {
-    HelloWorld
-  }
+    name: 'home',
+    components: {
+        HelloWorld
+    }
 };
 </script>
 
