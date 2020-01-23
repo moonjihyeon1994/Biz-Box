@@ -23,8 +23,8 @@ public class BizBoxApplication implements WebMvcConfigurer{
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(jwtInterceptor).addPathPatterns("/**")
-				.excludePathPatterns(Arrays.asList("/user/**"));
+		registry.addInterceptor(jwtInterceptor).addPathPatterns("/auth/**")
+				.excludePathPatterns(Arrays.asList("/auth/user/**"));
 	}
 	
 	@Override

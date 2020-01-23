@@ -2,7 +2,7 @@ package com.bizbox.jwt.service;
 
 import org.springframework.stereotype.Service;
 
-import com.bizbox.jwt.dto.User;
+import com.bizbox.vo.User;
 
 @Service
 public class UserService {
@@ -14,6 +14,6 @@ public class UserService {
 		}
 	}
 	public String getServerInfo() {
-		return "asdf";
+		return "made by bizbox";
 	}
 }

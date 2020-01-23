@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.bizbox.jwt.dto.User;
+import com.bizbox.vo.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -28,7 +28,7 @@ public class JwtService {
 		log.trace("time: {}", expireMin);
 		final JwtBuilder builder = Jwts.builder();
 		
-		builder.setHeaderParam("typ", "JWT");
+		builder.setHeaderParam("type", "JWT");
 		
 		builder.setSubject("로그인토큰")
 				.setExpiration(new Date(System.currentTimeMillis()+1000*60*expireMin))
