@@ -1,6 +1,5 @@
 <template>
-  <div>
-      
+  <div>W
       <div id='chartComp'>
         <chart></chart>
       </div>
@@ -11,14 +10,14 @@
 import Chart from './Chart'
 
 export default {
-    components: {
-        Chart
-    },
-    data() {
-        return {
+  components: {
+    Chart
+  },
+  data () {
+    return {
 
-        }
     }
+  }
 }
 </script>
 
