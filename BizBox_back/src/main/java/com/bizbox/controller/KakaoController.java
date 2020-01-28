@@ -33,10 +33,26 @@ public class KakaoController {
         System.out.println("controller access_token : " + access_Token);
 		HashMap<String, Object>userInfo = kakao.getUserInfo(access_Token);
 		System.out.println(userInfo);
+		String nickname = "";
+		String email = "";
 		if (userInfo.get("email") != null) {
-	        session.setAttribute("userId", userInfo.get("email"));
-	        session.setAttribute("access_Token", access_Token);
+//	        session.setAttribute("userId", userInfo.get("email"));
+//	        session.setAttribute("access_Token", access_Token);
+			nickname = (String) userInfo.get("nickname");
+			email = (String) userInfo.get("email");
 	    }
+		///////////////////////
+		
+		
         return userInfo.toString();
 	}
+	
+	@RequestMapping(value="/logout")
+	public String logout(HttpSession session) {
+	    kakao.kakaoLogout((String)session.getAttribute("access_Token"));
+	    session.removeAttribute("access_Token");
+	    session.removeAttribute("userId");
+	    return "index";
+	}
+
 }
