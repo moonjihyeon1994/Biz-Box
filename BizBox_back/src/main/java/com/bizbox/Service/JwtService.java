@@ -32,7 +32,8 @@ public class JwtService {
 		
 		builder.setSubject("로그인토큰")
 				.setExpiration(new Date(System.currentTimeMillis()+1000*60*expireMin))
-				.claim("User", user).claim("second", "더 담고 싶은거 있어?");
+				.claim("User", user);
+//				.claim("second", "더 담고 싶은거 있어?");
 		
 		builder.signWith(SignatureAlgorithm.HS256, salt.getBytes());
 		
