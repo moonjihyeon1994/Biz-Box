@@ -11,4 +11,5 @@ public interface PopulationByDAO {
 	PopulationByTime populationByTime(String address) throws Exception;
 	PopulationByLocation populationByLocation(String address) throws Exception;
 	List<PopulationByDong> populationByDong(String address) throws Exception;
+	List<String> getDongCodeList(String predoroname);
 }

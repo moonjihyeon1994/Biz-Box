@@ -84,6 +84,15 @@ public class PopulationByController {
 				if(pbl!=null)break;
 				doroname=doroname.substring(0, size-1-i);
 				}
+				if(pbl!=null) {
+					System.out.println("hihihi");
+					predoroname=api.getAddressByName(address).split(",")[5];	
+					System.out.println(predoroname+"sdafsdfasdfasdfasdfasdfasdfasdf");
+					List<String> dongcodelist = service.getDongCodeList(predoroname);
+					for (String string2 : dongcodelist) {
+						System.out.println("ddd:"+string2);
+					}
+				}
 			}
 			jsonObject.put("pbl", pbl);
 			jsonObject.put("point", Point);

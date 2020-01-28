@@ -17,5 +17,8 @@
 		( select left(G, 8) as Num from address_code where D like concat('%',#{address},'%') group by Num )
 		order by C, A, B ASC;
 	</select> 
+	<select id="getDongCodeList" parameterType="map" resultType="String" >
+		select  g from address_code where c like concat('%',#{predoroname},'%')
+	</select>
 
 </mapper>

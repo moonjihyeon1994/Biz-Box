@@ -11,4 +11,5 @@ public interface PopulationByService {
 	public PopulationByTime populationByTime(String address) throws Exception;
 	public PopulationByLocation populationByLocation(String address) throws Exception;
 	public List<PopulationByDong> populationByDong(String address) throws Exception;
+	public List<String> getDongCodeList(String predoroname);
 }
