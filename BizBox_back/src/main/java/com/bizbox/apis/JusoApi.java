@@ -53,39 +53,76 @@ public class JusoApi {
 			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
 			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
 		    size=jsonArray.size();
+		    boolean isfind=false;
 		    for(int i=0; i<size; i++) {
-		    temp = new StringBuilder();
-			JSONObject personObject = (JSONObject) jsonArray.get(i);
-			temp.append(personObject.get("admCd"));
-			temp.append(",");
-			temp.append(personObject.get("rnMgtSn"));
-			temp.append(",");
-			temp.append(personObject.get("udrtYn"));
-			temp.append(",");
-			temp.append(personObject.get("buldMnnm"));
-			temp.append(",");
-			temp.append(personObject.get("buldSlno"));
-			temp.append(",");
-			temp.append(personObject.get("emdNm"));
-			temp.append(",");
-			temp.append(personObject.get("emdNo"));
-			temp.append(",");
-			temp.append(personObject.get("liNm"));
-			temp.append(",");
-			temp.append(personObject.get("Rn"));
-			temp.append(",");
-			temp.append(personObject.get("lnbrMnnm"));
-			temp.append(",");
-			temp.append(personObject.get("jibunAddr"));
-			temp.append(",");
-			temp.append(personObject.get("roadAddrPart1"));
-			System.out.println(size);
-			System.out.println(temp.toString());
-			if(personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm").toString().substring(0, personObject.get("emdNm").toString().length()-1))) {
-				System.out.println("그만!!!!"+personObject.get("emdNm"));
-				break;
-				}
-			}
+			    temp = new StringBuilder();
+				JSONObject personObject = (JSONObject) jsonArray.get(i);
+				temp.append(personObject.get("admCd"));
+				temp.append(",");
+				temp.append(personObject.get("rnMgtSn"));
+				temp.append(",");
+				temp.append(personObject.get("udrtYn"));
+				temp.append(",");
+				temp.append(personObject.get("buldMnnm"));
+				temp.append(",");
+				temp.append(personObject.get("buldSlno"));
+				temp.append(",");
+				temp.append(personObject.get("emdNm"));
+				temp.append(",");
+				temp.append(personObject.get("emdNo"));
+				temp.append(",");
+				temp.append(personObject.get("liNm"));
+				temp.append(",");
+				temp.append(personObject.get("Rn"));
+				temp.append(",");
+				temp.append(personObject.get("lnbrMnnm"));
+				temp.append(",");
+				temp.append(personObject.get("jibunAddr"));
+				temp.append(",");
+				temp.append(personObject.get("roadAddrPart1"));
+				System.out.println(size);
+				System.out.println(temp.toString());
+				if(personObject.get("roadAddrPart1").toString().contains(name) || name.contains(personObject.get("roadAddrPart1").toString().substring(0, personObject.get("roadAddrPart1").toString().length()-1))) {
+					System.out.println("그만!!!!"+personObject.get("roadAddrPart1"));
+					isfind=true;
+					break;
+					}
+				} 
+		    		if(isfind==false){		    		
+		    		for(int i=0; i<size; i++) {
+				    temp = new StringBuilder();
+					JSONObject personObject = (JSONObject) jsonArray.get(i);
+					temp.append(personObject.get("admCd"));
+					temp.append(",");
+					temp.append(personObject.get("rnMgtSn"));
+					temp.append(",");
+					temp.append(personObject.get("udrtYn"));
+					temp.append(",");
+					temp.append(personObject.get("buldMnnm"));
+					temp.append(",");
+					temp.append(personObject.get("buldSlno"));
+					temp.append(",");
+					temp.append(personObject.get("emdNm"));
+					temp.append(",");
+					temp.append(personObject.get("emdNo"));
+					temp.append(",");
+					temp.append(personObject.get("liNm"));
+					temp.append(",");
+					temp.append(personObject.get("Rn"));
+					temp.append(",");
+					temp.append(personObject.get("lnbrMnnm"));
+					temp.append(",");
+					temp.append(personObject.get("jibunAddr"));
+					temp.append(",");
+					temp.append(personObject.get("roadAddrPart1"));
+					System.out.println(size);
+					System.out.println(temp.toString());
+					if(personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm").toString().substring(0, personObject.get("emdNm").toString().length()-1))) {
+						System.out.println("그만!!!!"+personObject.get("emdNm"));
+						break;
+						}
+					}
+		}
 		}catch (Exception e) {
 			System.out.println("해당주소가 존재하지않습니다.");
 			e.printStackTrace();
