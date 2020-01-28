@@ -4,7 +4,7 @@
       <v-tab link to="/" class="link1">BizBox</v-tab>
       <v-tab link to="/result" class="link1">Result</v-tab>
       <v-tab link to="/about" class="link1">About</v-tab>
-      <v-tab style="float:right" link to="/" class="link1">Login</v-tab>
+      <v-tab link to="/" class="link1">Login</v-tab>
     </v-tabs>
   </div>
 </template>
