@@ -77,6 +77,7 @@ public class SalesInformation {
 	private String AB;
 	private String AC;
 	private String AD;
+	private String AE;
 	private String AF;
 	private String AG;
 	private String AH;
