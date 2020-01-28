@@ -1,7 +1,7 @@
 <template>
   <div id="loginForm">
-    <form action="">
-      <input type="text" name="username" placeholder="Username" required />
+    <form action="" v-on:submit.prevent>
+      <!-- <input type="text" name="username" placeholder="Username" required /> -->
       <input
         type="email"
         name="email"
@@ -12,8 +12,8 @@
       <input
         type="password"
         name="password"
-        placeholder="Password"
         required
+        placeholder="Password"
         minlength="4"
       />
       <p>The password must be > 4 char</p>
@@ -21,18 +21,86 @@
 
       <input type="submit" value="Login" disabled />
       <input type="submit" value="Login" />
-      <a href="">
-        <button id="googlebutton">Google Login</button>
-      </a>
-      <a href="">
-        <button id="kakaobutton">Kakao Login</button>
-      </a>
+      <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
+        <img src="@/assets/btn_google_dark.png" alt="" />
+      </div>
+      <!-- <a id="google_btn" href="">
+        <img src="@/assets/btn_google_dark.png" alt="" />
+      </a> -->
+      <!-- <a id="kakao_btn" href="https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://70.12.246.137:8080/kakao/login&response_type=code">
+        <img src="@/assets/btn_kakao.png" alt="" />
+      </a> -->
+      <!-- <button @click="loginWithKakao">
+        <img src="@/assets/btn_kakao.png" alt="" />
+      </button> -->
     </form>
+    <a id="kakao-login-btn" @click="loginWithKakao">
+      <img src="@/assets/btn_kakao.png" alt="" />
+    </a>
   </div>
 </template>
 
-<script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 
+<script>
+import axios from 'axios'
+
+export default {
+  name: 'login_test',
+  data: () => {
+    return {
+      res: ''
+    }
+  },
+  methods: {
+    loginWithKakao () {
+      // console.log('asdf')
+      // axios.get('https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://70.12.246.137:8080/kakao/login&response_type=code', (req, res) => {
+      //   res.header('Access-Control-Allow-Origin', '*')
+      // })
+      //   .then(response => {
+      //     // response.header('Access-Control-Allow-Origin', '*')
+      //     // console.log(this.response)
+      //     console.log(response.data)
+      //   })
+      //   .catch(e => {
+      //     console.log('error: ', e)
+      //   })
+      console.log("click")
+      Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37');
+      // 로그인 창을 띄웁니다.
+      Kakao.Auth.login({
+        success: function(authObj) {
+          const accessToken = authObj.access_token;
+          // console.log(accessToken)
+          // alert(JSON.stringify(authObj));
+          const geturl = 'http://70.12.246.137:8080/kakao/login?code=' + accessToken
+          console.log(geturl)
+          axios.get(geturl)
+            .then(res => {
+              console.log(res)
+            })
+        },
+        fail: function(err) {
+          alert(JSON.stringify(err));
+        }
+      });
+    },
+    onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+    }
+  }
+}
 </script>
 
 <style>
@@ -42,6 +110,10 @@
   align-items: center;
   height: 100vh;
   font-family: sans-serif;
+}
+
+#loginForm form input {
+  height: 49px;
 }
 
 form {
@@ -54,14 +126,16 @@ form {
 input {
   display: block;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 10px;
   box-sizing: border-box;
   font-size: 15px;
   border: 1px solid #bbb;
   border-radius: 3px;
 }
-a { text-decoration:none }
+a {
+  text-decoration: none;
+}
 p {
   display: none;
   font-size: 12px;
@@ -95,7 +169,7 @@ input:valid ~ input:valid ~ input:valid ~ input[type='submit']:not(:disabled) {
 button {
   display: block;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 10px;
   box-sizing: border-box;
   font-size: 15px;
@@ -106,12 +180,9 @@ button {
   color: #fff;
 }
 
-#googlebutton {
-  background-color: #ee4035
+#google_btn {
+  /* background-color: #5135ee; */
+  height: 49px;
+  width: 222px;
 }
-
-#kakaobutton {
-  background-color: #ffcc5c
-}
-
 </style>
