@@ -1,6 +1,7 @@
 package com.bizbox.controller;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import com.bizbox.apis.JusoApi;
 import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
+import com.bizbox.vo.PopulationBytimeByDongCode;
 
 
 
@@ -54,6 +56,30 @@ public class PopulationByController {
 				if(pbt!=null)break;
 				doroname=doroname.substring(0, size-1-i);
 				}
+				if(pbt==null) {//끝까지 정보 없으면 address테이블에서 동코드 가져옴
+					System.out.println("hihihi");
+					
+					List<PopulationBytimeByDongCode> list= new LinkedList<PopulationBytimeByDongCode>();
+					predoroname=api.getAddressByName(address).split(",")[5];	
+					System.out.println(predoroname);
+					String dongcode = service.getDongCodeList(predoroname);
+					dongcode=dongcode.substring(0, dongcode.length()-2);
+					System.out.println(dongcode);
+					list=service.getTimeByDongCode(dongcode);
+					double j = 0,k= 0,l= 0,m= 0,n= 0,o= 0;
+					String J = null,K= null,L= null,M= null,N= null,O= null,P= null;
+					for(int i=1;  i<7;  i++) {J=(j+Double.parseDouble(list.get(i).getD()))+"";}
+					for(int i=7;  i<12; i++) {K=(k+Double.parseDouble(list.get(i).getD()))+"";}
+					for(int i=12; i<15; i++) {L=(l+Double.parseDouble(list.get(i).getD()))+"";}
+					for(int i=15; i<18; i++) {M=(m+Double.parseDouble(list.get(i).getD()))+"";}
+					for(int i=18; i<22; i++) {N=(n+Double.parseDouble(list.get(i).getD()))+"";}
+					for(int i=22; i<24; i++) {O=(o+Double.parseDouble(list.get(i).getD()))+"";}
+					pbt = new PopulationByTime("", "", "", "", "",predoroname, "", "", "", J, K, L, M, N, O, "", "", "", "", "","", "");
+					System.out.println(list.get(0).getA());
+					jsonObject.put("pbt", pbt);
+					jsonObject.put("point", Point);
+					return new ResponseEntity<Object>(jsonObject,HttpStatus.OK);
+				}
 			}
 			jsonObject.put("pbt", pbt);
 			jsonObject.put("point", Point);
@@ -74,24 +100,31 @@ public class PopulationByController {
 			pbl = service.populationByLocation(address);
 			if(pbl==null) {
 				JusoApi api = new JusoApi();
-				String predoroname=api.getAddressByName(address).split(",")[11];
+				String[] sp= api.getAddressByName(address).split(",");
+				String predoroname=sp[sp.length-1];
+				System.out.println(predoroname);
 				String[] string=predoroname.split(" ");
 				String doroname = string[2];
 				System.out.println(doroname);
 				int size=doroname.length();
-				for(int i=0; i<size-1; i++) {
+				for(int i=0; i<size-1; i++) {//처음 도로명 데이터 없으면 가장 가까운 상권 정보 알려주고
 					pbl = service.populationByLocation(doroname);
 				if(pbl!=null)break;
 				doroname=doroname.substring(0, size-1-i);
 				}
-				if(pbl!=null) {//끝까지 정보 없으면 address테이블에서 동코드 가져옴
+				if(pbl==null) {//끝까지 정보 없으면 address테이블에서 동코드 가져옴
 					System.out.println("hihihi");
 					predoroname=api.getAddressByName(address).split(",")[5];	
 					System.out.println(predoroname);
-					List<String> dongcodelist = service.getDongCodeList(predoroname);
-					for (String string2 : dongcodelist) {
-						System.out.println("ddd:"+string2);
-					}
+					String dongcode = service.getDongCodeList(predoroname);
+					dongcode=dongcode.substring(0, dongcode.length()-2);
+					System.out.println(dongcode);
+					pbl=service.getByDongCode(dongcode);
+					pbl.setF(predoroname);
+					System.out.println(pbl.getA());
+					jsonObject.put("pbl", pbl);
+					jsonObject.put("point", Point);
+					return new ResponseEntity<Object>(jsonObject,HttpStatus.OK);
 				}
 			}
 			jsonObject.put("pbl", pbl);
