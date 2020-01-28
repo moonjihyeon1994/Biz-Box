@@ -1,6 +1,7 @@
 package com.bizbox.apis;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @Service
+@CrossOrigin({ "*" })
 public class KakaoApi {
     private final String redirect_uri = "http://70.12.246.137:8080";
     private final String client_id = "64c7963937495c25ab3d30bc9f6e65e7";
