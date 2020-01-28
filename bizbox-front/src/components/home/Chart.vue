@@ -9,12 +9,11 @@
         <button @click="setOpt2()">시간별 유동인구</button>
         <button @click="setOpt3()">요일별 유동인구</button>
         <button @click="setOpt4()">연도별 상권 변화 지표</button>
-        <h2>{{ title }}</h2>
       </div>
       <input type="text" placeholder="검색하세요." v-model="key" @keyup.enter="getData()" />
-      <button @click="getData()">검색</button>
+      <button id="search-btn" @click="getData()">검색</button>
     </div>
-    <p>{{ road }}</p>
+    <p id="search-result">검색된 결과 : {{ road }}</p>
     <hr />
     <div id="chart1">
       <bar-chart
@@ -28,6 +27,10 @@
         :options="chartoptions"
       ></line-chart>
     </div>
+    <div id="point">
+      <p>{{ point }}</p>
+    </div>
+
   </div>
 </template>
 
@@ -49,7 +52,8 @@ export default {
       road: '',
       key: '',
       searchOption: 1,
-      title: '연령별 유동인구'
+      title: '연령별 유동인구',
+      point: 0
     }
   },
   methods: {
@@ -93,9 +97,10 @@ export default {
             // this.result = JSON.stringify(res.data)
             this.result = res.data.pbl
             this.road = this.result.f
+            this.point = res.data.point
           })
           .catch(err => {
-            alert(err)
+            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -170,9 +175,10 @@ export default {
           .then(res => {
             this.result = res.data.pbt
             this.road = this.result.f
+            this.point = res.data.point
           })
           .catch(err => {
-            alert(err)
+            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -231,9 +237,10 @@ export default {
           .then(res => {
             this.result = res.data.pbt
             this.road = this.result.f
+            this.point = res.data.point
           })
           .catch(err => {
-            alert(err)
+            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -294,9 +301,10 @@ export default {
           .then(res => {
             this.result = res.data.cblist
             this.road = this.result[0].d
+            this.point = res.data.point
           })
           .catch(err => {
-            alert(err)
+            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -348,5 +356,57 @@ export default {
 <style scoped>
 #chart1 {
   width: 600px;
+}
+
+#point {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 600px;
+  height: 50px;
+  line-height: 50px;
+  top: 5px;
+  font-size: 24px;
+  margin-top: 10px;
+  background-color: white;
+}
+
+#searchOptions {
+  margin: auto;
+}
+
+#searchOptions button {
+  font-size: 16px;
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 200px;
+  height: 30px;
+  margin-right: 10px;
+  background-color: white;
+  transition: 0.2s all ease;
+}
+
+#searchOptions button:hover{
+  background-color: rgb(224, 224, 224);
+}
+
+#search input {
+  border-radius: 5px 0 0 5px;
+  width: 200px;
+  height: 30px;
+  margin-top: 10px;
+  padding: 5px;
+  background-color: white;
+}
+
+#search-btn {
+  border-radius: 0 5px 5px 0;
+  width: 50px;
+  height: 30px;
+  background-color: rgb(172, 172, 172);
+}
+
+#search-result {
+  margin-top: 5px;
 }
 </style>
