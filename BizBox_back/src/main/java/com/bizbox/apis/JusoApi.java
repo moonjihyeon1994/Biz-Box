@@ -81,7 +81,10 @@ public class JusoApi {
 			temp.append(personObject.get("roadAddrPart1"));
 			System.out.println(size);
 			System.out.println(temp.toString());
-			if(personObject.get("emdNm").equals(name)) {break;}
+			if(personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm").toString().substring(0, personObject.get("emdNm").toString().length()-1))) {
+				System.out.println("그만!!!!"+personObject.get("emdNm"));
+				break;
+				}
 			}
 		}catch (Exception e) {
 			System.out.println("해당주소가 존재하지않습니다.");

@@ -12,6 +12,7 @@
   	<typeAlias type="com.bizbox.vo.PopulationByDong"  alias="pobd"/>
   	<typeAlias type="com.bizbox.vo.DongCode"  alias="dc"/>
   	<typeAlias type="com.bizbox.vo.SalesInformation"  alias="sales"/>
+  	<typeAlias type="com.bizbox.vo.PopulationBytimeByDongCode"  alias="ptdc"/>
   </typeAliases>
   
   <mappers>

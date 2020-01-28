@@ -52,8 +52,13 @@ public class ChangeBusinessController {
 		try {
 			String predongcode=api.getAddressByName(dong).split(",")[5];//동 이름 가져옴
 			String dongcode=predongcode.substring(0,predongcode.length()-1);
-			System.out.println(dongcode);
+			System.out.println("휴휴:"+dongcode);
 			precblist = service.getChangeHistory(dongcode);
+			while(precblist.size()==0 && dongcode.length()>0) {
+				dongcode=dongcode.substring(0,dongcode.length()-2);
+				System.out.println("휴휴:2"+dongcode);
+				precblist = service.getChangeHistory(dongcode);
+			}
 			for (Changebusiness changebusiness : precblist) {
 				int index=0;
 			   live[Integer.parseInt(changebusiness.getA())-2014]+=
