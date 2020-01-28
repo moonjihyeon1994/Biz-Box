@@ -84,10 +84,10 @@ public class PopulationByController {
 				if(pbl!=null)break;
 				doroname=doroname.substring(0, size-1-i);
 				}
-				if(pbl!=null) {
+				if(pbl!=null) {//끝까지 정보 없으면 address테이블에서 동코드 가져옴
 					System.out.println("hihihi");
 					predoroname=api.getAddressByName(address).split(",")[5];	
-					System.out.println(predoroname+"sdafsdfasdfasdfasdfasdfasdfasdf");
+					System.out.println(predoroname);
 					List<String> dongcodelist = service.getDongCodeList(predoroname);
 					for (String string2 : dongcodelist) {
 						System.out.println("ddd:"+string2);
