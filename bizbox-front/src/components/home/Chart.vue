@@ -344,9 +344,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-#chart1 {
-  width: 600px;
-}
-</style>
