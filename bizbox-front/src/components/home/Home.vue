@@ -1,54 +1,28 @@
 <template>
-  <section class="hero is-success is-fullheight">
-    <div class="hero-body">
-      <div class="container">
-        <hello-world></hello-world>
-        <hr />
-        <h1>Creating Beautiful Charts Using Vue.js Wrappers For Chart.js</h1>
-        <ul>
-          <li>
-            <router-link to="/chartjs">vue-chartjs</router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  <div class="row">
+    <div class="col-2"><Select :idx="items1.idx" :items="items1.item"></Select></div>
+    <div class="col-2"><Select :idx="items2.idx" :items="items2.item"></Select></div>
+  </div>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/common/HelloWorld.vue'
-
+import Select from '@/components/common/Select.vue'
 export default {
-  name: 'home',
+  name: 'Home',
+  data () {
+    return {
+      items1: {
+        idx: '시/도',
+        item: ['서울', '부산', '울산']
+      },
+      items2: {
+        idx: '구/군',
+        item: ['강남구', '강서구', '강북구']
+      }
+    }
+  },
   components: {
-    // HelloWorld
+    Select
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.home {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-}
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-  text-decoration: underline;
-}
-</style>

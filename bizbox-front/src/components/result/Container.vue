@@ -27,5 +27,3 @@ export default {
     height: 300px;
 }
 </style>
-
-<style src="../../assets/css/reset.css"></style>

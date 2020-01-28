@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/home/Home.vue'
 import Result from '@/components/result/Result.vue'
-import Chart from '@/components/home/Chart.vue'
+import Chart from '@/components/result/Chart.vue'
 
 Vue.use(VueRouter)
 
