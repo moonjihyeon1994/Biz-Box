@@ -13,4 +13,5 @@ export default {
   }
 }
 </script>
+<style src="@/assets/css/reset.css"></style>
 <style src="@/components/common/common.css"></style>

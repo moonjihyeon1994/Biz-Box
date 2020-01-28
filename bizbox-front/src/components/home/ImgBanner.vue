@@ -8,4 +8,4 @@ export default {
 }
 </script>
 
-<style scoped src="@/components/home/ImgBanner.css"></style>
+<style scoped src="./ImgBanner.css"></style>
