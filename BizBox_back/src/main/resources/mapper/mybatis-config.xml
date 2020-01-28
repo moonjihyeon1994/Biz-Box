@@ -11,11 +11,13 @@
   	<typeAlias type="com.bizbox.vo.Changebusiness"  alias="change"/>
   	<typeAlias type="com.bizbox.vo.PopulationByDong"  alias="pobd"/>
   	<typeAlias type="com.bizbox.vo.DongCode"  alias="dc"/>
+  	<typeAlias type="com.bizbox.vo.SalesInformation"  alias="sales"/>
   </typeAliases>
   
   <mappers>
    <!-- <mapper resource="mapper/foodmapper.xml"/> -->
    <mapper resource="mapper/populationByMapper.xml" />
    <mapper resource="mapper/changebusinessMapper.xml" />
+   <mapper resource="mapper/salesMapper.xml" />
   </mappers>
 </configuration>
