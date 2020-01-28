@@ -1,14 +1,9 @@
 <template>
-  <section class="hero is-success is-fullheight">
+  <section class="hero is-fullheight">
     <div class="hero-body">
       <div class="container">
         <hr />
-        <h1>Creating Beautiful Charts Using Vue.js Wrappers For Chart.js</h1>
-        <ul>
-          <li>
-            <router-link to="/chartjs">vue-chartjs</router-link>
-          </li>
-        </ul>
+        <chart></chart>
       </div>
     </div>
   </section>
@@ -16,9 +11,13 @@
 
 <script>
 // @ is an alias to /src
+import Chart from './Chart'
 
 export default {
-  name: 'result'
+  name: 'result',
+  components: {
+    Chart
+  }
 }
 </script>
 
