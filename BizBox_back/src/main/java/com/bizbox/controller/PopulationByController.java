@@ -60,9 +60,14 @@ public class PopulationByController {
 					System.out.println("hihihi");
 					
 					List<PopulationBytimeByDongCode> list= new LinkedList<PopulationBytimeByDongCode>();
-					predoroname=api.getAddressByName(address).split(",")[5];	
+					predoroname=api.getAddressByName(address).split(",")[5];
+					String realname=predoroname;
 					System.out.println(predoroname);
 					String dongcode = service.getDongCodeList(predoroname);
+					while(dongcode==null && predoroname.length()>0 ) {
+						predoroname=predoroname.substring(0, predoroname.length()-2);
+						dongcode = service.getDongCodeList(predoroname);
+					}
 					dongcode=dongcode.substring(0, dongcode.length()-2);
 					System.out.println(dongcode);
 					list=service.getTimeByDongCode(dongcode);
@@ -74,7 +79,7 @@ public class PopulationByController {
 					for(int i=15; i<18; i++) {M=(m+Double.parseDouble(list.get(i).getD()))+"";}
 					for(int i=18; i<22; i++) {N=(n+Double.parseDouble(list.get(i).getD()))+"";}
 					for(int i=22; i<24; i++) {O=(o+Double.parseDouble(list.get(i).getD()))+"";}
-					pbt = new PopulationByTime("", "", "", "", "",predoroname, "", "", "", J, K, L, M, N, O, "", "", "", "", "","", "");
+					pbt = new PopulationByTime("", "", "", "", "",realname, "", "", "", J, K, L, M, N, O, "", "", "", "", "","", "");
 					System.out.println(list.get(0).getA());
 					jsonObject.put("pbt", pbt);
 					jsonObject.put("point", Point);
@@ -115,12 +120,18 @@ public class PopulationByController {
 				if(pbl==null) {//끝까지 정보 없으면 address테이블에서 동코드 가져옴
 					System.out.println("hihihi");
 					predoroname=api.getAddressByName(address).split(",")[5];	
+					String realname=predoroname;
 					System.out.println(predoroname);
 					String dongcode = service.getDongCodeList(predoroname);
+					
+					while(dongcode==null && predoroname.length()>0 ) {
+						predoroname=predoroname.substring(0, predoroname.length()-2);
+						dongcode = service.getDongCodeList(predoroname);
+					}
 					dongcode=dongcode.substring(0, dongcode.length()-2);
 					System.out.println(dongcode);
 					pbl=service.getByDongCode(dongcode);
-					pbl.setF(predoroname);
+					pbl.setF(realname);
 					System.out.println(pbl.getA());
 					jsonObject.put("pbl", pbl);
 					jsonObject.put("point", Point);
