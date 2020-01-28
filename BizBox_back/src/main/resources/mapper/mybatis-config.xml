@@ -10,6 +10,7 @@
   	<typeAlias type="com.bizbox.vo.PopulationByLocation"  alias="pobl"/>
   	<typeAlias type="com.bizbox.vo.Changebusiness"  alias="change"/>
   	<typeAlias type="com.bizbox.vo.PopulationByDong"  alias="pobd"/>
+  	<typeAlias type="com.bizbox.vo.DongCode"  alias="dc"/>
   </typeAliases>
   
   <mappers>

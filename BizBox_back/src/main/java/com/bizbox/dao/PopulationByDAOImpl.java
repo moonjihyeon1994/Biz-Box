@@ -1,5 +1,6 @@
 package com.bizbox.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -32,5 +33,11 @@ public class PopulationByDAOImpl implements PopulationByDAO {
 	@Override
 	public List<PopulationByDong> populationByDong(String address) throws Exception {
 		return session.selectList(name+"populationByDong", address);
+	}
+	@Override
+	public List<String> getDongCodeList(String predoroname) {
+		HashMap<String,String> map = new HashMap<String, String>();
+		map.put("predoroname", predoroname);
+		return session.selectList(name+"getDongCodeList",predoroname);
 	}
 }

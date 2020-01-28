@@ -23,7 +23,7 @@ private final String name ="com.bizbox.mapper.changebusinessMapper.";
 	@Override
 	public List<Changebusiness> getChangeHistory(String dongcode) {
 		
-		return session.selectList("findByDong", dongcode);
+		return session.selectList(name+"findByDong", dongcode);
 	}
 
 }
