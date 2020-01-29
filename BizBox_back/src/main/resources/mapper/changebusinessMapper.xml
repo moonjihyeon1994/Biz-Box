@@ -7,4 +7,10 @@
 	<select id="findByDong" parameterType="String" resultType="change">
 		select * from businesschange where d like concat('%',#{dongcode},'%')  order by a,d,b
 	</select>
+
+	
+	<select id="selectByDong" parameterType="String" resultType="change">
+		select * from businesschange where f like concat('%',#{address},'%')  order by a DESC  limit 1
+	</select>
+	
 </mapper>
