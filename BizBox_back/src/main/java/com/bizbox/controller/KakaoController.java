@@ -42,7 +42,6 @@ public class KakaoController {
 	@RequestMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestParam("refresh_token") String refresh_token, HttpSession session, HttpServletResponse res) {
 		//https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://70.12.246.137:8080/kakao/login&response_type=code
-		//https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://localhost:8080/kakao/login&response_type=code
 		System.out.println("refresh_token : " + refresh_token);
 		String access_Token = kakao.getAccessToken(refresh_token);
         System.out.println("controller access_token : " + access_Token);
@@ -82,5 +81,4 @@ public class KakaoController {
 	    session.removeAttribute("userId");
 	    return "index";
 	}
-
 }
