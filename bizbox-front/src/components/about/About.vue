@@ -2,15 +2,15 @@
   <div class="about">
     <h1>This is an about page</h1>
     <v-row>
-      <resultList></resultList>
+      <countStores></countStores>
     </v-row>
   </div>
 </template>
 <script>
-import resultList from '@/components/about/resultList.vue'
+import countStores from '@/components/about/CountStores.vue'
 export default {
   components: {
-    resultList
+    countStores
   }
 }
 </script>
