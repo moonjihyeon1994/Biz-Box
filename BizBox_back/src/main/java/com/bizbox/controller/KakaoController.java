@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.JwtService;
-import com.bizbox.Service.UserService;
+import com.bizbox.Service.UserServiceImpl;
 import com.bizbox.apis.KakaoApi;
 import com.bizbox.vo.User;
 
@@ -37,7 +37,7 @@ public class KakaoController {
 	private JwtService jwtService;
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 	
 	@RequestMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestParam("refresh_token") String refresh_token, HttpSession session, HttpServletResponse res) {
@@ -50,8 +50,6 @@ public class KakaoController {
 		String nickname = "";
 		String email = "";
 		if (userInfo.get("email") != null) {
-//	        session.setAttribute("userId", userInfo.get("email"));
-//	        session.setAttribute("access_Token", access_Token);
 			nickname = (String) userInfo.get("nickname");
 			email = (String) userInfo.get("email");
 	    }
@@ -64,7 +62,7 @@ public class KakaoController {
 			String token = jwtService.create(loginUser);
 			res.setHeader("jwt-auth-token", token);
 			resultMap.put("status", true);
-			resultMap.put("data", token);
+			resultMap.put("data", loginUser);
 			status = HttpStatus.ACCEPTED;
 		}catch(RuntimeException e) {
 			log.error("로그인 실패", e);
@@ -72,13 +70,5 @@ public class KakaoController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
         return new ResponseEntity<Map<String,Object>>(resultMap, status);
-	}
-	
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-	    kakao.kakaoLogout((String)session.getAttribute("access_Token"));
-	    session.removeAttribute("access_Token");
-	    session.removeAttribute("userId");
-	    return "index";
 	}
 }
