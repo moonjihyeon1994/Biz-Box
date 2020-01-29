@@ -1,7 +1,7 @@
 <template>
   <div id="loginForm">
-    <form action="">
-      <input type="text" name="username" placeholder="Username" required />
+    <form action="" v-on:submit.prevent>
+      <!-- <input type="text" name="username" placeholder="Username" required /> -->
       <input
         type="email"
         name="email"
@@ -12,8 +12,8 @@
       <input
         type="password"
         name="password"
-        placeholder="Password"
         required
+        placeholder="Password"
         minlength="4"
       />
       <p>The password must be > 4 char</p>
@@ -21,18 +21,81 @@
 
       <input type="submit" value="Login" disabled />
       <input type="submit" value="Login" />
-      <a href="">
-        <button id="googlebutton">Google Login</button>
-      </a>
-      <a href="">
-        <button id="kakaobutton">Kakao Login</button>
+
+      <a id="kakao_btn" @click="loginWithKakao">
+        <img src="@/assets/btn_kakao.png" alt="" />
       </a>
     </form>
+    <a id="kakao-login-btn" @click="getInfo">
+      <button>get infomation, check console</button>
+    </a>
   </div>
 </template>
 
-<script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 
+<script>
+import axios from 'axios'
+const storage = window.sessionStorage
+const ai = axios.create({
+  baseURL: 'http://70.12.246.137:8080/user/'
+})
+
+export default {
+  name: 'login_test',
+  data: () => {
+    return {
+      mydata: '',
+      token: ''
+    }
+  },
+  methods: {
+    loginWithKakao () {
+      console.log("Kakao login button clicked")
+      Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37');
+      Kakao.Auth.login({
+        success: function(authObj) {
+          // const accessToken = authObj.access_token;
+          const refreshToken = authObj.refresh_token;
+          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
+          // console.log(getUrl)
+
+          storage.setItem('jwt-auth-token', '')
+          storage.setItem('login_user_name', '')
+          storage.setItem('login_user_email', '')
+
+          axios.get(getUrl)
+            .then(res => {
+              console.log(res.data)
+              if (res.data.status) {
+                storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
+                storage.setItem('login_user_name', res.data.name)
+                storage.setItem('login_user_email', res.data.email)
+              }
+            })
+        },
+        fail: function(err) {
+          alert(JSON.stringify(err));
+        }
+      });
+    },
+    getInfo() {
+      ai.post(
+        '/info',
+        {
+          email: storage.getItem('login_user_email')
+        },
+        {
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token')
+          }
+        }
+      ).then(res => {
+        console.log(res)
+      })
+    }
+  }
+}
 </script>
 
 <style>
@@ -42,6 +105,10 @@
   align-items: center;
   height: 100vh;
   font-family: sans-serif;
+}
+
+#loginForm form input {
+  height: 49px;
 }
 
 form {
@@ -54,14 +121,16 @@ form {
 input {
   display: block;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 10px;
   box-sizing: border-box;
   font-size: 15px;
   border: 1px solid #bbb;
   border-radius: 3px;
 }
-a { text-decoration:none }
+a {
+  text-decoration: none;
+}
 p {
   display: none;
   font-size: 12px;
@@ -95,23 +164,20 @@ input:valid ~ input:valid ~ input:valid ~ input[type='submit']:not(:disabled) {
 button {
   display: block;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 10px;
   box-sizing: border-box;
   font-size: 15px;
   border: 1px solid #bbb;
   border-radius: 3px;
   border: none;
-  /* background-color: #8bc34a; */
+  background-color: #8bc34a;
   color: #fff;
 }
 
-#googlebutton {
-  background-color: #ee4035
+#google_btn {
+  /* background-color: #5135ee; */
+  height: 49px;
+  width: 222px;
 }
-
-#kakaobutton {
-  background-color: #ffcc5c
-}
-
 </style>
