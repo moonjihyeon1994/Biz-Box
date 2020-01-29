@@ -1,5 +1,9 @@
 package com.bizbox.apis;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 27990971b08064312c3c7112e9d028d2493d6d0d
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +13,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+<<<<<<< HEAD
+=======
+import java.util.Set;
+>>>>>>> 27990971b08064312c3c7112e9d028d2493d6d0d
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,7 +28,7 @@ import org.json.simple.parser.JSONParser;
 
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
-
+import com.bizbox.utils.*;
 public class JusoApi {
 	
 //	도로명주소로 입력
@@ -130,6 +141,57 @@ public class JusoApi {
 		return temp.toString();
 	}
 	
+	public List<String> getAddressSetByName(String name) throws IOException {
+		// 요청변수 설정
+		String currentPage = "0";
+		String countPerPage = "100";
+		String resultType = "json";
+		String confmKey = "devU01TX0FVVEgyMDIwMDEyMDE2MjcwNjEwOTQwNzE=";
+		String keyword = name;
+		String apiUrl = "http://www.juso.go.kr/addrlink/addrLinkApi.do?" + "currentPage=" + currentPage
+				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey="
+				+ confmKey + "&resultType=" + resultType;
+
+		URL url = new URL(apiUrl);
+		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+		StringBuffer sb = new StringBuffer();
+		String tempStr = null;
+		while (true) {
+			tempStr = br.readLine();
+			if (tempStr == null)
+				break;
+			sb.append(tempStr);
+		}
+		br.close();
+		int size=0;
+		List<String> addresslist = new LinkedList<String>();
+		try {
+			JSONParser jsonParse = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
+			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
+			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
+		    size=jsonArray.size();
+		    
+		    for(int i=0; i<size; i++) {
+				JSONObject personObject = (JSONObject) jsonArray.get(i);
+				String sp[]=personObject.get("roadAddrPart1").toString().split(" ");
+				String ad=sp[2];
+				System.out.println(ad);
+				addresslist.add(ad);
+				} 
+		}catch (Exception e) {
+			System.out.println("해당주소가 존재하지않습니다.");
+			e.printStackTrace();
+		}
+		Set Address = new HashSet<String>();
+		AddressUtil util = new AddressUtil();
+		for (int i = 0; i < addresslist.size(); i++) {
+			String ad=util.RemoveNumber(addresslist.get(i));
+			Address.add(ad);
+		}
+		List<String> setlist = new LinkedList<String>(Address);
+		return setlist;
+	}
 	
 //	xy좌표로 입력
 	public String getAddressByXY(String num) throws IOException {
