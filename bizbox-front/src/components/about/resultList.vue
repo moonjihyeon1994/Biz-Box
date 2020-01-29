@@ -44,13 +44,18 @@ export default {
         '음식': '',
         '부동산': '',
         '의료': '',
-        '관광여가오락': ''
+        '관광여가오락': '',
         // '선택업종': ''
+        'address': '',
+        'range': ''
       }
     }
   },
   mounted () {
-    axios.get('/storecount/%EA%B2%BD%EC%9D%B8%EB%A1%9C248-14/500')
+    this.info.address = '%EA%B2%BD%EC%9D%B8%EB%A1%9C248-14'
+    this.info.range = '500'
+    var getUrl = '/storecount/' + this.info.address + '/' + this.info.range
+    axios.get(getUrl)
       .then(res => {
         var jsonlarge = res.data.large
         // console.log(res.data.large)

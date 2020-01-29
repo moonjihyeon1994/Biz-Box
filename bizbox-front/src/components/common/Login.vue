@@ -21,21 +21,13 @@
 
       <input type="submit" value="Login" disabled />
       <input type="submit" value="Login" />
-      <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
-        <img src="@/assets/btn_google_dark.png" alt="" />
-      </div>
-      <!-- <a id="google_btn" href="">
-        <img src="@/assets/btn_google_dark.png" alt="" />
-      </a> -->
-      <!-- <a id="kakao_btn" href="https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://70.12.246.137:8080/kakao/login&response_type=code">
+
+      <a id="kakao_btn" @click="loginWithKakao">
         <img src="@/assets/btn_kakao.png" alt="" />
-      </a> -->
-      <!-- <button @click="loginWithKakao">
-        <img src="@/assets/btn_kakao.png" alt="" />
-      </button> -->
+      </a>
     </form>
-    <a id="kakao-login-btn" @click="loginWithKakao">
-      <img src="@/assets/btn_kakao.png" alt="" />
+    <a id="kakao-login-btn" @click="getInfo">
+      <button>get infomation, check console</button>
     </a>
   </div>
 </template>
@@ -44,41 +36,42 @@
 
 <script>
 import axios from 'axios'
+const storage = window.sessionStorage
+const ai = axios.create({
+  baseURL: 'http://70.12.246.137:8080/user/'
+})
 
 export default {
   name: 'login_test',
   data: () => {
     return {
-      res: ''
+      mydata: '',
+      token: ''
     }
   },
   methods: {
     loginWithKakao () {
-      // console.log('asdf')
-      // axios.get('https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://70.12.246.137:8080/kakao/login&response_type=code', (req, res) => {
-      //   res.header('Access-Control-Allow-Origin', '*')
-      // })
-      //   .then(response => {
-      //     // response.header('Access-Control-Allow-Origin', '*')
-      //     // console.log(this.response)
-      //     console.log(response.data)
-      //   })
-      //   .catch(e => {
-      //     console.log('error: ', e)
-      //   })
-      console.log("click")
+      console.log("Kakao login button clicked")
       Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37');
-      // 로그인 창을 띄웁니다.
       Kakao.Auth.login({
         success: function(authObj) {
-          const accessToken = authObj.access_token;
-          // console.log(accessToken)
-          // alert(JSON.stringify(authObj));
-          const geturl = 'http://70.12.246.137:8080/kakao/login?code=' + accessToken
-          console.log(geturl)
-          axios.get(geturl)
+          // const accessToken = authObj.access_token;
+          const refreshToken = authObj.refresh_token;
+          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
+          // console.log(getUrl)
+
+          storage.setItem('jwt-auth-token', '')
+          storage.setItem('login_user_name', '')
+          storage.setItem('login_user_email', '')
+
+          axios.get(getUrl)
             .then(res => {
-              console.log(res)
+              console.log(res.data)
+              if (res.data.status) {
+                storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
+                storage.setItem('login_user_name', res.data.name)
+                storage.setItem('login_user_email', res.data.email)
+              }
             })
         },
         fail: function(err) {
@@ -86,18 +79,20 @@ export default {
         }
       });
     },
-    onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log("Image URL: " + profile.getImageUrl());
-        console.log("Email: " + profile.getEmail());
-
-        // The ID token you need to pass to your backend:
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
+    getInfo() {
+      ai.post(
+        '/info',
+        {
+          email: storage.getItem('login_user_email')
+        },
+        {
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token')
+          }
+        }
+      ).then(res => {
+        console.log(res)
+      })
     }
   }
 }
@@ -176,7 +171,7 @@ button {
   border: 1px solid #bbb;
   border-radius: 3px;
   border: none;
-  /* background-color: #8bc34a; */
+  background-color: #8bc34a;
   color: #fff;
 }
 
