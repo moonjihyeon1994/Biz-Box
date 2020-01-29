@@ -1,0 +1,32 @@
+i.v-icon.notranslate.mdi.mdi-menu.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-account.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-information-outline.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
+    color: #ffffff;
+}
+
+div.v-toolbar__content {
+    color: #ffffff;
+    background-color: #455054;
+}
+
+div.v-navigation-drawer__content {
+    background-color: #455054;
+}
+
+div.v-list-item__title {
+    color: #ffffff;
+}
+
+div.v-list.v-sheet.v-sheet--tile.theme--dark.v-list--dense {
+    background-color: #455054;
+}

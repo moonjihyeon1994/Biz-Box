@@ -1,8 +1,33 @@
-.row {
-    justify-content: center;
+.searchbar {
     background-image: url('../../assets/ImgBanner.jpg');
+    height: 550px;
     width: 100%;
-    height: 450px;
     background-size: 100% 100%;
-    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+    color: #ffff
+}
+
+input {
+    width: 100%;
+    height: 2.25em;
+    line-height: 1.5;
+    color: #ffff;
+    border: 1px solid #ffff;
+}
+::placeholder{
+    color: #ffff
+}
+
+.search-item {
+    padding: 5px;
+    height: 2em;
+}
+
+.box {
+    height: 00px;
+    background-color: #455054;
+    max-width: 500px;
+    -webkit-align-items: center;
+    align-items: center;
 }
