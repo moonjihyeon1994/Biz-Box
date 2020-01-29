@@ -37,6 +37,11 @@ public class KakaoController {
 	
 	@Autowired
 	private UserService userService;
+//	
+//	@GetMapping("/oath")
+//	public ResponseEntity<Map<String, Object>> go(){
+//		return ;
+//	}
 	
 	@GetMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestParam("code") String code, @RequestParam("refresh_token") String refresh_token, HttpSession session, HttpServletResponse res) {
