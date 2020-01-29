@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,20 +38,13 @@ public class KakaoController {
 	
 	@Autowired
 	private UserService userService;
-//	
-//	@GetMapping("/oath")
-//	public ResponseEntity<Map<String, Object>> go(){
-//		return ;
-//	}
 	
-	@GetMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestParam("code") String code, @RequestParam("refresh_token") String refresh_token, HttpSession session, HttpServletResponse res) {
+	@RequestMapping("/login")
+	public ResponseEntity<Map<String, Object>> login(@RequestParam("refresh_token") String refresh_token, HttpSession session, HttpServletResponse res) {
 		//https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://70.12.246.137:8080/kakao/login&response_type=code
 		//https://kauth.kakao.com/oauth/authorize?client_id=64c7963937495c25ab3d30bc9f6e65e7&redirect_uri=http://localhost:8080/kakao/login&response_type=code
-		
-		System.out.println("code : " + code);
 		System.out.println("refresh_token : " + refresh_token);
-		String access_Token = kakao.getAccessToken(code);
+		String access_Token = kakao.getAccessToken(refresh_token);
         System.out.println("controller access_token : " + access_Token);
 		HashMap<String, Object>userInfo = kakao.getUserInfo(access_Token);
 		System.out.println(userInfo);
@@ -63,7 +57,7 @@ public class KakaoController {
 			email = (String) userInfo.get("email");
 	    }
 		
-		///////////////////////
+		// jwt 변환
 		Map<String, Object>resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {
@@ -71,7 +65,7 @@ public class KakaoController {
 			String token = jwtService.create(loginUser);
 			res.setHeader("jwt-auth-token", token);
 			resultMap.put("status", true);
-			resultMap.put("data", loginUser);
+			resultMap.put("data", token);
 			status = HttpStatus.ACCEPTED;
 		}catch(RuntimeException e) {
 			log.error("로그인 실패", e);

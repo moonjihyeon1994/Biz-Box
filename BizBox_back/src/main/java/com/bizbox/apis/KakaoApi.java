@@ -19,12 +19,11 @@ import com.google.gson.JsonParser;
 @Service
 @CrossOrigin({ "*" })
 public class KakaoApi {
-    private final String redirect_uri = "http://70.12.246.137:8080";
+    private final String redirect_uri = "http://70.12.246.137:8080/kakao/login";
     private final String client_id = "64c7963937495c25ab3d30bc9f6e65e7";
-	
-    public String getAccessToken (String authorize_code) {
+    
+    public String getAccessToken (String refresh_token) {
         String access_Token = "";
-        String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
         
         try {
@@ -38,11 +37,10 @@ public class KakaoApi {
             //    POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
+            sb.append("grant_type=refresh_token");
             sb.append("&client_id=");
             sb.append(client_id);
-            sb.append("&redirect_uri="+redirect_uri+"/kakao/login");
-            sb.append("&code=" + authorize_code);
+            sb.append("&refresh_token=" + refresh_token);
             bw.write(sb.toString());
             bw.flush();
             
@@ -65,10 +63,8 @@ public class KakaoApi {
             JsonElement element = parser.parse(result);
             
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
             
             System.out.println("access_token : " + access_Token);
-            System.out.println("refresh_token : " + refresh_Token);
             
             br.close();
             bw.close();
