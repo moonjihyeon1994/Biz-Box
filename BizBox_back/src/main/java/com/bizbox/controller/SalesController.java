@@ -40,11 +40,22 @@ public class SalesController {
 				System.out.println(string);
 			}
 			
+			
+			list= service.salesInfo(address);
+			if(list.isEmpty()) {
 			for(int i=0; i<adlist.size(); i++) {
 				list= service.salesInfo(adlist.get(i));
 				if(!list.isEmpty())break;
 			}
-			
+			}
+			if(list.isEmpty()) {
+				list.add(new SalesInformation
+				("0","0","0",address,"0","0","0",
+				 "0","0","0","0","0","0","0","0",
+				 "0","0","0","0","0","0","0","0",
+				 "0","0","0","0","0","0","0","0",
+				 "0","0","0"));
+			}
 			//System.out.println(list.toString());
 			return new ResponseEntity<Object>(list, HttpStatus.OK);
 		} catch (Exception e) {
