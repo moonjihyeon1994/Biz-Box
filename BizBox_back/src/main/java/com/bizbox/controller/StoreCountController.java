@@ -22,7 +22,6 @@ public class StoreCountController {
 	
 	@GetMapping("/storecount/{address}/{range}")
 	public ResponseEntity<Object> getStoreNumByCount(@PathVariable String address,@PathVariable String range){
-		PopulationByTime pbt;
 		try {
 			String num = api.getAddressByName(address);
 			String xy = api.getAddressByXY(num);
