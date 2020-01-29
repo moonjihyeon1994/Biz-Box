@@ -1,15 +1,15 @@
 <template>
-  <div class="row">
-    <SearchBar class="col-12"></SearchBar>
+  <div>
+    <Vsearch></Vsearch>
   </div>
 </template>
 
 <script>
-import SearchBar from './SearchBar.vue'
+import Vsearch from './Vsearch.vue'
 export default {
   name: 'Home',
   components: {
-    SearchBar
+    Vsearch
   }
 }
 </script>
