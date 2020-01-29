@@ -21,7 +21,9 @@
 
       <input type="submit" value="Login" disabled />
       <input type="submit" value="Login" />
-
+      <a id="signup" href="">
+        <button>SIGN UP</button>
+      </a>
       <a id="kakao_btn" @click="loginWithKakao">
         <img src="@/assets/btn_kakao.png" alt="" />
       </a>
