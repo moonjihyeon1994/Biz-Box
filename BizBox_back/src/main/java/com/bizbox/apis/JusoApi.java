@@ -404,4 +404,85 @@ public class JusoApi {
 
 		return jsonObject;
 	}
+	
+	public JSONObject findAllStore(String xy, String radius) throws IOException {
+		int idx = 1;
+		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		java.util.List<String> names = new ArrayList<String>();
+		while (true) {
+			String str = findStore(xy, radius, String.valueOf(idx));
+			idx++;
+			try {
+				JSONParser jsonParse = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParse.parse(str);
+
+				JSONObject header = (JSONObject) jsonObj.get("header");
+				String resultCode = (String) header.get("resultCode");
+				if (resultCode.equals("03"))
+					break;
+				JSONObject body = (JSONObject) jsonObj.get("body");
+				JSONArray itemsArray = (JSONArray) body.get("items");
+
+				for (int i = 0; i < itemsArray.size(); i++) {
+					JSONObject items = (JSONObject) itemsArray.get(i);
+					String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
+					String indsMclsNm = (String) items.get("indsMclsNm"); // 중분류
+					String indsSclsNm = (String) items.get("indsSclsNm"); // 소분류
+
+					indsLclsNm = indsLclsNm.replace("/", "");
+					indsMclsNm = indsMclsNm.replace("/", "");
+					indsMclsNm = indsMclsNm.replace("/", "");
+
+					if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
+						LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
+					} else {
+						LNm.put(indsLclsNm, 1);
+					}
+
+					if (storecount.containsKey(indsMclsNm)) {
+						if (storecount.get(indsMclsNm).containsKey(indsSclsNm)) {
+							storecount.get(indsMclsNm).put(indsSclsNm, storecount.get(indsMclsNm).get(indsSclsNm) + 1);
+						} else {
+							storecount.get(indsMclsNm).put(indsSclsNm, 1);
+						}
+					} else {
+						names.add(indsMclsNm);
+						storecount.put(indsMclsNm, new HashMap<String, Integer>());
+					}
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject1 = new JSONObject();
+		JSONObject jsonObject2 = new JSONObject();
+		for (int i = 0; i < storecount.size(); i++) {
+			String key1 = names.get(i);
+			JSONObject data = new JSONObject();
+			for (Map.Entry<String, Integer> entry : storecount.get(names.get(i)).entrySet()) {
+				String key2 = entry.getKey();
+				int value2 = entry.getValue();
+				data.put(key2, value2);
+			}
+			JSONArray array = new JSONArray();
+			array.add(data);
+
+			jsonObject1.put(key1, array);
+		}
+		jsonObject.put("small", jsonObject1);
+
+		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
+			String key = entry.getKey();
+			int value = entry.getValue();
+			jsonObject2.put(key, value);
+		}
+
+		jsonObject.put("large", jsonObject2);
+
+		return jsonObject;
+	}
 }
