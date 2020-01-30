@@ -230,6 +230,7 @@ header,
 hgroup,
 menu,
 nav,
+select,
 section {
   display: block;
 }
