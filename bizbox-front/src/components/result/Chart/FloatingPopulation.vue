@@ -2,10 +2,10 @@
   <div>
       <div id="search">
       <div id="searchOptions">
-        <button @click="setOpt1()" v-bind:style="btnStyle1">연령별 유동인구</button>
-        <button @click="setOpt2()" v-bind:style="btnStyle2">시간별 유동인구</button>
-        <button @click="setOpt3()" v-bind:style="btnStyle3">요일별 유동인구</button>
-        <button @click="setOpt4()" v-bind:style="btnStyle4">연도별 상권 변화 지표</button>
+        <button @click="setOpt1()" v-bind:style="btnStyle1" :disabled="loadingStatus">연령별 유동인구</button>
+        <button @click="setOpt2()" v-bind:style="btnStyle2" :disabled="loadingStatus">시간별 유동인구</button>
+        <button @click="setOpt3()" v-bind:style="btnStyle3" :disabled="loadingStatus">요일별 유동인구</button>
+        <button @click="setOpt4()" v-bind:style="btnStyle4" :disabled="loadingStatus">연도별 상권 변화 지표</button>
       </div>
       <input type="text" placeholder="검색하세요." v-model="key" @keyup.enter="getData()" />
       <button id="search-btn" @click="getData()">검색</button>
@@ -13,16 +13,21 @@
     <p id="search-result">검색된 결과 : {{ road }}</p>
     <hr />
     <div id="chart1">
-    <spinner :loading="loadingStatus"></spinner>
+      <div id="back" :style="allowDiv"></div>
+      <spinner :loading="loadingStatus"></spinner>
       <bar-chart
         v-if="searchOption === 1 || searchOption === 4"
         :chart-data="chartdata"
         :options="chartoptions"
+        width='500px'
+        height='300px'
       ></bar-chart>
       <line-chart
         v-if="searchOption === 2 || searchOption === 3"
         :chart-data="chartdata"
         :options="chartoptions"
+        width='500px'
+        height='300px'
       ></line-chart>
     </div>
     <div id="point">
@@ -54,21 +59,28 @@ export default {
       title: '연령별 유동인구',
       point: 0,
       btnStyle1: {
-        backgroundColor: '#d9d9d9'
+        backgroundColor: '#d9d9d9',
+        cursor: 'pointer'
       },
       btnStyle2: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        cursor: 'pointer'
       },
       btnStyle3: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        cursor: 'pointer'
       },
       btnStyle4: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        cursor: 'pointer'
       },
       chartStyle: {
         display: 'contents'
       },
-      loadingStatus: false
+      loadingStatus: false,
+      allowDiv: {
+        display: 'none'
+      }
     }
   },
   methods: {
@@ -134,6 +146,11 @@ export default {
     },
     getData () {
       this.loadingStatus = true
+      this.allowDiv.display = 'block'
+      this.btnStyle1.cursor = 'not-allowed'
+      this.btnStyle2.cursor = 'not-allowed'
+      this.btnStyle3.cursor = 'not-allowed'
+      this.btnStyle4.cursor = 'not-allowed'
 
       if (this.searchOption === 1) {
         axios
@@ -142,9 +159,6 @@ export default {
             this.result = res.data.pbl
             this.road = this.result.f
             this.point = res.data.point
-          })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -191,7 +205,7 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               scales: {
                 yAxes: [
                   {
@@ -214,7 +228,11 @@ export default {
             }
 
             this.loadingStatus = false
-            this.chartStyle.display = 'block'
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       } else if (this.searchOption === 2) {
         axios
@@ -223,9 +241,6 @@ export default {
             this.result = res.data.pbt
             this.road = this.result.f
             this.point = res.data.point
-          })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -256,7 +271,7 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               scales: {
                 yAxes: [
                   {
@@ -279,7 +294,11 @@ export default {
             }
 
             this.loadingStatus = false
-            this.chartStyle.display = 'block'
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       } else if (this.searchOption === 3) {
         axios
@@ -288,9 +307,6 @@ export default {
             this.result = res.data.pbt
             this.road = this.result.f
             this.point = res.data.point
-          })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -323,7 +339,7 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               scales: {
                 yAxes: [
                   {
@@ -346,7 +362,11 @@ export default {
             }
 
             this.loadingStatus = false
-            this.chartStyle.display = 'block'
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       } else {
         axios
@@ -355,9 +375,6 @@ export default {
             this.result = res.data.cblist
             this.road = this.result[0].d
             this.point = res.data.point
-          })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
           })
           .finally(() => {
             this.chartdata = {
@@ -378,7 +395,7 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               scales: {
                 yAxes: [
                   {
@@ -401,6 +418,12 @@ export default {
             }
 
             this.loadingStatus = false
+            this.allowDiv.display = 'none'
+
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       }
     }
@@ -410,14 +433,26 @@ export default {
 
 <style scoped>
 #chart1 {
+  position: relative;
   width: 500px;
+  height: 300px;
+  overflow: hidden;
+}
+
+#back {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
 }
 
 #point {
+  border: 1px solid black;
   border-radius: 5px;
   width: 500px;
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
   top: 5px;
   font-size: 24px;
   margin-top: 10px;
