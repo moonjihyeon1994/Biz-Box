@@ -6,6 +6,7 @@
 </template>
 <script>
 import Nav from '@/components/common/Nav.vue'
+
 export default {
   name: 'app',
   components: {
