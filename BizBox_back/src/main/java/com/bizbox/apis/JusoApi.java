@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
 import com.bizbox.utils.*;
+
 @Service
 public class JusoApi {
 
@@ -272,19 +273,19 @@ public class JusoApi {
 			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
 			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
 			JSONObject xyObject = (JSONObject) jsonArray.get(0);
-			entX = (String)xyObject.get("entX");
-			entY = (String)xyObject.get("entY");
-		}catch (Exception e) {
+			entX = (String) xyObject.get("entX");
+			entY = (String) xyObject.get("entY");
+		} catch (Exception e) {
 			System.out.println("xy좌표 찾기 오류");
 			e.printStackTrace();
 		}
-		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5",
-				"+ellps=GRS80", "+units=m", "+x_0=1000000", "+y_0=2000000", "+k=0.9996" };
+		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5", "+ellps=GRS80", "+units=m",
+				"+x_0=1000000", "+y_0=2000000", "+k=0.9996" };
 
 		Point2D.Double srcProjec = null;
 		Point2D.Double dstProjec = null;
 		Projection proj = ProjectionFactory.fromPROJ4Specification(proj4_w);
-		srcProjec = new Point2D.Double(Double.valueOf(entX) ,Double.valueOf(entY));
+		srcProjec = new Point2D.Double(Double.valueOf(entX), Double.valueOf(entY));
 		dstProjec = proj.inverseTransform(srcProjec, new Point2D.Double());
 		StringBuilder temp = new StringBuilder();
 		temp.append(dstProjec.x);
@@ -418,7 +419,7 @@ public class JusoApi {
 		return jsonObject;
 	}
 
-	public HashMap<String,Integer> findStoreToSpring(String xy, String radius) throws IOException {
+	public HashMap<String, Integer> findStoreToSpring(String xy, String radius) throws IOException {
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
@@ -443,16 +444,24 @@ public class JusoApi {
 					String indsMclsNm = (String) items.get("indsMclsNm"); // 중분류
 					String indsSclsNm = (String) items.get("indsSclsNm"); // 소분류
 
-					indsLclsNm = indsLclsNm.replace("/", "");
-					indsMclsNm = indsMclsNm.replace("/", "");
-					indsMclsNm = indsMclsNm.replace("/", "");
-
-					if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
-						LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
-					} else {
-						LNm.put(indsLclsNm, 1);
+					indsLclsNm = indsLclsNm.replace("/", " ");
+					indsMclsNm = indsMclsNm.replace("/", " ");
+					indsMclsNm = indsMclsNm.replace("/", " ");
+					if (indsLclsNm.contains("음식") ||
+							indsLclsNm.contains("오락")  	||
+							indsLclsNm.contains("스포츠") || 
+							indsLclsNm.contains("패션") 	||
+							indsLclsNm.contains("의류") 	||
+							indsLclsNm.contains("편의점")	||
+							indsLclsNm.contains("운동") 
+							
+							) {
+						if (LNm.containsKey(indsMclsNm)) { // 대분류 당 갯수
+							LNm.put(indsMclsNm, LNm.get(indsMclsNm) + 1);
+						} else {
+							LNm.put(indsMclsNm, 1);
+						}
 					}
-
 					if (storecount.containsKey(indsMclsNm)) {
 						if (storecount.get(indsMclsNm).containsKey(indsSclsNm)) {
 							storecount.get(indsMclsNm).put(indsSclsNm, storecount.get(indsMclsNm).get(indsSclsNm) + 1);
@@ -485,8 +494,8 @@ public class JusoApi {
 //
 //			jsonObject1.put(key1, array);
 //		}
-		
-		//jsonObject.put("small", jsonObject1);
+
+		// jsonObject.put("small", jsonObject1);
 
 //		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
 //			String key = entry.getKey();
@@ -494,7 +503,7 @@ public class JusoApi {
 //			jsonObject2.put(key, value);
 //		}
 
-		//jsonObject.put("large", jsonObject2);
+		// jsonObject.put("large", jsonObject2);
 
 		return LNm;
 	}
