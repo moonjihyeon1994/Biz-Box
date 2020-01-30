@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app dark color="#455054">
+    <v-app-bar app dark color="#041b2d">
       <v-toolbar-title style="width: 300px">
         <span>BizBox</span>
       </v-toolbar-title>
