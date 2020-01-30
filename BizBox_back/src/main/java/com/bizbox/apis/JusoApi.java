@@ -1,12 +1,5 @@
 package com.bizbox.apis;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 27990971b08064312c3c7112e9d028d2493d6d0d
-=======
->>>>>>> 9d7b9fdfe8596b01e7feb789bfdda1105c815a5d
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,14 +13,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import java.util.Set;
->>>>>>> 27990971b08064312c3c7112e9d028d2493d6d0d
-=======
-import java.util.Set;
->>>>>>> 9d7b9fdfe8596b01e7feb789bfdda1105c815a5d
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
