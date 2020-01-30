@@ -20,7 +20,7 @@ import com.bizbox.Service.PopulationByService;
 import com.bizbox.vo.Changebusiness;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
-
+import com.bizbox.utils.*;
 import net.bytebuddy.dynamic.scaffold.MethodGraph.Linked;
 
 import com.bizbox.apis.*;
@@ -34,9 +34,9 @@ public class ChangeBusinessController {
 	
 	@GetMapping("/getHistory/{dong}")
 	public ResponseEntity<Object> getHistory(@PathVariable String dong){
-		
+		String predongcode="";
 		int Point=0;
-		List<Changebusiness> precblist;
+		List<Changebusiness> precblist = new LinkedList<Changebusiness>();
 		List<Changebusiness> cblist = new LinkedList();
 		int live[] = new int[6];
 		int die[] = new int[6];
@@ -48,17 +48,22 @@ public class ChangeBusinessController {
 			cblist.add(new Changebusiness((2014+i)+""));
 		}
 		JusoApi api = new JusoApi();
-		
+		AddressUtil util = new AddressUtil();
+		List<String> donglist = new LinkedList<String>();
 		try {
-			String predongcode=api.getAddressByName(dong).split(",")[11];//동 이름 가져옴
-			predongcode=api.getAddressByName(predongcode).split(",")[5];
-			String dongcode=predongcode.substring(0,predongcode.length()-1);
-			System.out.println("휴휴:"+dongcode);
-			precblist = service.getChangeHistory(dongcode);
-			while(precblist.size()==0 && dongcode.length()>0) {
-				dongcode=dongcode.substring(0,dongcode.length()-1);
-				System.out.println("휴휴2:"+dongcode);
-				precblist = service.getChangeHistory(dongcode);
+			donglist=api.getDongSetByName(dong);
+			for (String string : donglist) {
+				System.out.println(string);
+			}
+
+			for (String string : donglist) {
+				System.out.println("동이름:"+string);
+				precblist = service.getChangeHistory(string);
+				predongcode=string;
+				if(!precblist.isEmpty())break;
+			}
+			if(precblist.isEmpty()) {
+				predongcode="죄송합니다."+" \" "+predongcode+" \" "+"에 대한 데이터가 존재 하지않습니다.";
 			}
 			for (Changebusiness changebusiness : precblist) {
 				int index=0;
