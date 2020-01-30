@@ -38,9 +38,24 @@ public class IndustrySuggestionsController {
 	@Autowired
 	SalesService saliesservice;
 	
-	@GetMapping("/Industry/{address}")
-	public ResponseEntity<Object> suggestionIndustry(@PathVariable String address){
+	@GetMapping("/Industry/{address}/{range}")
+	public ResponseEntity<Object> suggestionIndustry(@PathVariable String address,@PathVariable String range){
 		
+		try {
+			String num = api.getAddressByName(address);
+			String xy = api.getAddressByXY(num);
+			HashMap<String,Integer> total = api.findStoreToSpring(xy, range);
+			
+			for (Map.Entry<String, Integer> entry : total.entrySet()) {
+			String key = entry.getKey();
+			int value = entry.getValue();
+			System.out.println(key +" "+value);
+		}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		
 		
