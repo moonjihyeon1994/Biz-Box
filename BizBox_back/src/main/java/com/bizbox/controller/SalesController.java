@@ -26,41 +26,16 @@ public class SalesController {
 	
 	@Autowired
 	SalesService service;
-	
+
 	@GetMapping("/{address}")
 	public ResponseEntity<Object> getSalesInfo(@PathVariable String address){
-		List<SalesInformation> list = new LinkedList<SalesInformation>();
 		try {
-			AddressUtil util= new AddressUtil();
-			JusoApi juso= new JusoApi();
-			String preaddress = util.RemoveNumber(address);
-			
-			List<String> adlist=juso.getAddressSetByName(preaddress);
-			for (String string : adlist) {
-				System.out.println(string);
-			}
-			
-			
-			list= service.salesInfo(address);
-			if(list.isEmpty()) {
-			for(int i=0; i<adlist.size(); i++) {
-				list= service.salesInfo(adlist.get(i));
-				if(!list.isEmpty())break;
-			}
-			}
-			if(list.isEmpty()) {
-				list.add(new SalesInformation
-				("0","0","0",address,"0","0","0",
-				 "0","0","0","0","0","0","0","0",
-				 "0","0","0","0","0","0","0","0",
-				 "0","0","0","0","0","0","0","0",
-				 "0","0","0"));
-			}
-			//System.out.println(list.toString());
+			List<SalesInformation> list =service.salesInfosub(address);
 			return new ResponseEntity<Object>(list, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
 		}
 	}
+
 }

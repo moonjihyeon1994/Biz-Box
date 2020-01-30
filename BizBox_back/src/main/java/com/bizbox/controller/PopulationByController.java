@@ -48,6 +48,7 @@ public class PopulationByController {
 			AddressUtil util = new AddressUtil();
 			String RemovedAddress = util.RemoveNumber(address);
 			String predoroname = api.getAddressByName(RemovedAddress).split(",")[11];// 도로명
+			System.out.println(predoroname);
 			adlist = api.getAddressSetByName(RemovedAddress);
 			for (String string : adlist) {
 				System.out.println(string);
