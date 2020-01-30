@@ -1,0 +1,12 @@
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #428cd4;
+    color: #ffff;
+    font-family: inherit;
+}
+
+select::-ms-expand {
+    display: none;
+}
