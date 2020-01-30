@@ -2,26 +2,35 @@ div.hello h3 {
     font-weight: bold;
 }
 
+ul li {
+    float: left;
+}
+
 ul li a {
     color: #594F4F;
     justify-content: center;
+    
 }
 
 div.v-list.v-sheet.v-sheet--title-theme--light {
-    background-color: #E5FCC2;
+    background-color: #455054;
 }
 
 div.v-list-item.v-list-item--link.theme--light {
     color: #745ebd;
+    
 }
 
 
 a.link1.v-tab--active.v-tab {
     color: #594F4F;
-    background-color: #E5FCC2;
+    background-color: #FFFF;
 }
 
-div.v-slide-group__content.v-tabs-bar__content {
-    background-color:#9DE0AD;
-    color: #E5FCC2
+a.link1.v-tab {
+    color: #ffff;
+}
+
+div.v-tabs {
+    color: #ffff
 }
