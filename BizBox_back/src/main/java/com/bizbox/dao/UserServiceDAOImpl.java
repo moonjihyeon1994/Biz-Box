@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bizbox.vo.User;
 
-import lombok.extern.slf4j.Slf4j;
 @Repository
-@Slf4j 
 public class UserServiceDAOImpl implements UserServiceDAO {
 
 	private final String name ="com.bizbox.mapper.userServiceMapper.";
@@ -17,15 +15,17 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 	SqlSession session;
 	
 	@Override
-	public int singupUser(User user) {
+	public int singupUser(User user) throws Exception{
 		return session.insert(name+"singupUser", user);
 	}
 
 	@Override
-	public User loginUser(User user) {
-//		String salt = 이것을 email로 통해 받아온다
-		
-		
-		return null;
+	public String getPw(String email) throws Exception{
+		return session.selectOne(name+"getPw", email);
+	}
+
+	@Override
+	public User login(User user) throws Exception {
+		return session.selectOne(name+"login",user);
 	}
 }
