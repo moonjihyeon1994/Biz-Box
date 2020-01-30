@@ -40,7 +40,7 @@ public class PopulationByServiceImpl implements PopulationByService{
 
 	@Override
 	public String getDongCodeList(String predoroname) {
-		// TODO Auto-generated method stub
+		log.trace("address",predoroname);
 		return dao.getDongCodeList(predoroname);
 	}
 
