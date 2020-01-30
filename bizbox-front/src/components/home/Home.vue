@@ -1,6 +1,8 @@
 <template>
-  <div>
+  <div id='home' class="mar-0">
+    <div class="searchbox">
     <Vsearch></Vsearch>
+    </div>
   </div>
 </template>
 

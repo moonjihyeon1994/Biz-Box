@@ -2,7 +2,6 @@
     text-align: center;
     color: #3c2f2f;
     background-color: #FFFF;
-    height: 800px;
 }
 
 .container {
@@ -10,38 +9,62 @@
     display: flex;
     -webkit-justify-content: center;
     justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
     margin: 0;
     padding: 0 0;
     width: 100%;
-    margin-top: 56px;
-}
-
-.align-itme-center {
-    -webkit-align-items: center;
-    align-items: center;
 }
 
 .flex-column-1 {
     -webkit-flex: 1;
     flex: 1;
+    margin: 0 8px;
+    width: 100%;
+    -webkit-align-items: center;
+    align-items: center;
 }
 
 .flex-column-2 {
     -webkit-flex: 2;
     flex: 2;
+    margin: 8px;
+    -webkit-align-items: center;
+    align-items: center;
 }
 
 .flex-column-3 {
     -webkit-flex: 3;
     flex: 3;
+    margin: 8px;
+    -webkit-align-items: center;
+    align-items: center;
 }
 
 .flex-column-4 {
     -webkit-flex: 4;
     flex: 4;
+    margin: 8px;
+    -webkit-align-items: center;
+    align-items: center;
 }
 
 .flex-column-5 {
     -webkit-flex: 5;
     flex: 5;
+    margin: 8px;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+h1 {
+    color: #000000
+}
+
+.m-8px {
+    margin: 8 8 8 8;
+}
+
+div.v-input__control {
+    color: #455054;
 }

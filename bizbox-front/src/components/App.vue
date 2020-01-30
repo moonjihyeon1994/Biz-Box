@@ -1,8 +1,8 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app dark>
+    <v-app-bar app dark color="#455054">
       <v-toolbar-title style="width: 300px">
-        <span>Biz Box</span>
+        <span>BizBox</span>
       </v-toolbar-title>
       <v-spacer />
       <v-list dense v-for="nav in navList" :key="nav.routeto">
@@ -23,14 +23,27 @@ export default {
   name: 'app',
   data: () => ({
     drawer: null,
+    titleon: true,
     navList: [
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
       { routeto: '/about', icon: 'mdi-account', title: 'Login' }
     ]
-  })
+  }),
+  methods: {
+    onResize () {
+      if (window.innerWidth > 700) {
+        this.titleon = true
+      } else {
+        this.titleon = false
+      }
+    }
+  },
+  created () {
+    this.onResize()
+  }
 }
 </script>
 
 <style src="@/components/common/common.css"></style>
-<style src="@/components/common/Navbar.css"></style>
+<style scoped src="@/components/common/Navbar.css"></style>

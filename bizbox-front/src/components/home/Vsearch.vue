@@ -1,21 +1,17 @@
 <template>
-  <div class="container">
-    <Vselect :items="items1" :labname="labname1" class="flex-column-1"></Vselect>
-    <Vselect :items="items2" :labname="labname2" class="flex-column-1"></Vselect>
+  <div class="flex-column-1">
+    <div class="container searchbox">
+      <h1><strong>비즈박스</strong>에서<br>상권정보를 검색하세요</h1>
+      <SearchForm></SearchForm>
+    </div>
   </div>
 </template>
 
 <script>
-import Vselect from '@/components/common/Vselect.vue'
+import SearchForm from '@/components/home/SearchForm.vue'
 export default {
-  data: () => ({
-    labname1: '시/도',
-    items1: ['서울', '부산', '울산'],
-    labname2: '구/군',
-    items2: ['강남구', '강서구', '강북구']
-  }),
   components: {
-    Vselect
+    SearchForm
   }
 }
 </script>
