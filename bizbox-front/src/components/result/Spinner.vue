@@ -20,11 +20,12 @@ export default {
 
 <style>
 .lds {
+    z-index: 3;
     display: inline-block;
     position: relative;
     width: 64px;
     height: 64px;
-    top: 250px;
+    top: 110px;
     left: 0;
 }
 

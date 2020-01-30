@@ -2,10 +2,10 @@
   <div>
       <div id="search">
       <div id="searchOptions">
-        <button @click="setOpt1()" v-bind:style="btnStyle1">연령별 매출</button>
-        <button @click="setOpt2()" v-bind:style="btnStyle2">시간별 매출</button>
-        <button @click="setOpt3()" v-bind:style="btnStyle3">요일별 매출</button>
-        <button @click="setOpt4()" v-bind:style="btnStyle4">성별 매출</button>
+        <button @click="setOpt1()" v-bind:style="btnStyle1" :disabled="loadingStatus">연령별 매출</button>
+        <button @click="setOpt2()" v-bind:style="btnStyle2" :disabled="loadingStatus">시간별 매출</button>
+        <button @click="setOpt3()" v-bind:style="btnStyle3" :disabled="loadingStatus">요일별 매출</button>
+        <button @click="setOpt4()" v-bind:style="btnStyle4" :disabled="loadingStatus">성별 매출</button>
       </div>
       <input type="text" placeholder="검색하세요." v-model="key" @keyup.enter="getData()" />
       <button id="search-btn" @click="getData()">검색</button>
@@ -13,23 +13,27 @@
     <p id="search-result">검색된 결과 : {{ road }}</p>
     <hr />
     <div id="chart1">
+      <div id="back" :style="allowDiv"></div>
       <spinner :loading="loadingStatus"></spinner>
       <horizontal-bar-chart
         v-if="searchOption === 1"
         :chart-data="chartdata"
         :options="chartoptions"
+        width='500px'
+        height='300px'
       ></horizontal-bar-chart>
       <line-chart
         v-if="searchOption === 2"
         :chart-data="chartdata"
         :options="chartoptions"
+        width='500px'
+        height='300px'
       ></line-chart>
       <pie-chart v-if="searchOption === 3 || searchOption == 4"
         :chart-data="chartdata"
-        :options="chartoptions"></pie-chart>
-    </div>
-    <div id="point">
-      <p>{{ point }}</p>
+        :options="chartoptions"
+        width='500px'
+        height='300px'></pie-chart>
     </div>
   </div>
 </template>
@@ -59,18 +63,25 @@ export default {
       title: '연령별 매출',
       point: 0,
       btnStyle1: {
-        backgroundColor: '#d9d9d9'
+        backgroundColor: '#d9d9d9',
+        cursor: 'pointer'
       },
       btnStyle2: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        cursor: 'pointer'
       },
       btnStyle3: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        cursor: 'pointer'
       },
       btnStyle4: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        cursor: 'pointer'
       },
-      loadingStatus: false
+      loadingStatus: false,
+      allowDiv: {
+        display: 'none'
+      }
     }
   },
   methods: {
@@ -136,6 +147,11 @@ export default {
     },
     getData () {
       this.loadingStatus = true
+      this.allowDiv.display = 'block'
+      this.btnStyle1.cursor = 'not-allowed'
+      this.btnStyle2.cursor = 'not-allowed'
+      this.btnStyle3.cursor = 'not-allowed'
+      this.btnStyle4.cursor = 'not-allowed'
 
       if (this.searchOption === 1) {
         let sumOf10 = 0
@@ -168,9 +184,6 @@ export default {
             sumOf50 /= 100000000
             sumOf60 /= 100000000
           })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
-          })
           .finally(() => {
             this.chartdata = {
               labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
@@ -192,7 +205,7 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               scales: {
                 yAxes: [
                   {
@@ -215,6 +228,11 @@ export default {
             }
 
             this.loadingStatus = false
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       } else if (this.searchOption === 2) {
         let sum1 = 0
@@ -247,9 +265,6 @@ export default {
             sum5 /= 100000000
             sum6 /= 100000000
           })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
-          })
           .finally(() => {
             this.chartdata = {
               labels: [
@@ -279,7 +294,7 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               scales: {
                 yAxes: [
                   {
@@ -302,6 +317,11 @@ export default {
             }
 
             this.loadingStatus = false
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       } else if (this.searchOption === 3) {
         let sum1 = 0
@@ -337,9 +357,6 @@ export default {
             sum6 /= 100000000
             sum7 /= 100000000
           })
-          .catch(err => {
-            alert(err, '검색어를 확인해주세요.')
-          })
           .finally(() => {
             this.chartdata = {
               labels: [
@@ -370,10 +387,15 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false
+              maintainAspectRatio: true
             }
 
             this.loadingStatus = false
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       } else {
         let sumWoman = 0
@@ -391,8 +413,6 @@ export default {
 
             sumWoman /= 100000000
             sumMan /= 100000000
-          }).catch(err => {
-            alert(err)
           }).finally(() => {
             this.chartdata = {
               labels: [
@@ -413,10 +433,15 @@ export default {
 
             this.chartoptions = {
               responsive: true,
-              maintainAspectRatio: false
+              maintainAspectRatio: true
             }
 
             this.loadingStatus = false
+            this.allowDiv.display = 'none'
+            this.btnStyle1.cursor = 'pointer'
+            this.btnStyle2.cursor = 'pointer'
+            this.btnStyle3.cursor = 'pointer'
+            this.btnStyle4.cursor = 'pointer'
           })
       }
     }
@@ -430,20 +455,23 @@ export default {
 }
 
 #chart1 {
+  position: relative;
   width: 500px;
+  height: 300px;
+  overflow: hidden;
+  margin-bottom: 100px;
 }
 
-#point {
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 500px;
-  height: 50px;
-  line-height: 50px;
-  top: 5px;
-  font-size: 24px;
-  margin-top: 10px;
-  margin-bottom: 50px;
-  background-color: white;
+#back {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+}
+
+#back:hover {
+  cursor: not-allowed;
 }
 
 #searchOptions {
