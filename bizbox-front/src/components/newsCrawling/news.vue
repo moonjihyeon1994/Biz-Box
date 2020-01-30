@@ -47,4 +47,7 @@ export default {
         size: 2em;
         text-shadow: 0 0 12px;
       }
+.newsrow span {
+        size: 10px;
+      }
 </style>
