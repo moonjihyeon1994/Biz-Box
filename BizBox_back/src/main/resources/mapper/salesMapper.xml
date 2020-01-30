@@ -7,6 +7,6 @@
 	<select id="salesInfo" parameterType="String" resultType="sales">
 		select *, G/AF as AG, G/H as AH from salesinformation
 		where d like concat('%',#{address},'%')
-		order by a,f limit 1
+		order by a,f 
 	</select>
 </mapper>
