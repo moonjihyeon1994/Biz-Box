@@ -35,9 +35,12 @@
 </template>
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 
 <script>
 import axios from 'axios'
+import router from'../../router'
 const storage = window.sessionStorage
 const ai = axios.create({
   baseURL: 'http://70.12.247.78:8080/user/'
@@ -72,11 +75,11 @@ export default {
               console.log(res.data)
               if (res.data.status) {
                 storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
-                storage.setItem('login_user_name', res.data.name)
-                storage.setItem('login_user_email', res.data.email)
+                storage.setItem('login_user_name', res.data.data.name)
+                storage.setItem('login_user_email', res.data.data.email)
                 console.log(storage)
               }
-              // router.push('/')
+              router.push('/')
             })
         },
         fail: function(err) {
