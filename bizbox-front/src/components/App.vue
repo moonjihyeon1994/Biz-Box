@@ -27,7 +27,7 @@ export default {
     navList: [
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
-      { routeto: '/about', icon: 'mdi-account', title: 'Login' }
+      { routeto: '/login', icon: 'mdi-account', title: 'Login' }
     ]
   }),
   methods: {
