@@ -1,20 +1,48 @@
 <template>
-<div class="row">
-  <div class="col-4">
-    <h1>col 3</h1>
-  </div>
-  <div class="col-9">
-    <h1>Hi this is result</h1>
-  </div>
-</div>
-
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <hr />
+        <chart></chart>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
-export default {}
-</script>
-<style scoped>
-  .item1 {
-    grid-row: 1 / 6 / 1/ 2;
+// @ is an alias to /src
+import Chart from './Chart'
+
+export default {
+  name: 'result',
+  components: {
+    Chart
   }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.home {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+h1,
+h2 {
+  font-weight: normal;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+  text-decoration: underline;
+}
 </style>
