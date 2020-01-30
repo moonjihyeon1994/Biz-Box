@@ -33,6 +33,7 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user, HttpServletResponse res) {
+		System.out.println(user.toString());
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {

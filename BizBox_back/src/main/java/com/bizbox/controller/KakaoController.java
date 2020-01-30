@@ -60,11 +60,13 @@ public class KakaoController {
 		try {
 			User temp = userService.checkUser(newUser);
 			if(temp!=null) {	//기존회원이면
+				System.out.println("기존회원");
 				String token = jwtService.create(temp);
 				res.setHeader("jwt-auth-token", token);
 				resultMap.put("status", true);
 				resultMap.put("data", temp);
 			}else {
+				System.out.println("가입하는중");
 				userService.socialSingupUser(newUser);
 				temp = userService.checkUser(newUser);
 				String token = jwtService.create(temp);
