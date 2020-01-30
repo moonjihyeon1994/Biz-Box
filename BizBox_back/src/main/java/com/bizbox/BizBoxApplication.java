@@ -24,8 +24,10 @@ public class BizBoxApplication implements WebMvcConfigurer{
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(jwtInterceptor).addPathPatterns("/kakao/**")
-				.excludePathPatterns(Arrays.asList("/kakao/login/**"));
+		registry.addInterceptor(jwtInterceptor).addPathPatterns("/user/**")
+				.excludePathPatterns(Arrays.asList("/kakao/login/**"))
+				.excludePathPatterns(Arrays.asList("/user/login/**"))
+				.excludePathPatterns(Arrays.asList("/user/signup/**"));
 	}
 	
 	@Bean

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class JwtInterceptor implements HandlerInterceptor{
+	
 	@Autowired
 	private JwtService jwtService;
 	
@@ -21,12 +22,10 @@ public class JwtInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		System.out.println(request.getMethod()+" : "+request.getServletPath());
-		
 		if(request.getMethod().equals("OPTIONS")) {
 			return true;
 		}else {
 			String token = request.getHeader("jwt-auth-token");
-			System.out.println(token);
 			if(token != null && token.length() > 0) {
 				jwtService.checkValid(token);
 				log.trace("토큰 사용 가능: {}", token);
