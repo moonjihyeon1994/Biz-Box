@@ -23,6 +23,9 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 
 	@Override
 	public User loginUser(User user) {
+//		String salt = 이것을 email로 통해 받아온다
+		
+		
 		return null;
 	}
 }

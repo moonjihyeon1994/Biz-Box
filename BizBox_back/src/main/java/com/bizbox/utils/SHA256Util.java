@@ -4,6 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class SHA256Util {
 	public static String getEncrypt(String source, String salt) {
 		return getEncrypt(source, salt.getBytes());
