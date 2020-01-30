@@ -21,9 +21,9 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public int singupUser(User user) {
-		String salt = shaUtil.generateSalt();
+		String salt = shaUtil.generateSalt();	//salt생성
 		String pw = user.getPw();
-		pw = shaUtil.getEncrypt(pw, salt);
+		pw = shaUtil.getEncrypt(pw, salt);	//생성된 salt를 pw와 조합해서 암호화
 		
 		user.setPw(pw);
 		return dao.singupUser(user);

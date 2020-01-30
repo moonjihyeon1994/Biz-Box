@@ -14,10 +14,11 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.stereotype.Service;
 
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
-
+@Service
 public class JusoApi {
 	
 //	도로명주소로 입력
@@ -124,7 +125,6 @@ public class JusoApi {
 		}catch (Exception e) {
 			System.out.println("해당주소가 존재하지않습니다.");
 			e.printStackTrace();
-			
 		}
 		System.out.println(size);
 		return temp.toString();
@@ -158,14 +158,27 @@ public class JusoApi {
 			sb.append(tempStr);
 		}
 		br.close();
-		
+		String entX = "";
+		String entY = "";
+		try {
+			JSONParser jsonParse = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
+			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
+			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
+			JSONObject xyObject = (JSONObject) jsonArray.get(0);
+			entX = (String)xyObject.get("entX");
+			entY = (String)xyObject.get("entY");
+		}catch (Exception e) {
+			System.out.println("xy좌표 찾기 오류");
+			e.printStackTrace();
+		}
 		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5",
 				"+ellps=GRS80", "+units=m", "+x_0=1000000", "+y_0=2000000", "+k=0.9996" };
 
 		Point2D.Double srcProjec = null;
 		Point2D.Double dstProjec = null;
 		Projection proj = ProjectionFactory.fromPROJ4Specification(proj4_w);
-		srcProjec = new Point2D.Double(942382.1170934895 ,1944406.216968163);
+		srcProjec = new Point2D.Double(Double.valueOf(entX) ,Double.valueOf(entY));
 		dstProjec = proj.inverseTransform(srcProjec, new Point2D.Double());
 		StringBuilder temp = new StringBuilder();
 		temp.append(dstProjec.x);
@@ -202,7 +215,6 @@ public class JusoApi {
 		while ((line = rd.readLine()) != null) {
 			sb.append(line);
 		}
-		
 		rd.close();
 		conn.disconnect();
 		return sb.toString();
