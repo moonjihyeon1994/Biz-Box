@@ -24,7 +24,8 @@ export default {
     position: relative;
     width: 64px;
     height: 64px;
-    top: 200px;
+    top: 250px;
+    left: 0;
 }
 
 .lds div {
