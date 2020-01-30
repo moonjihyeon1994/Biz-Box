@@ -28,7 +28,7 @@
         <img src="@/assets/btn_kakao.png" alt="" />
       </a>
     </form>
-    <a id="kakao-login-btn" @click="getInfo">
+    <a @click="getInfo">
       <button>get infomation, check console</button>
     </a>
   </div>
@@ -40,11 +40,11 @@
 import axios from 'axios'
 const storage = window.sessionStorage
 const ai = axios.create({
-  baseURL: 'http://70.12.246.137:8080/user/'
+  baseURL: 'http://70.12.247.78:8080/user/'
 })
 
 export default {
-  name: 'login_test',
+  name: 'login',
   data: () => {
     return {
       mydata: '',
@@ -59,12 +59,13 @@ export default {
         success: function(authObj) {
           // const accessToken = authObj.access_token;
           const refreshToken = authObj.refresh_token;
-          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
-          // console.log(getUrl)
+          const getUrl = 'http://70.12.247.78:8080/kakao/login?refresh_token=' + refreshToken
+          console.log('Login success')
 
           storage.setItem('jwt-auth-token', '')
           storage.setItem('login_user_name', '')
           storage.setItem('login_user_email', '')
+          console.log(storage)
 
           axios.get(getUrl)
             .then(res => {
@@ -73,7 +74,9 @@ export default {
                 storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
                 storage.setItem('login_user_name', res.data.name)
                 storage.setItem('login_user_email', res.data.email)
+                console.log(storage)
               }
+              // router.push('/')
             })
         },
         fail: function(err) {
