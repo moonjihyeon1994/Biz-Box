@@ -21,14 +21,15 @@
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="About">About</router-link></li>
         <li><router-link to="Result">Result</router-link></li>
-        <li><router-link to="Login">Login</router-link></li>
+        <li>Login</li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script>
-export default {}
+export default {
+}
 </script>
 
 <style scoped src="@/components/common/Nav.css"></style>
