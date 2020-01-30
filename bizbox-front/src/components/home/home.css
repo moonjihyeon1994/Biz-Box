@@ -7,8 +7,9 @@
 }
 
 .searchbox {
-    height: 600px;
-    background-image: url("../../assets/ImgBanner.jpg");
+    height: 700px;
+    background-image: url("../../assets/garocity.jpg");
+    /* background-color: #308695; */
     background-size: cover;
     width: 100vw;
     display: -webkit-flex;
@@ -17,4 +18,5 @@
     justify-content: center;
     -webkit-align-items: center;
     align-items: center;
+    padding-top: 0;
 }
