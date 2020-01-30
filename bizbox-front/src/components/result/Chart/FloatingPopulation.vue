@@ -13,6 +13,7 @@
     <p id="search-result">검색된 결과 : {{ road }}</p>
     <hr />
     <div id="chart1">
+    <spinner :loading="loadingStatus"></spinner>
       <bar-chart
         v-if="searchOption === 1 || searchOption === 4"
         :chart-data="chartdata"
@@ -31,14 +32,16 @@
 </template>
 
 <script>
-import BarChart from '../js/BarChart'
-import LineChart from '../js/LineChart'
+import BarChart from '../../../lib/BarChart'
+import LineChart from '../../../lib/LineChart'
 import axios from '../../../js/http-commons'
+import Spinner from '../Spinner'
 
 export default {
   components: {
     BarChart,
-    LineChart
+    LineChart,
+    Spinner
   },
   data () {
     return {
@@ -61,11 +64,18 @@ export default {
       },
       btnStyle4: {
         backgroundColor: 'white'
-      }
+      },
+      chartStyle: {
+        display: 'contents'
+      },
+      loadingStatus: false
     }
   },
   methods: {
     setOpt1 () {
+      this.chartdata = null
+      this.chartoptions = null
+
       this.searchOption = 1
       this.title = '연령별 유동인구'
       this.btnStyle1.backgroundColor = '#d9d9d9'
@@ -78,6 +88,9 @@ export default {
       }
     },
     setOpt2 () {
+      this.chartdata = null
+      this.chartoptions = null
+
       this.searchOption = 2
       this.title = '시간별 유동인구'
       this.btnStyle1.backgroundColor = 'white'
@@ -90,6 +103,9 @@ export default {
       }
     },
     setOpt3 () {
+      this.chartdata = null
+      this.chartoptions = null
+
       this.searchOption = 3
       this.title = '요일별 유동인구'
       this.btnStyle1.backgroundColor = 'white'
@@ -102,6 +118,9 @@ export default {
       }
     },
     setOpt4 () {
+      this.chartdata = null
+      this.chartoptions = null
+
       this.searchOption = 4
       this.title = '연도별 상권 변화 지표'
       this.btnStyle1.backgroundColor = 'white'
@@ -114,11 +133,12 @@ export default {
       }
     },
     getData () {
+      this.loadingStatus = true
+
       if (this.searchOption === 1) {
         axios
           .get('/population/getPopulationByLocation/' + this.key)
           .then(res => {
-            // this.result = JSON.stringify(res.data)
             this.result = res.data.pbl
             this.road = this.result.f
             this.point = res.data.point
@@ -192,6 +212,9 @@ export default {
                 ]
               }
             }
+
+            this.loadingStatus = false
+            this.chartStyle.display = 'block'
           })
       } else if (this.searchOption === 2) {
         axios
@@ -254,6 +277,9 @@ export default {
                 ]
               }
             }
+
+            this.loadingStatus = false
+            this.chartStyle.display = 'block'
           })
       } else if (this.searchOption === 3) {
         axios
@@ -318,6 +344,9 @@ export default {
                 ]
               }
             }
+
+            this.loadingStatus = false
+            this.chartStyle.display = 'block'
           })
       } else {
         axios
@@ -370,6 +399,8 @@ export default {
                 ]
               }
             }
+
+            this.loadingStatus = false
           })
       }
     }
@@ -379,13 +410,12 @@ export default {
 
 <style scoped>
 #chart1 {
-  width: 600px;
+  width: 500px;
 }
 
 #point {
-  border: 1px solid black;
   border-radius: 5px;
-  width: 600px;
+  width: 500px;
   height: 50px;
   line-height: 50px;
   top: 5px;
