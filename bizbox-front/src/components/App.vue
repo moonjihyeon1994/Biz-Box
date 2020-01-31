@@ -19,6 +19,7 @@
   </v-app>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'app',
   data: () => ({
@@ -27,10 +28,11 @@ export default {
     navList: [
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
-      { routeto: '/login', icon: 'mdi-account', title: 'Login' }
+      { routeto: '/about', icon: 'mdi-information-outline', title: 'About' }
     ]
   }),
   methods: {
+    ...mapActions(['logout']),
     onResize () {
       if (window.innerWidth > 700) {
         this.titleon = true
@@ -41,6 +43,9 @@ export default {
   },
   created () {
     this.onResize()
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn'])
   }
 }
 </script>
