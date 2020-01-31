@@ -2,14 +2,14 @@
   <div id="loginForm">
     <form action="" v-on:submit.prevent>
       <!-- <input type="text" name="username" placeholder="Username" required /> -->
-      <input
+      <input v-model="email"
         type="email"
         name="email"
         placeholder="Email"
         required
         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
       />
-      <input
+      <input v-model="password"
         type="password"
         name="password"
         required
@@ -18,19 +18,19 @@
       />
       <p>The password must be > 4 char</p>
       <!-- You also can use only one input and use "pointer-events: none;", but you still can select it using tab -->
-
-      <input type="submit" value="Login" disabled />
-      <input type="submit" value="Login" />
-      <a id="signup" href="">
+      <a id="login_btn" @click="requestLogin">
+        <button>Login</button>
+      </a>
+      <a id="signup" @click="signup">
         <button>SIGN UP</button>
       </a>
       <a id="kakao_btn" @click="loginWithKakao">
         <img src="@/assets/btn_kakao.png" alt="" />
       </a>
     </form>
-    <a @click="getInfo">
+    <!-- <a @click="getInfo">
       <button>get infomation, check console</button>
-    </a>
+    </a> -->
   </div>
 </template>
 
@@ -50,8 +50,8 @@ export default {
   name: 'login',
   data: () => {
     return {
-      mydata: '',
-      token: ''
+      email: '',
+      password: ''
     }
   },
   methods: {
@@ -62,16 +62,17 @@ export default {
         success: function(authObj) {
           // const accessToken = authObj.access_token;
           const refreshToken = authObj.refresh_token;
-          const getUrl = 'http://70.12.247.78:8080/kakao/login?refresh_token=' + refreshToken
+          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
           console.log('Login success')
 
           storage.setItem('jwt-auth-token', '')
           storage.setItem('login_user_name', '')
           storage.setItem('login_user_email', '')
-          console.log(storage)
+          // console.log(storage)
 
           axios.get(getUrl)
             .then(res => {
+              console.log('Get success')
               console.log(res.data)
               if (res.data.status) {
                 storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
@@ -100,6 +101,19 @@ export default {
         }
       ).then(res => {
         console.log(res)
+      })
+    },
+    signup() {
+      router.push('/signup')
+    },
+    requestLogin() {
+      const postUrl = 'http://70.12.246.137:8080/user/login'
+      axios.post(postUrl, {
+        email: this.email,
+        pw: this.password
+      }).then(res => {
+        console.log(res)
+        router.push('/')
       })
     }
   }
