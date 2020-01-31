@@ -5,7 +5,7 @@
         <button @click="setOpt1()" v-bind:style="btnStyle1" :disabled="loadingStatus">연령별 매출</button>
         <button @click="setOpt2()" v-bind:style="btnStyle2" :disabled="loadingStatus">시간별 매출</button>
         <button @click="setOpt3()" v-bind:style="btnStyle3" :disabled="loadingStatus">요일별 매출</button>
-        <button @click="setOpt4()" v-bind:style="btnStyle4" :disabled="loadingStatus">성별 매출</button>
+        <button @click="setOpt4()" v-bind:style="btnStyle4" :disabled="loadingStatus">성별에 따른 매출</button>
       </div>
       <input type="text" placeholder="검색하세요." v-model="key" @keyup.enter="getData()" />
       <button id="search-btn" @click="getData()">검색</button>
@@ -449,7 +449,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 [v-cloak] {
     display: none;
 }
@@ -476,22 +476,22 @@ export default {
 
 #searchOptions {
   margin: auto;
-}
 
-#searchOptions button {
-  font-size: 16px;
-  display: inline-block;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 200px;
-  height: 30px;
-  margin-right: 10px;
-  background-color: white;
-  transition: 0.2s all ease;
-}
+  button {
+    font-size: 16px;
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 200px;
+    height: 30px;
+    margin-right: 10px;
+    background-color: white;
+    transition: 0.1s all ease;
 
-#searchOptions button:hover{
-  background-color: rgb(224, 224, 224);
+    &:hover {
+      font-weight: bold;
+    }
+  }
 }
 
 #search input {
