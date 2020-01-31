@@ -8,9 +8,9 @@
     <hr />
     <v-list>
       <v-list-item>
-        name: {{ info.name }}
+        result: {{ info.name }}
       </v-list-item>
-      <v-list-item>
+      <!-- <v-list-item>
         value: {{ info.value }}
       </v-list-item>
       <v-list-item>
@@ -30,7 +30,7 @@
       </v-list-item>
       <v-list-item>
         result: {{ info.result }}
-      </v-list-item>
+      </v-list-item> -->
     </v-list>
   </div>
 </template>
@@ -43,14 +43,14 @@ export default {
     return {
       key: '',
       info: {
-        'name': '',
-        'value': '',
-        'salespderstore': '',
-        'salestotal': '',
-        'businesschane': '',
-        'businesstiming': '',
-        'maincustomer': '',
-        'result': ''
+        'name': ''
+        // 'value': '',
+        // 'salespderstore': '',
+        // 'salestotal': '',
+        // 'businesschane': '',
+        // 'businesstiming': '',
+        // 'maincustomer': '',
+        // 'result': ''
       }
     }
   },
@@ -61,12 +61,12 @@ export default {
           // console.log(res)
           console.log(res.data.bl)
           this.info.name = res.data.bl.name
-          this.info.value = res.data.bl.value
-          this.info.salespderstore = res.data.bl.salespderstore
-          this.info.salestotal = res.data.bl.salestotal
-          this.info.businesschane = res.data.bl.businesschane
-          this.info.businesstiming = res.data.bl.businesstiming
-          this.info.maincustomer = res.data.bl.maincustomer
+          // this.info.value = res.data.bl.value
+          // this.info.salespderstore = res.data.bl.salespderstore
+          // this.info.salestotal = res.data.bl.salestotal
+          // this.info.businesschane = res.data.bl.businesschane
+          // this.info.businesstiming = res.data.bl.businesstiming
+          // this.info.maincustomer = res.data.bl.maincustomer
           // this.info.result = res.data.result
         }).catch(err => alert(err, '검색어를 확인해주세요'))
       }
