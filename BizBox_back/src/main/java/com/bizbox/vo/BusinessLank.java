@@ -18,7 +18,10 @@ public class BusinessLank implements Comparable<BusinessLank> {
 	
 	@Override
 	public int compareTo(BusinessLank o) {
-		return Integer.compare(this.value, o.value);
+		if(this.salespderstore==o.salespderstore) {
+			return Integer.compare(o.value, this.value);
+		}
+		return Integer.compare(o.salespderstore, this.salespderstore);
 	}
 	
 }
