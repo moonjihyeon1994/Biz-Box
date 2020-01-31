@@ -276,7 +276,7 @@ export default {
                 yAxes: [
                   {
                     ticks: {
-                      beginAtZero: true
+                      beginAtZero: false
                     },
                     gridLines: {
                       display: true
@@ -344,7 +344,7 @@ export default {
                 yAxes: [
                   {
                     ticks: {
-                      beginAtZero: true
+                      beginAtZero: false
                     },
                     gridLines: {
                       display: true
@@ -431,7 +431,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #chart1 {
   position: relative;
   width: 500px;
@@ -461,22 +461,26 @@ export default {
 
 #searchOptions {
   margin: auto;
-}
 
-#searchOptions button {
-  font-size: 16px;
-  display: inline-block;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 200px;
-  height: 30px;
-  margin-right: 10px;
-  background-color: white;
-  transition: 0.2s all ease;
+  button {
+    font-size: 16px;
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 200px;
+    height: 30px;
+    margin-right: 10px;
+    background-color: white;
+    transition: 0.1s all ease;
+
+    &:hover {
+      font-weight: bold;
+    }
+  }
 }
 
 #searchOptions button:hover{
-  background-color: rgb(224, 224, 224);
+    background-color: #E38FE3;
 }
 
 #search input {
