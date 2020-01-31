@@ -1,32 +1,55 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <v-app id="inspire">
+    <v-app-bar app dark color="#041b2d">
+      <v-toolbar-title style="width: 300px">
+        <span>BizBox</span>
+      </v-toolbar-title>
+      <v-spacer />
+      <v-list dense v-for="nav in navList" :key="nav.routeto">
+        <v-list-item link :to="nav.routeto">
+          <v-list-item-content>
+            <v-list-item-title>{{ nav.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-app-bar>
+    <div class="container view">
+      <router-view />
     </div>
-    <router-view/>
-  </div>
+  </v-app>
 </template>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import { mapActions, mapGetters } from 'vuex'
+export default {
+  name: 'app',
+  data: () => ({
+    drawer: null,
+    titleon: true,
+    navList: [
+      { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
+      { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
+      { routeto: '/about', icon: 'mdi-information-outline', title: 'About' },
+      { routeto: '/login', icon: 'mdi-account', title: 'Login' }
+    ]
+  }),
+  methods: {
+    ...mapActions(['logout']),
+    onResize () {
+      if (window.innerWidth > 700) {
+        this.titleon = true
+      } else {
+        this.titleon = false
+      }
+    }
+  },
+  created () {
+    this.onResize()
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn'])
+  }
 }
+</script>
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style src="@/components/common/common.css"></style>
+<style scoped src="@/components/common/Navbar.css"></style>
