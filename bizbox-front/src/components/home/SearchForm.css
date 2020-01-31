@@ -3,6 +3,11 @@ form.container.searchform {
     color: #ffff;
     height: 60%;
     opacity: 0.9;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: stretch;
     flex-direction: column;
     letter-spacing: 0.08em;
 }

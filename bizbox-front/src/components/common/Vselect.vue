@@ -1,6 +1,6 @@
 <template>
   <div class="m-8px">
-    <v-select :items="items" :label="labname" dark></v-select>
+    <v-select dense :items="items" :label="labname" dark full-width></v-select>
   </div>
 </template>
 

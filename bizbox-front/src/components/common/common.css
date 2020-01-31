@@ -1,74 +1,57 @@
 #app {
     text-align: center;
-    color: #3c2f2f;
-    background-color: #FFFF;
+    color: #ffffff;
 }
 
-.container {
+/* Only for routerview container */
+.container.view {
+    flex: 1;
     display: -webkit-flex;
     display: flex;
     -webkit-justify-content: center;
     justify-content: center;
     -webkit-align-items: center;
-    align-items: center;
-    margin: 0;
-    padding: 0 0;
-    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
 }
 
-.container.view {
-    margin-top: 50px;
-}
-
-.flex-column-1 {
-    -webkit-flex: 1;
-    flex: 1;
-    margin: 0 8px;
-    width: 100%;
-    -webkit-align-items: center;
-    align-items: center;
-}
-
-.flex-column-2 {
-    -webkit-flex: 2;
-    flex: 2;
-    margin: 8px;
-    -webkit-align-items: center;
-    align-items: center;
-}
-
-.flex-column-3 {
-    -webkit-flex: 3;
-    flex: 3;
-    margin: 8px;
-    -webkit-align-items: center;
-    align-items: center;
-}
-
-.flex-column-4 {
-    -webkit-flex: 4;
-    flex: 4;
-    margin: 8px;
-    -webkit-align-items: center;
-    align-items: center;
-}
-
-.flex-column-5 {
-    -webkit-flex: 5;
-    flex: 5;
-    margin: 8px;
-    -webkit-align-items: center;
-    align-items: center;
-}
-
-h1 {
-    color: #000000
-}
-
-.m-8px {
-    margin: 8 8 8 8;
+/* Set Background CSS */
+div.v-application--wrap {
+    /* background-color: cornflowerblue; */
+    background-image: url("../../assets/garocity.jpg");
+    background-size: cover;
+    display: -webkit-flex;
+    display: flex;
+    padding-top: 56px;
 }
 
 div.v-input__control {
     color: #455054;
+}
+
+.container {
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.flex-item-1 {
+    flex: 1;
+}
+
+p {
+    color: #ffff;
+    font-size: larger;
+}
+
+.m-8px {
+    margin: 8px
+}
+
+@media (min-width:700px) {
+    .container {
+        display: -webkit-flex;
+        display: flex;
+    }
 }
