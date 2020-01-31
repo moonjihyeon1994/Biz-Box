@@ -31,7 +31,7 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 		String predongcode = "";
 		int Point = 0;
 		List<Changebusiness> precblist = new LinkedList<Changebusiness>();
-		List<Changebusiness> cblist = new LinkedList();
+		List<Changebusiness> cblist = new LinkedList<Changebusiness>();
 		int live[] = new int[6];
 		int die[] = new int[6];
 		int averL[] = new int[6];
@@ -175,6 +175,33 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 			}
 			what[Integer.parseInt(changebusiness.getA()) - 2014][index]++;
 
+		}
+		for (int i = 0; i < 6; i++) {
+			Changebusiness changebusiness = cblist.get(i);
+			changebusiness.setA((2014 + i) + "");
+			changebusiness.setG(live[i] / 8 + "");
+			changebusiness.setH(die[i] / 8 + "");
+			changebusiness.setI(averL[i] / 8 + "");
+			changebusiness.setJ(averD[i] / 8 + "");
+			changebusiness.setD(predongcode);
+			int max = 0;
+			int maxindex = 0;
+			for (int j = 0; j < 4; j++) {
+				if (max < what[i][j]) {
+					maxindex = j;
+					max = what[i][j];
+				}
+			}
+
+			if (maxindex == 0) {
+				changebusiness.setF("상권축소");
+			} else if (maxindex == 1) {
+				changebusiness.setF("정체");
+			} else if (maxindex == 2) {
+				changebusiness.setF("다이나믹");
+			} else if (maxindex == 3) {
+				changebusiness.setF("상권확장");
+			}
 		}
 		return cblist;
 	}
