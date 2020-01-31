@@ -39,4 +39,26 @@ public class PopulationByLocation {
 	private String AC;
 	private String AD;
 	
+	public PopulationByLocation(String j, String k, String l, String m, String n, String o, String p, String q,
+			String r, String s, String t, String u, String v, String w, String x, String y, String z, String aA) {
+		J = j;
+		K = k;
+		L = l;
+		M = m;
+		N = n;
+		O = o;
+		P = p;
+		Q = q;
+		R = r;
+		S = s;
+		T = t;
+		U = u;
+		V = v;
+		W = w;
+		X = x;
+		Y = y;
+		Z = z;
+		AA = aA;
+	}
+	
 }
