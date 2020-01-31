@@ -52,12 +52,14 @@ public class IndustrySuggestionsController {
 		JSONObject jsonObject = new JSONObject();
 		int maxsales=0;
 		int minstore=Integer.MAX_VALUE;
-
+		Changebusiness CB= new Changebusiness();
+		String change="";
+		int point=0;
 		try {
 			silist = saliesservice.salesInfosub(address);
 			cblist = changeservice.getChangeHistorySubtolist(address);
-			Changebusiness cb = cblist.get(5);
-
+			CB = cblist.get(4);
+			change=cblist.get(5).getF();
 			String num = api.getAddressByName(address);
 			String xy = api.getAddressByXY(num);
 			HashMap<String, Integer> NumberOfBusinesses = api.findStoreToSpring(xy, "350");
@@ -87,7 +89,7 @@ public class IndustrySuggestionsController {
 				for(int i=0; i<sp.length; i++) {
 					for (SalesInformation sl : silist) {
 						if(sl.getF().contains(sp[i])) {
-							BL.setSalespderstore(BL.getSalespderstore()+Integer.parseInt(sl.getG())/1000);
+							BL.setSalespderstore(BL.getSalespderstore()+(int)Long.parseLong(sl.getG())/1000);
 						}
 					}
 				}
@@ -98,20 +100,19 @@ public class IndustrySuggestionsController {
 				bllist.add(BL);
 				BusinessesLank[index] = value;
 			}
-			System.out.println(minstore);
 			Collections.sort(bllist);
 			
 			for (BusinessLank bl : bllist) {
 				System.out.println(bl.getName() + " " + bl.getValue());
 			}
-
+			
 			System.out.println("----------------------");
 			for (BusinessLank bl : bllist) {
 				System.out.println(bl.getName() + " " + bl.getSalespderstore());
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		String maxss = "";
 		String mincouts="";
@@ -124,8 +125,14 @@ public class IndustrySuggestionsController {
 			}
 		}
 		
-		bllist.get(0).setName("분석이 완료 되었습니다. 우선, 경쟁업체가 가장 적은 업종은"+"\""+mincouts+"\""+"입니다. 또한 매출이 가장 좋은 업종은"+"\""+maxss+"\""+"입니다. 종합적으로 비즈박스가 추천하는 업종은 "+"\""+bllist.get(0).getName()+"\""+"입니다");
-		
+		bllist.get(0).setName(
+				
+				"분석이 완료 되었습니다. 우선, 경쟁업체가 가장 적은 업종은"+"\""+mincouts+"\""+"입니다. "
+			  + "또한 매출이 가장 좋은 업종은"+"\""+maxss+"\""+"입니다. "
+			  + "종합적으로 비즈박스가 추천하는 업종은 "+"\""+bllist.get(0).getName()+"\""+"입니다. "
+			  + "최근 해당 지역에 상권 변화 지표는 "+change+ "입니다. 이 정보는 참고용으로 활용해주세요 ^^"
+			  
+				);
 		jsonObject.put("bl", bllist.get(0));
 
 		return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
