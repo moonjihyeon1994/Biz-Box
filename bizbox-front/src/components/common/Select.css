@@ -2,7 +2,7 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-color: #428cd4;
+    background-color: transparent;
     color: #ffff;
     font-family: inherit;
 }
