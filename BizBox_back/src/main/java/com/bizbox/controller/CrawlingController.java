@@ -1,5 +1,6 @@
 package com.bizbox.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin({ "*" })
 public class CrawlingController {
 	
-	NaverNewsCrawler NNcrawler = new NaverNewsCrawler();
+	@Autowired
+	NaverNewsCrawler NNcrawler;
 	
 	@GetMapping("/crawling/naver")
 	public ResponseEntity<Object> getNaverNews(){
