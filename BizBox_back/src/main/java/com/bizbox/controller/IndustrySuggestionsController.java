@@ -72,6 +72,15 @@ public class IndustrySuggestionsController {
 				BusinessLank BL = new BusinessLank();
 				String name = entry.getKey();
 				String[] sp=name.split(" ");
+				
+				for(int i=0; i<sp.length; i++) {
+					if(sp[i].contains("유흥")) {
+						sp[i]="유흥";
+					}else if(sp[i].contains("커피") || sp[i].contains("카페")) {
+						sp[i]="커피";
+					}
+				}
+				
 				int value = entry.getValue();
 				int index = 0;
 				
