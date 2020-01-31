@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
 import com.bizbox.utils.*;
+
 @Service
 public class JusoApi {
 
@@ -84,8 +85,6 @@ public class JusoApi {
 				temp.append(personObject.get("jibunAddr"));
 				temp.append(",");
 				temp.append(personObject.get("roadAddrPart1"));
-				System.out.println(size);
-				System.out.println(temp.toString());
 				if (personObject.get("roadAddrPart1").toString().contains(name)
 						|| name.contains(personObject.get("roadAddrPart1").toString().substring(0,
 								personObject.get("roadAddrPart1").toString().length() - 1))) {
@@ -121,8 +120,7 @@ public class JusoApi {
 					temp.append(personObject.get("jibunAddr"));
 					temp.append(",");
 					temp.append(personObject.get("roadAddrPart1"));
-					System.out.println(size);
-					System.out.println(temp.toString());
+				
 					if (personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm")
 							.toString().substring(0, personObject.get("emdNm").toString().length() - 1))) {
 						System.out.println("그만!!!!" + personObject.get("emdNm"));
@@ -272,19 +270,19 @@ public class JusoApi {
 			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
 			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
 			JSONObject xyObject = (JSONObject) jsonArray.get(0);
-			entX = (String)xyObject.get("entX");
-			entY = (String)xyObject.get("entY");
-		}catch (Exception e) {
+			entX = (String) xyObject.get("entX");
+			entY = (String) xyObject.get("entY");
+		} catch (Exception e) {
 			System.out.println("xy좌표 찾기 오류");
 			e.printStackTrace();
 		}
-		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5",
-				"+ellps=GRS80", "+units=m", "+x_0=1000000", "+y_0=2000000", "+k=0.9996" };
+		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5", "+ellps=GRS80", "+units=m",
+				"+x_0=1000000", "+y_0=2000000", "+k=0.9996" };
 
 		Point2D.Double srcProjec = null;
 		Point2D.Double dstProjec = null;
 		Projection proj = ProjectionFactory.fromPROJ4Specification(proj4_w);
-		srcProjec = new Point2D.Double(Double.valueOf(entX) ,Double.valueOf(entY));
+		srcProjec = new Point2D.Double(Double.valueOf(entX), Double.valueOf(entY));
 		dstProjec = proj.inverseTransform(srcProjec, new Point2D.Double());
 		StringBuilder temp = new StringBuilder();
 		temp.append(dstProjec.x);
@@ -418,7 +416,9 @@ public class JusoApi {
 		return jsonObject;
 	}
 
-	public HashMap<String,Integer> findStoreToSpring(String xy, String radius) throws IOException {
+	public HashMap<String, Integer> findStoreToSpring(String xy, String radius) throws IOException {
+		
+		System.out.println("상점개수 찾는중........");
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
@@ -443,59 +443,36 @@ public class JusoApi {
 					String indsMclsNm = (String) items.get("indsMclsNm"); // 중분류
 					String indsSclsNm = (String) items.get("indsSclsNm"); // 소분류
 
-					indsLclsNm = indsLclsNm.replace("/", "");
-					indsMclsNm = indsMclsNm.replace("/", "");
-					indsMclsNm = indsMclsNm.replace("/", "");
-
-					if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
-						LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
-					} else {
-						LNm.put(indsLclsNm, 1);
-					}
-
-					if (storecount.containsKey(indsMclsNm)) {
-						if (storecount.get(indsMclsNm).containsKey(indsSclsNm)) {
-							storecount.get(indsMclsNm).put(indsSclsNm, storecount.get(indsMclsNm).get(indsSclsNm) + 1);
+					indsLclsNm = indsLclsNm.replace("/", " ");
+					indsMclsNm = indsMclsNm.replace("/", " ");
+					indsMclsNm = indsMclsNm.replace("/", " ");
+					if (
+						!indsMclsNm.contains("기타")  &&
+						indsLclsNm.contains("음식")   ||
+						indsLclsNm.contains("중식")   ||
+						indsLclsNm.contains("일식")   ||
+						indsLclsNm.contains("커피")   ||
+						indsLclsNm.contains("치킨")   ||
+						indsLclsNm.contains("양식")   || 
+						indsLclsNm.contains("오락")  	 ||
+						indsLclsNm.contains("스포츠")  || 
+						indsLclsNm.contains("패션") 	 ||
+						indsLclsNm.contains("의류") 	 ||
+						indsLclsNm.contains("편의점")	 ||
+						indsLclsNm.contains("운동")    
+							) {
+						
+						if (LNm.containsKey(indsMclsNm)) { // 대분류 당 갯수
+							LNm.put(indsMclsNm, LNm.get(indsMclsNm) + 1);
 						} else {
-							storecount.get(indsMclsNm).put(indsSclsNm, 1);
+							LNm.put(indsMclsNm, 1);
 						}
-					} else {
-						names.add(indsMclsNm);
-						storecount.put(indsMclsNm, new HashMap<String, Integer>());
 					}
 				}
-
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-//		JSONObject jsonObject = new JSONObject();
-//		JSONObject jsonObject1 = new JSONObject();
-//		JSONObject jsonObject2 = new JSONObject();
-//		for (int i = 0; i < storecount.size(); i++) {
-//			String key1 = names.get(i);
-//			JSONObject data = new JSONObject();
-//			for (Map.Entry<String, Integer> entry : storecount.get(names.get(i)).entrySet()) {
-//				String key2 = entry.getKey();
-//				int value2 = entry.getValue();
-//				data.put(key2, value2);
-//			}
-//			JSONArray array = new JSONArray();
-//			array.add(data);
-//
-//			jsonObject1.put(key1, array);
-//		}
-		
-		//jsonObject.put("small", jsonObject1);
-
-//		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
-//			String key = entry.getKey();
-//			int value = entry.getValue();
-//			jsonObject2.put(key, value);
-//		}
-
-		//jsonObject.put("large", jsonObject2);
-
 		return LNm;
 	}
 }

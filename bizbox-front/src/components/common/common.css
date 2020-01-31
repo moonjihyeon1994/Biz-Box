@@ -16,6 +16,10 @@
     width: 100%;
 }
 
+.container.view {
+    margin-top: 50px;
+}
+
 .flex-column-1 {
     -webkit-flex: 1;
     flex: 1;
