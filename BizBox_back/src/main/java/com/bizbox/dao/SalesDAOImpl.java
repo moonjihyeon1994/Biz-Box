@@ -6,24 +6,22 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.bizbox.vo.Changebusiness;
+import com.bizbox.vo.SalesInformation;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Repository
-public class ChangeBusinessDAOImpl implements ChangeBusinessDAO {
+@Slf4j
+public class SalesDAOImpl implements SalesDAO {
 
-private final String name ="com.bizbox.mapper.changebusinessMapper.";
+	private final String name ="com.bizbox.mapper.salesMapper.";
 	
 	@Autowired
 	SqlSession session;
 	
-	
 	@Override
-	public List<Changebusiness> getChangeHistory(String dongcode) {
-		
-		return session.selectList(name+"findByDong", dongcode);
+	public List<SalesInformation> salesInfo(String address) throws Exception {
+		return session.selectList(name+"salesInfo", address);
 	}
 
 }
