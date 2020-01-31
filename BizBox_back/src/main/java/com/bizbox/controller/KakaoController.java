@@ -53,19 +53,30 @@ public class KakaoController {
 			nickname = (String) userInfo.get("nickname");
 			email = (String) userInfo.get("email");
 	    }
-		
+		User newUser = new User(nickname, email);
 		// jwt 변환
 		Map<String, Object>resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {
-			User loginUser = userService.Singin(nickname, email);
-			String token = jwtService.create(loginUser);
-			res.setHeader("jwt-auth-token", token);
-			resultMap.put("status", true);
-			resultMap.put("data", loginUser);
+			User temp = userService.checkUser(newUser);
+			if(temp!=null) {	//기존회원이면
+				System.out.println("기존회원");
+				String token = jwtService.create(temp);
+				res.setHeader("jwt-auth-token", token);
+				resultMap.put("status", true);
+				resultMap.put("data", temp);
+			}else {
+				System.out.println("가입하는중");
+				userService.socialSingupUser(newUser);
+				temp = userService.checkUser(newUser);
+				String token = jwtService.create(temp);
+				res.setHeader("jwt-auth-token", token);
+				resultMap.put("status", true);
+				resultMap.put("data", temp);
+			}
 			status = HttpStatus.ACCEPTED;
-		}catch(RuntimeException e) {
-			log.error("로그인 실패", e);
+		}catch(Exception e) {
+			log.error("카카오로그인 실패", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}

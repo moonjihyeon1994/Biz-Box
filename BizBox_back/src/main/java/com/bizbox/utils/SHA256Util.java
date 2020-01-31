@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SHA256Util {
-	public static String getEncrypt(String source, String salt) {
+	public String getEncrypt(String source, String salt) {
 		return getEncrypt(source, salt.getBytes());
 	}
 
-	public static String getEncrypt(String source, byte[] salt) {
+	public String getEncrypt(String source, byte[] salt) {
 
 		String result = "";
 
@@ -42,7 +42,7 @@ public class SHA256Util {
 		return result;
 	}
 
-	public static String generateSalt() {
+	public String generateSalt() {
 		Random random = new Random();
 
 		byte[] salt = new byte[8];

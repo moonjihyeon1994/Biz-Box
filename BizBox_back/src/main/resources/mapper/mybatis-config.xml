@@ -13,6 +13,8 @@
   	<typeAlias type="com.bizbox.vo.DongCode"  alias="dc"/>
   	<typeAlias type="com.bizbox.vo.SalesInformation"  alias="sales"/>
   	<typeAlias type="com.bizbox.vo.PopulationBytimeByDongCode"  alias="ptdc"/>
+  	<typeAlias type="com.bizbox.vo.Password"  alias="password"/>
+  	<typeAlias type="com.bizbox.vo.User"  alias="user"/>
   </typeAliases>
   
   <mappers>
@@ -20,5 +22,7 @@
    <mapper resource="mapper/populationByMapper.xml" />
    <mapper resource="mapper/changebusinessMapper.xml" />
    <mapper resource="mapper/salesMapper.xml" />
+   <mapper resource="mapper/userServiceMapper.xml"/>
+   <mapper resource="mapper/passMapper.xml"/>
   </mappers>
 </configuration>
