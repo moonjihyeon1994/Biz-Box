@@ -11,9 +11,24 @@
 	<select id="populationByLocation" parameterType="String" resultType="pobl">
 		select * from population_location where F like 	concat('%',#{address},'%')  order by a DESC  limit 1
 	</select>
-	
-	<select id="populationByDong" parameterType="String" resultType="pobd">
-		select * from local_people_dong where C like concat('%',#{address},'%') order by A, B
+	<select id="getByDongCode" parameterType="String" resultType="pobl">
+		select  
+avg(f+g)+avg(t+u) J,avg(h+i)+avg(v+w) K,avg(j+k)+avg(x+y) L,avg(l+m)+avg(z+aa) M,avg(n+o)+avg(ab+ac) N,avg(p+q+r)+avg(ad+ae+af) O,
+avg(f+g) P,avg(h+i) Q,avg(j+k) R,avg(l+m) S,avg(n+o) T,avg(p+q+r) U,
+avg(t+u) V,avg(v+w) W,avg(x+y) X,avg(z+aa) Y,avg(ab+ac) Z,avg(ad+ae+af) AA
+from local_people_dong where c like concat('%',#{dongcode},'%') order by A desc limit 24; 
 	</select>
 	
+	<select id="populationByDong" parameterType="String" resultType="pobd">
+		select * from local_people_dong where C in 
+		( select left(G, 8) as Num from address_code where C like concat('%',#{address},'%') group by Num )
+		order by C, A, B ASC;
+	</select> 
+	<select id="getDongCodeList" parameterType="map" resultType="String" >
+		select  g from address_code where c like concat('%',#{predoroname},'%') limit 1
+	</select>
+	<select id="getTimeByDongCode" parameterType="String" resultType="ptdc" >
+		select * from (select * from local_people_dong where c  like concat('%',#{dongcode},'%')) TT order by A desc limit 24;
+	</select>
+
 </mapper>

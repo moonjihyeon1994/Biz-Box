@@ -9,6 +9,7 @@ import com.bizbox.dao.PopulationByDAO;
 import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
+import com.bizbox.vo.PopulationBytimeByDongCode;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +36,24 @@ public class PopulationByServiceImpl implements PopulationByService{
 	public List<PopulationByDong> populationByDong(String address) throws Exception {
 		log.trace("address",address);
 		return dao.populationByDong(address);
+	}
+
+	@Override
+	public String getDongCodeList(String predoroname) {
+		log.trace("address",predoroname);
+		return dao.getDongCodeList(predoroname);
+	}
+
+	@Override
+	public PopulationByLocation getByDongCode(String dongcode) {
+		// TODO Auto-generated method stub
+		return dao.getByDongCode(dongcode);
+	}
+
+	@Override
+	public List<PopulationBytimeByDongCode> getTimeByDongCode(String dongcode) {
+		// TODO Auto-generated method stub
+		return dao.populationByTimeByDongCode(dongcode);
 	}
 
 }
