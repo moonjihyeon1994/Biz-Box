@@ -43,7 +43,6 @@ public class IndustrySuggestionsController {
 	SalesService saliesservice;
 	@Autowired
 	ChangeBusinessService changeservice;
-	
 
 	@GetMapping("/Industry/{address}")
 	public ResponseEntity<Object> suggestionIndustry(@PathVariable String address) {
@@ -51,62 +50,76 @@ public class IndustrySuggestionsController {
 		List<SalesInformation> silist = new LinkedList<SalesInformation>();
 		List<Changebusiness> cblist = new LinkedList<Changebusiness>();
 		JSONObject jsonObject = new JSONObject();
-		
-		
+		int maxsales=0;
+		int minstore=Integer.MAX_VALUE;
+
 		try {
-			silist=saliesservice.salesInfosub(address);
-			cblist=changeservice.getChangeHistorySubtolist(address);
-			Changebusiness cb =cblist.get(5);
-			
-			
+			silist = saliesservice.salesInfosub(address);
+			cblist = changeservice.getChangeHistorySubtolist(address);
+			Changebusiness cb = cblist.get(5);
+
 			String num = api.getAddressByName(address);
 			String xy = api.getAddressByXY(num);
 			HashMap<String, Integer> NumberOfBusinesses = api.findStoreToSpring(xy, "350");
+			
 			int[] BusinessesLank = new int[NumberOfBusinesses.size()];
-			int max=0;
-			int min=Integer.MAX_VALUE;
-			List<String> maxstore=new LinkedList<String>();
+			int max = 0;
+			int min = Integer.MAX_VALUE;
+			System.out.println("왜안됨?");
+			
+			List<String> maxstore = new LinkedList<String>();
 			for (Map.Entry<String, Integer> entry : NumberOfBusinesses.entrySet()) {
-				int index = 0;
-				String name = entry.getKey();
-				int value = entry.getValue();
 				BusinessLank BL = new BusinessLank();
-				BL.setName(name);BL.setValue(value);
-				bllist.add(BL);
-				BusinessesLank[index] = value;
-				System.out.println(name + " " + value);
-			
-			}
-			Collections.sort(bllist);
-			//Arrays.sort(BusinessesLank);// 업종 수대로 순위매김
-			
-			for (BusinessLank bl : bllist) {
-				String name=bl.getName();
-				String[] sp = name.split(" ");
+				String name = entry.getKey();
+				String[] sp=name.split(" ");
+				int value = entry.getValue();
+				int index = 0;
+				
 				for(int i=0; i<sp.length; i++) {
-					for (SalesInformation si : silist) {
-						if(si.getAF().contains(sp[i])){
-							
+					for (SalesInformation sl : silist) {
+						if(sl.getF().contains(sp[i])) {
+							BL.setSalespderstore(BL.getSalespderstore()+Integer.parseInt(sl.getG())/1000);
 						}
 					}
 				}
+				maxsales=Math.max(maxsales, BL.getSalespderstore());
+				minstore=Math.min(minstore, value);
+				BL.setName(name);
+				BL.setValue(value);
+				bllist.add(BL);
+				BusinessesLank[index] = value;
 			}
+			System.out.println(minstore);
+			Collections.sort(bllist);
 			
-			for (Map.Entry<String, Integer> entry : NumberOfBusinesses.entrySet()) {
-				String name = entry.getKey();
-				int value = entry.getValue();
-				System.out.println(name + " " + value);
+			for (BusinessLank bl : bllist) {
+				System.out.println(bl.getName() + " " + bl.getValue());
+			}
+
+			System.out.println("----------------------");
+			for (BusinessLank bl : bllist) {
+				System.out.println(bl.getName() + " " + bl.getSalespderstore());
 			}
 
 		} catch (Exception e) {
-			
+
+		}
+		String maxss = "";
+		String mincouts="";
+		for (BusinessLank bl : bllist) {
+			if (bl.getSalespderstore()==maxsales) {
+				maxss=maxss+bl.getName()+",";
+			}
+			if (bl.getValue()==minstore) {
+				mincouts=mincouts+bl.getName()+",";
+			}
 		}
 		
+		bllist.get(0).setName("분석이 완료 되었습니다. 우선, 경쟁업체가 가장 적은 업종은"+"\""+mincouts+"\""+"입니다. 또한 매출이 가장 좋은 업종은"+"\""+maxss+"\""+"입니다. 종합적으로 비즈박스가 추천하는 업종은 "+"\""+bllist.get(0).getName()+"\""+"입니다");
 		
-		BusinessLank bl = new BusinessLank();
 		jsonObject.put("bl", bllist.get(0));
-		
-		return new  ResponseEntity<Object>(jsonObject,HttpStatus.OK);
+
+		return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
 	}
 
 }
