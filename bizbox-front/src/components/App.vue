@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app dark color="#041b2d">
+    <v-app-bar app color="transparent" flat hide-on-scroll>
       <v-toolbar-title style="width: 300px">
         <span>BizBox</span>
       </v-toolbar-title>
@@ -24,7 +24,7 @@ export default {
   name: 'app',
   data: () => ({
     drawer: null,
-    titleon: true,
+    routeon: true,
     navList: [
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
@@ -33,17 +33,7 @@ export default {
     ]
   }),
   methods: {
-    ...mapActions(['logout']),
-    onResize () {
-      if (window.innerWidth > 700) {
-        this.titleon = true
-      } else {
-        this.titleon = false
-      }
-    }
-  },
-  created () {
-    this.onResize()
+    ...mapActions(['logout'])
   },
   computed: {
     ...mapGetters(['isLoggedIn'])
