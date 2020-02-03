@@ -13,13 +13,17 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    'ChangeCenter': store => {
-      store.commit('ChangeCenter', name)
+    'ChangeCenter': (store, payload) => {
+      store.commit('ChangeCenter', { xy: payload.xy })
     }
+    // 'GetCenter': store => {
+    //   store.commit('GetCenter', );
+    // }
   },
   mutations: {
     'ChangeCenter': (state, payload) => {
-      state.Map.center.lat = payload
+      state.Map.center.lat = payload.x
+      state.Map.center.lng = payload.y
     }
   },
   // mutations: {
