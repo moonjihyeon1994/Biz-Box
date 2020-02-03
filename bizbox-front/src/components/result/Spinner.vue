@@ -1,7 +1,6 @@
 <template>
   <div class="lds" v-if="loading">
-      <div>
-      </div>
+      <div></div>
       <div></div>
       <div></div>
   </div>

@@ -58,11 +58,11 @@ input[type='submit']:disabled {
     opacity: 0.9;
 }
 
-input:valid~input:valid~input:valid~input[type='submit']:disabled {
+input:valid~input:valid~input[type='submit']:disabled {
     display: none;
 }
 
-input:valid~input:valid~input:valid~input[type='submit']:not(:disabled) {
+input:valid~input:valid~input[type='submit']:not(:disabled) {
     display: block;
     cursor: pointer;
 }

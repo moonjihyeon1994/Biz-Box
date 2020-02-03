@@ -30,6 +30,7 @@
         minlength="4"
       /> -->
       <!-- <p id="are_same">여기서 password confirm check</p> -->
+      <input type="submit" value="Signup" disabled>
       <input type="submit" value="Signup" @click="requestSignup"/>
       <!-- <button type="submit">Sign up</button> -->
     </form>
@@ -43,6 +44,7 @@
 <script>
 import axios from 'axios'
 import router from'../../router'
+const storage = window.sessionStorage
 
 export default {
   name: 'signup_here',
@@ -61,12 +63,21 @@ export default {
         email: this.email,
         pw: this.password
       }).then(res => {
-        console.log(res)
-        router.push('/login')
+        if (res.data.status === true) {
+          // console.log(res)
+          storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
+          storage.setItem('login_user_name', res.data.data.name)
+          storage.setItem('login_user_email', res.data.data.email)
+          console.log(storage)
+          router.push('/')
+        } else {
+          alert('회원가입 실패했습니다.')
+        }
+      }).catch ((err) => {
+        alert('회원가입을 실패했습니다.')
       })
     }
   }
-
 }
 
 </script>

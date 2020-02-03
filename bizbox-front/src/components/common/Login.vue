@@ -16,15 +16,19 @@
         placeholder="Password"
         minlength="4"
       />
-      <p>The password must be > 4 char</p>
+      <!-- <p>The password must be > 4 char</p> -->
+
       <!-- You also can use only one input and use "pointer-events: none;", but you still can select it using tab -->
-      <a id="login_btn" @click="requestLogin">
+      <input type="submit" value="Login" disabled>
+      <input type="submit" value="Login" @click="requestLogin">
+      <!-- <a id="login_btn" @click="requestLogin">
         <button>Login</button>
-      </a>
+      </a> -->
+
       <a id="signup" @click="signup">
         <button>SIGN UP</button>
       </a>
-      <a id="kakao_btn" @click="loginWithKakao">
+      <a id="kakao_btn" @click="loginWithKakao" :disabled="loading">
         <img src="@/assets/btn_kakao.png" alt="" />
       </a>
     </form>
@@ -42,44 +46,48 @@
 import axios from 'axios'
 import router from'../../router'
 const storage = window.sessionStorage
-const ai = axios.create({
-  baseURL: 'http://70.12.247.78:8080/user/'
-})
+// const ai = axios.create({
+//   baseURL: 'http://70.12.247.78:8080/user/'
+// })
 
 export default {
   name: 'login',
   data: () => {
     return {
       email: '',
-      password: ''
+      password: '',
+      loading: false
     }
   },
   methods: {
     loginWithKakao () {
       console.log("Kakao login button clicked")
+
       Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37');
       Kakao.Auth.login({
         success: function(authObj) {
+          this.loading = true;
           // const accessToken = authObj.access_token;
           const refreshToken = authObj.refresh_token;
           const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
           console.log('Login success')
 
-          storage.setItem('jwt-auth-token', '')
-          storage.setItem('login_user_name', '')
-          storage.setItem('login_user_email', '')
-          // console.log(storage)
+          // storage.setItem('jwt-auth-token', '')
+          // storage.setItem('login_user_name', '')
+          // storage.setItem('login_user_email', '')
 
           axios.get(getUrl)
             .then(res => {
-              console.log('Get success')
-              console.log(res.data)
+              // console.log(res.data)
               if (res.data.status) {
                 storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
                 storage.setItem('login_user_name', res.data.data.name)
                 storage.setItem('login_user_email', res.data.data.email)
                 console.log(storage)
               }
+            })
+            .finally(() => {
+              this.loading = false;
               router.push('/')
             })
         },
@@ -87,21 +95,6 @@ export default {
           alert(JSON.stringify(err));
         }
       });
-    },
-    getInfo() {
-      ai.post(
-        '/info',
-        {
-          email: storage.getItem('login_user_email')
-        },
-        {
-          headers: {
-            'jwt-auth-token': storage.getItem('jwt-auth-token')
-          }
-        }
-      ).then(res => {
-        console.log(res)
-      })
     },
     signup() {
       router.push('/signup')
@@ -112,10 +105,34 @@ export default {
         email: this.email,
         pw: this.password
       }).then(res => {
-        console.log(res)
-        router.push('/')
+        console.log(res.data.status)
+        if (res.data.status === true) {
+          // console.log(res)
+          storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
+          storage.setItem('login_user_name', '')
+          storage.setItem('login_user_email', res.data.data.email)
+          console.log(storage)
+          router.push('/')
+        } else {
+          alert('email 이나 password 를 확인하세요')
+        }
       })
     }
+    // getInfo() {
+    //   ai.post(
+    //     '/info',
+    //     {
+    //       email: storage.getItem('login_user_email')
+    //     },
+    //     {
+    //       headers: {
+    //         'jwt-auth-token': storage.getItem('jwt-auth-token')
+    //       }
+    //     }
+    //   ).then(res => {
+    //     console.log(res)
+    //   })
+    // }
   }
 }
 </script>
