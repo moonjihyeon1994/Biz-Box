@@ -8,12 +8,27 @@
 <script>
 export default {
   data: () => ({
-    name: ''
+    name: '',
+    xy: {
+      x: '',
+      y: ''
+    }
   }),
   methods: {
     search: function () {
+      alert(this.name)
+      // eslint-disable-next-line no-undef
+      axios
+        .get('/Address/GetXY/' + this.name)
+        .then(res => {
+          this.data.xy.x = res.x
+          this.data.xy.y = res.y
+        })
+
       // eslint-disable-next-line no-unused-expressions
-      this.$store.dispatch('ChangeCenter', name)
+      // eslint-disable-next-line standard/object-curly-even-spacing
+      this.$store.dispatch('ChangeCenter', { xy: this.xy })
+      alert(this.$store.state.Map.center.lat)
     }
   }
 }

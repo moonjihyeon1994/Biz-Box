@@ -18,9 +18,12 @@ import VueDaumMap from 'vue-daum-map'
 import MapSearch from './MapSearch.vue'
 
 export default {
+//   created() {
+//         this.$store.dispatch('GetCenter');// 화면 로딩 할때 data get
+//     },
   data: () => ({
     appKey: '8227ff53a7c3554b706e45589733cb41', // 테스트용 appkey
-    center: this.$store.state.Map.center, // 지도의 중심 좌표
+    center: {lat: 37.505691, lng: 127.0298106}, // 지도의 중심 좌표
     level: 3, // 지도의 레벨(확대, 축소 정도),
     mapTypeId: VueDaumMap.MapTypeId.NORMAL, // 맵 타입
     libraries: [], // 추가로 불러올 라이브러리
