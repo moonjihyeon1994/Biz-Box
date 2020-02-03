@@ -1,5 +1,5 @@
 <template>
-  <div id="loginForm">
+  <div id="loginForm" class="biz-container">
     <form action="" v-on:submit.prevent>
       <!-- <input type="text" name="username" placeholder="Username" required /> -->
       <input v-model="email"
