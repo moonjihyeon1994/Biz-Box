@@ -1,4 +1,5 @@
 import router from '../../router'
+// const Kakao = require('Kakao')
 
 const HOST = process.env.VUE_APP_SERVER_HOST
 // const KAKAOKEY = process.env.VUE_APP_SERVER
@@ -7,6 +8,7 @@ const axios = require('axios')
 const state = {
   token: null,
   username: null,
+  email: null,
   errors: [],
   loading: false
 }
@@ -21,11 +23,15 @@ const mutations = {
   setLoading: (state, flag) => (state.loading = flag),
   setToken: (state, token) => {
     state.token = token
-    sessionStorage.setItem('jwt', token)
+    sessionStorage.setItem('jwt-auth-token', token)
   },
   setUsername: (state, name) => {
     state.username = name
-    sessionStorage.setItem('username', name)
+    sessionStorage.setItem('login_user_name', name)
+  },
+  setUserEmail: (state, email) => {
+    state.email = email
+    sessionStorage.setItem('login_user_name', email)
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = [])
@@ -33,16 +39,17 @@ const mutations = {
 
 const actions = {
   initialLogin: ({ commit }) => {
-    const token = sessionStorage.getItem('jwt')
+    const token = sessionStorage.getItem('jwt-auth-token')
     if (token) {
       commit('setToken', token)
     }
   },
+
   logout: ({ commit }) => {
     commit('setToken', null)
-    sessionStorage.removeItem('my_movies')
-    sessionStorage.removeItem('my_reviews')
-    sessionStorage.removeItem('username')
+    sessionStorage.removeItem('jwt-auth-token')
+    sessionStorage.removeItem('login_user_name')
+    sessionStorage.removeItem('login_user_email')
     router.push('/login')
   },
 
@@ -56,12 +63,18 @@ const actions = {
       router.push('/')
     } else {
       axios
-        .post(HOST + '/api-token-auth/', credentials)
-        .then(token => {
-          commit('setToken', token.data.token)
-          commit('setUsername', credentials.username)
-          commit('setLoading', false)
-          router.push('/')
+        .post('http://70.12.246.137:8080/user/login/', credentials)
+        .then(res => {
+          if (res.data.status === true) {
+            // console.log(res)
+            commit('setToken', res.headers['jwt-auth-token'])
+            commit('setUsername', 'heecheol')
+            commit('setUserEmail', res.data.data.email)
+            console.log(state)
+            router.push('/')
+          } else {
+            alert('로그인에 실패했습니다.')
+          }
         })
         .catch(err => {
           if (!err.response) {
@@ -77,19 +90,31 @@ const actions = {
         })
     }
   },
+  loginWithKakao: ({ commit, getters }) => {
+    Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37')
+    Kakao.Auth.login({
+      success: function (authObj) {
+        const refreshToken = authObj.refresh_token
+        const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
+        console.log(authObj)
 
-  validation: ({ commit, dispatch }, credentials) => {
-    commit('setLoading', false)
-    if (!credentials.username) {
-      commit('pushError', 'username can not be empty')
-      commit('setLoading', false)
-    }
-    if (credentials.password < 8) {
-      commit('pushError', 'password too short')
-      commit('setLoading', false)
-    } else {
-      dispatch('login', credentials)
-    }
+        axios.get(getUrl)
+          .then(res => {
+            if (res.data.status) {
+              commit('setToken', res.headers['jwt-auth-token'])
+              commit('setUsername', 'heecheol')
+              commit('setUserEmail', res.data.data.email)
+              console.log(state)
+            }
+          })
+          .finally(() => {
+            router.push('/')
+          })
+      },
+      fail: function (err) {
+        alert(JSON.stringify(err))
+      }
+    })
   },
 
   signup: (
