@@ -30,7 +30,9 @@ export default {
     navList: [
       { routeto: '/login', icon: 'mdi-account', title: 'Login' },
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
-      { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' }
+      { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' },
+      { routeto: '/modal', icon: 'mdi-information-outline', title: 'Modal' }
+      // 바꾼거
     ]
   }),
   methods: {
