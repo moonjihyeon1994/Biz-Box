@@ -1,15 +1,14 @@
 <template>
   <div id="loginForm" class="biz-container">
-    <form action="" v-on:submit.prevent>
-      <!-- <input type="text" name="username" placeholder="Username" required /> -->
-      <input v-model="email"
+    <form action="" @submit.prevent="login(credentials)">
+      <input v-model="credentials.email"
         type="email"
         name="email"
         placeholder="Email"
         required
         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
       />
-      <input v-model="password"
+      <input v-model="credentials.ps"
         type="password"
         name="password"
         required
@@ -20,21 +19,16 @@
 
       <!-- You also can use only one input and use "pointer-events: none;", but you still can select it using tab -->
       <input type="submit" value="Login" disabled>
-      <input type="submit" value="Login" @click="requestLogin">
-      <!-- <a id="login_btn" @click="requestLogin">
-        <button>Login</button>
-      </a> -->
+      <input type="submit" value="Login">
 
       <a id="signup" @click="signup">
         <button>SIGN UP</button>
       </a>
-      <a id="kakao_btn" @click="loginWithKakao" :disabled="loading">
+
+      <a id="kakao_btn" @click="loginWithKakao()">
         <img src="@/assets/btn_kakao.png" alt="" />
       </a>
     </form>
-    <!-- <a @click="getInfo">
-      <button>get infomation, check console</button>
-    </a> -->
   </div>
 </template>
 
@@ -45,94 +39,23 @@
 <script>
 import axios from 'axios'
 import router from'../../router'
-const storage = window.sessionStorage
-// const ai = axios.create({
-//   baseURL: 'http://70.12.247.78:8080/user/'
-// })
+import { mapActions } from 'vuex'
 
 export default {
   name: 'login',
   data: () => {
     return {
-      email: '',
-      password: '',
-      loading: false
+      credentials: {
+        email: '',
+        ps: ''
+      }
     }
   },
   methods: {
-    loginWithKakao () {
-      console.log("Kakao login button clicked")
-
-      Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37');
-      Kakao.Auth.login({
-        success: function(authObj) {
-          this.loading = true;
-          // const accessToken = authObj.access_token;
-          const refreshToken = authObj.refresh_token;
-          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
-          console.log('Login success')
-
-          // storage.setItem('jwt-auth-token', '')
-          // storage.setItem('login_user_name', '')
-          // storage.setItem('login_user_email', '')
-
-          axios.get(getUrl)
-            .then(res => {
-              // console.log(res.data)
-              if (res.data.status) {
-                storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
-                storage.setItem('login_user_name', res.data.data.name)
-                storage.setItem('login_user_email', res.data.data.email)
-                console.log(storage)
-              }
-            })
-            .finally(() => {
-              this.loading = false;
-              router.push('/')
-            })
-        },
-        fail: function(err) {
-          alert(JSON.stringify(err));
-        }
-      });
-    },
+    ...mapActions(['login', 'loginWithKakao']),
     signup() {
       router.push('/signup')
-    },
-    requestLogin() {
-      const postUrl = 'http://70.12.246.137:8080/user/login'
-      axios.post(postUrl, {
-        email: this.email,
-        pw: this.password
-      }).then(res => {
-        console.log(res.data.status)
-        if (res.data.status === true) {
-          // console.log(res)
-          storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
-          storage.setItem('login_user_name', '')
-          storage.setItem('login_user_email', res.data.data.email)
-          console.log(storage)
-          router.push('/')
-        } else {
-          alert('email 이나 password 를 확인하세요')
-        }
-      })
     }
-    // getInfo() {
-    //   ai.post(
-    //     '/info',
-    //     {
-    //       email: storage.getItem('login_user_email')
-    //     },
-    //     {
-    //       headers: {
-    //         'jwt-auth-token': storage.getItem('jwt-auth-token')
-    //       }
-    //     }
-    //   ).then(res => {
-    //     console.log(res)
-    //   })
-    // }
   }
 }
 </script>
