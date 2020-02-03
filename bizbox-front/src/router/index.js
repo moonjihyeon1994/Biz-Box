@@ -6,6 +6,7 @@ import Result from '@/components/result/Result.vue'
 import Login from '@/components/common/Login.vue'
 import Signup from '@/components/common/Signup.vue'
 import ResultSearch from '@/components/result/ResultSearch.vue'
+import Map from '@/components/map/kakaomap.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [
     path: '/result2',
     name: 'newResult',
     component: ResultSearch
+  },
+  {
+    path: '/map',
+    name: 'mapcd .',
+    component: Map
   }
 ]
 
