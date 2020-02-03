@@ -23,5 +23,7 @@ export default {
 </script>
 
 <style scoped>
-
+#app {
+  display: block;
+}
 </style>
