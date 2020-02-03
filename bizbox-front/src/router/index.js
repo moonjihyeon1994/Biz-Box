@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '@/components/login/Login.vue'
 import Home from '@/components/home/Home.vue'
 import BizMap from '@/components/bizmap/BizMap'
+import Modal from '@/components/modal/Modal.vue'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,13 @@ const routes = [
     path: '/bizmap',
     name: 'bizmap',
     component: BizMap
+  },
+  {
+    path: '/modal',
+    name: 'modal',
+    component: Modal
   }
+  // 바꿈
 ]
 
 const router = new VueRouter({
