@@ -1,4 +1,4 @@
-<template>    
+<template>
 <!-- 지도를 표시할 div 입니다 -->
 <div>
     <span @click="this.onLoad">지도</span>
@@ -12,11 +12,10 @@
       style="width:500px;height:400px;"/>
 </div>
 
-
 </template>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0574c7ce26ff4134a0dc5f831d6edd37&libraries=services"></script>
 <script>
-import VueDaumMap from 'vue-daum-map'   
+import VueDaumMap from 'vue-daum-map'
 
 export default {
     data: () => ({

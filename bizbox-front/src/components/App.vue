@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app color="transparent" flat hide-on-scroll>
+    <v-app-bar app color="transparent" flat>
       <v-toolbar-title style="width: 300px">
         <span>BizBox</span>
       </v-toolbar-title>
@@ -20,16 +20,17 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import '@/assets/css/reset.css'
+import '@/assets/css/common.css'
 export default {
   name: 'app',
   data: () => ({
     drawer: null,
     routeon: true,
     navList: [
+      { routeto: '/login', icon: 'mdi-account', title: 'Login' },
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
-      { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
-      { routeto: '/about', icon: 'mdi-information-outline', title: 'About' },
-      { routeto: '/login', icon: 'mdi-account', title: 'Login' }
+      { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' }
     ]
   }),
   methods: {
@@ -40,6 +41,3 @@ export default {
   }
 }
 </script>
-
-<style src="@/components/common/common.css"></style>
-<style scoped src="@/components/common/Navbar.css"></style>

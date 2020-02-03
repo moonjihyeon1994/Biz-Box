@@ -1,5 +1,5 @@
 <template>
-  <form class="container searchform" action="/result">
+  <form class="container searchform" action="/">
     <Vselect
       :items="items1"
       :labname="labname1"
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Vselect from '@/components/common/Vselect.vue'
+import Vselect from '@components/common/Vselect/Vselect.vue'
 export default {
   data: () => ({
     select1: null,

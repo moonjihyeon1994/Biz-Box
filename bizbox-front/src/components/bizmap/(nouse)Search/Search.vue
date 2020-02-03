@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import SearchForm from '@/components/home/SearchForm.vue'
+import SearchForm from './SearchForm/SearchForm.vue'
 export default {
   components: {
     SearchForm
@@ -16,4 +16,4 @@ export default {
 }
 </script>
 
-<style scoped src="./Vsearch.css"></style>
+<style scoped src="./Search.css"></style>
