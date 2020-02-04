@@ -4,16 +4,13 @@
 }
 
 /* Only for routerview container */
-.container.view {
+.viewcontainer {
     flex: 1;
     display: -webkit-flex;
     display: flex;
-    -webkit-justify-content: center;
-    justify-content: center;
     -webkit-align-items: center;
     align-items: stretch;
     flex-direction: column;
-
 }
 
 /* Set Background CSS */
