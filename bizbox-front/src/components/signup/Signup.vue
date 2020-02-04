@@ -1,38 +1,31 @@
 <template>
   <div id="signupForm">
-    <form action="" v-on:submit.prevent>
-      <input type="text" v-model="name"
+    <form action="" @submit.prevent="signup(credentials)">
+      <input v-model="credentials.name"
+        type="text"
         name="name"
         required
         placeholder="username"
         minlength="4"
       />
       <input
-        type="email" v-model="email"
+        type="email" v-model="credentials.email"
         name="email"
         placeholder="Email"
         required
         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
       />
       <input
-        type="password" v-model="password"
+        type="password" v-model="credentials.pw"
         name="password"
         required
         placeholder="Password"
         minlength="4"
       />
       <!-- <p>The password must be > 4 char</p> -->
-      <!-- <input
-        type="password"
-        name="confirmpassword"
-        required
-        placeholder="Confirm Password"
-        minlength="4"
-      /> -->
-      <!-- <p id="are_same">여기서 password confirm check</p> -->
+
       <input type="submit" value="Signup" disabled>
-      <input type="submit" value="Signup" @click="requestSignup"/>
-      <!-- <button type="submit">Sign up</button> -->
+      <input type="submit" value="Signup"/>
     </form>
   </div>
 </template>
@@ -44,39 +37,20 @@
 <script>
 import axios from 'axios'
 import router from'../../router'
-const storage = window.sessionStorage
+import { mapActions } from 'vuex'
 
 export default {
-  name: 'signup_here',
   data: () => {
     return {
-      name: '',
-      email: '',
-      password: ''
+      credentials: {
+        name: '',
+        email: '',
+        password: ''
+      }
     }
   },
   methods: {
-    requestSignup() {
-      const postUrl = 'http://70.12.246.137:8080/user/signup'
-      axios.post(postUrl, {
-        name: this.name,
-        email: this.email,
-        pw: this.password
-      }).then(res => {
-        if (res.data.status === true) {
-          // console.log(res)
-          storage.setItem('jwt-auth-token', res.headers['jwt-auth-token'])
-          storage.setItem('login_user_name', res.data.data.name)
-          storage.setItem('login_user_email', res.data.data.email)
-          console.log(storage)
-          router.push('/')
-        } else {
-          alert('회원가입 실패했습니다.')
-        }
-      }).catch ((err) => {
-        alert('회원가입을 실패했습니다.')
-      })
-    }
+    ...mapActions(['signup'])
   }
 }
 
@@ -159,9 +133,4 @@ button {
   color: #fff;
 }
 
-#google_btn {
-  /* background-color: #5135ee; */
-  height: 49px;
-  width: 222px;
-}
 </style>
