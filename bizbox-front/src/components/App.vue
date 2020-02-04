@@ -13,7 +13,7 @@
         </v-list-item>
       </v-list>
     </v-app-bar>
-    <div class="container view">
+    <div class="viewcontainer">
       <router-view />
     </div>
   </v-app>
