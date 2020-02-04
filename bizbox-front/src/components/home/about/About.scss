@@ -4,15 +4,106 @@ $color2: rgb(15, 66, 95);
 #bz-container {
   position: relative;
   width: 100%;
-  height: 800px;
+  height: 100%;
   background-color: white;
 
-  #bz-styleBox {
-    position: absolute;
-    width: 50%;
+  > div {
+    position: relative;
+    // border: 1px solid black;
+    width: 1200px;
     height: 600px;
-    top: 100px;
-    right: 0;
-    background-color: $color1;
+    margin: auto;
+    margin-bottom: 100px;
   }
+
+  .bz-aboutTitle {
+    position: absolute;
+    top: 80px;
+    font-size: 4em;
+    font-weight: bold;
+    color: $color2;
+  }
+
+  .bz-imgBox {
+    position: absolute;
+    width: 600px;
+    height: 100%;
+
+    img {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .bz-aboutText {
+    position: absolute;
+    width: 600px;
+    font-size: 1.5em;
+    top: 300px; 
+    text-align: justify;
+    padding: 0 70px;
+    font-weight: bold;
+  }
+
+  #bz-about1 {
+    position: relative;
+
+    .bz-imgBox {
+      right: 0;
+    }
+
+    .bz-aboutTitle {
+      left: 100px;
+    }
+
+    .colorBox {
+      position: absolute;
+      right: -400px;
+      width: 400px;
+      height: 600px;
+      background-color: $color1;
+    }
+  }
+  
+  #bz-about2 {
+    position: relative;
+
+    .bz-aboutTitle {
+      right: 100px;
+    }
+
+    .bz-aboutText {
+      right: 0;
+    }
+
+    .colorBox {
+      position: absolute;
+      left: -400px;
+      width: 400px;
+      height: 600px;
+      background-color: $color1;
+    }
+  }
+
+  #bz-about3 {
+    position: relative;
+
+    .bz-imgBox {
+      right: 0;
+    }
+
+    .bz-aboutTitle {
+      left: 100px;
+    }
+
+    .colorBox {
+      position: absolute;
+      right: -400px;
+      width: 400px;
+      height: 600px;
+      background-color: $color1;
+    }
+  }
+
 }
