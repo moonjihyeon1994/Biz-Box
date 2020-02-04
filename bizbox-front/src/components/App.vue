@@ -41,3 +41,10 @@ export default {
   }
 }
 </script>
+
+<style>
+@font-face {
+  font-family: 'OG';
+  src: url('../assets/fonts/OmniGothicL.woff');
+}
+</style>

@@ -1,7 +1,10 @@
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
 #bz-container {
   background-color: white;
   width: 100%;
-  height: 800px;
+  height: 750px;
 
   div {
     position: absolute;
@@ -11,14 +14,28 @@
     background-image: url('../../../assets/home_main_resized.png');
     width: 100%;
     height: 750px;
+
+     /* Tablet */
+     @media screen and (max-width: 992px) {
+      & {
+        height: 650px;
+      }
+    }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        height: 600px;
+      }
+    }
   }
 
   #bz-styleText {
     top: 80px;
     left: 60px;
     color: black;
-    font-size: 72px;
-    color: #ebab77;
+    font-size: 5em;
+    color: $color1;
 
     animation-name: mainTitle;
     animation-duration: 1.5s;
@@ -34,13 +51,41 @@
         left: 60px;
       }
     }
+
+    /* Tablet */
+    @media screen and (max-width: 992px) {
+      & {
+        font-size: 4em;
+        left: 20px;
+      }
+
+      @keyframes mainTitle {
+        from {
+          opacity: 0;
+          left: 0;
+        }
+        to {
+          opacity: 1;
+          left: 20px;
+        }
+      }
+    }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        left: 20px;
+        top: 100px;
+        font-size: 3em;
+      }
+    }
   }
 
   #bz-styleTestSub {
     top: 250px;
     left: 120px;
     color: black;
-    font-size: 48px;
+    font-size: 3em;
     color: rgb(255, 255, 255);
 
     animation-name: mainSub;
@@ -50,14 +95,40 @@
 
     @keyframes mainSub {
       0% {
-        display: none;
         opacity: 0;
         left: 0;
       }
       100% {
-        display: block;
         opacity: 1;
         left: 120px;
+      }
+    }
+
+     /* Tablet */
+     @media screen and (max-width: 992px) {
+      & {
+        font-size: 2em;
+        left: 30px;
+      }
+
+      @keyframes mainSub {
+        0% {
+          opacity: 0;
+          left: 0;
+        }
+        100% {
+          opacity: 1;
+          left: 30px;
+        }
+      }
+    }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        font-size: 1.5em;
+        left: 30px;
+        top: 200px;
       }
     }
   }
@@ -65,8 +136,8 @@
   #bz-startBox {
     background-color: rgba(0, 0, 0, 0.6);
     width: 600px;
-    height: 250px;
-    top: 450px;
+    height: 200px;
+    top: 460px;
     left: 50%;
     transform: translateX(-50%);
 
@@ -74,9 +145,25 @@
     box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
     color: rgb(223, 223, 223);
 
+    /* Tablet */
+    @media screen and (max-width: 992px) {
+      & {
+        width: 500px;
+        top: 400px;
+      }
+    }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        width: 400px;
+        top: 350px;
+      }
+    }
+
     #bz-startBox-text {
       position: relative;
-      top: 50px;
+      top: 35px;
       font-size: 28px;
       text-align: center;
       letter-spacing: 5px;
@@ -86,7 +173,7 @@
     #bz-startBox-start {
       position: relative;
       margin: auto;
-      top: 110px;
+      top: 70px;
       width: 300px;
       height: 50px;
       background-color: #2d81b5a6;
@@ -101,6 +188,20 @@
       &:hover {
         cursor: pointer;
         background-color: #2d81b5e8;
+      }
+    }
+
+    animation-name: startBox;
+    animation-duration: 1.5s;
+    animation-delay: 0.5s;
+    animation-timing-function: ease-in;
+
+    @keyframes startBox {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
       }
     }
   }
