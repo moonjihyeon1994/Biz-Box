@@ -10,7 +10,7 @@
       />
       <input v-model="credentials.pw"
         type="password"
-        name="password"
+        name="pw"
         required
         placeholder="Password"
         minlength="4"
