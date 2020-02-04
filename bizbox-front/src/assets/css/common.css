@@ -15,7 +15,7 @@
 
 /* Set Background CSS */
 div.v-application--wrap {
-    background-color: wheat;
+    background-color:#ffffff;
     /* background-image: url("../../assets/garocity.jpg"); */
     /* background-size: cover; */
     display: -webkit-flex;
