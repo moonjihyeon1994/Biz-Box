@@ -1,39 +1,36 @@
 <template>
-  <div class=tabcontainer>
+  <div class="tabcontainer">
     <div class="tab">
-      <button class="tablinks" @click="openCity($event, 'London')" id="defaultOpen">보고서</button>
-      <button class="tablinks" @click="openCity($event, 'Paris')">그래프</button>
-      <button class="tablinks" @click="openCity($event, 'Tokyo')">Tokyo</button>
+      <button class="tablinks" @click="openContents($event, 'Total')" id="defaultOpen">
+        보고서
+      </button>
+      <button class="tablinks" @click="openContents($event, 'Graph')">
+        그래프
+      </button>
+      <!-- <button class="tablinks" @click="openCity($event, 'Tokyo')">Tokyo</button> -->
     </div>
 
     <!-- Tab content -->
-    <div id="London" class="tabcontent">
-      <h3>보고서</h3>
-      <p>보여주자</p>
+    <div id="Total" class="tabcontent">
+      <!-- 여기에 형꺼 -->
     </div>
 
-    <div id="Paris" class="tabcontent">
-      <h3>귀찬다</h3>
-      <p>아주많이</p>
-    </div>
-
-    <div id="Tokyo" class="tabcontent">
-      <h3>Tokyo</h3>
-      <p>Tokyo is the capital of Japan.</p>
+    <div id="Graph" class="tabcontent">
+      <!-- 여기에 내꺼 -->
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  components: {
+  },
   mounted () {
     document.getElementById('defaultOpen').click()
   },
   methods: {
-    openCity (evt, cityName) {
-      // Declare all variables
+    openContents (evt, cityName) {
       let i, tabcontent, tablinks
-
       // Get all elements with class="tabcontent" and hide them
       tabcontent = document.getElementsByClassName('tabcontent')
       for (i = 0; i < tabcontent.length; i++) {
@@ -59,9 +56,12 @@ export default {
   overflow: hidden;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 3px 3px 0px 0px;
+  clear: both;
 }
-
+.tab div {
+  border: 0;
+}
 /* Style the buttons that are used to open the tab content */
 .tab button {
   background-color: inherit;
@@ -69,7 +69,7 @@ export default {
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 5px 16px;
   transition: 0.3s;
 }
 
