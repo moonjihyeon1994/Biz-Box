@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app color="transparent" flat>
+    <v-app-bar app :color="navColor" flat>
       <v-toolbar-title style="width: 300px">
         <span>BizBox</span>
       </v-toolbar-title>
@@ -13,7 +13,7 @@
         </v-list-item>
       </v-list>
     </v-app-bar>
-    <div class="viewcontainer">
+    <div class="viewcontainer" v-scroll="onScroll">
       <router-view />
     </div>
   </v-app>
@@ -31,10 +31,18 @@ export default {
       { routeto: '/login', icon: 'mdi-account', title: 'Login' },
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' }
-    ]
+    ],
+    navColor: 'transparent'
   }),
   methods: {
-    ...mapActions(['logout'])
+    ...mapActions(['logout']),
+    onScroll () {
+      if (document.documentElement.scrollTop === 0) {
+        this.navColor = 'transparent'
+      } else {
+        this.navColor = '#324043'
+      }
+    }
   },
   computed: {
     ...mapGetters(['isLoggedIn'])
