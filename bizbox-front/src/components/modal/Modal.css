@@ -15,14 +15,15 @@
 
 .modal-container {
   width: 80%;
-  height: 80%;
+  height: 400px;
   margin: 120px auto 0;
-  padding: 30px 30px;
+  padding: 10px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.432);
   transition: all 0.3s ease;
-  border-radius: 10px 10px 10px 10px;
+  border-radius: 3px;
+  overflow: auto;
 }
 
 .modal-header h3 {
@@ -74,4 +75,11 @@
 .modal-default-button {
   margin: 0px auto;
   text-align: center;
+}
+
+.close-button {
+  float: right;
+  position: relative;
+  top: 0px;
+  right: 0px;
 }
