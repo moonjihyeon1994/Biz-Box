@@ -32,7 +32,11 @@ export default {
       const boderHeight = 120
       let modalcontainer = document.getElementsByClassName('modal-container')
       let newHeight = window.innerHeight - boderHeight - 50 + 'px'
-      modalcontainer[1].style.height = newHeight
+      try {
+        modalcontainer[1].style.height = newHeight
+      } catch (e) {
+        // console.log(e)
+      }
     }
   }
 }
