@@ -6,7 +6,7 @@ import Result from '@/components/result/Result.vue'
 import Login from '@/components/common/Login.vue'
 import Signup from '@/components/common/Signup.vue'
 import ResultSearch from '@/components/result/ResultSearch.vue'
-
+import map from '@/components/map/Newmap.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -42,6 +42,11 @@ const routes = [
     path: '/result2',
     name: 'newResult',
     component: ResultSearch
+  },
+  {
+    path: '/map',
+    name: 'newResult',
+    component: map
   }
 ]
 

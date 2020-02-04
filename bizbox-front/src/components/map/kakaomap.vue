@@ -1,7 +1,7 @@
 <template>    
 <!-- 지도를 표시할 div 입니다 -->
-<div>
-    <span @click="this.onLoad">지도</span>
+ <div>
+<span @click="this.onLoad">지도</span>
 <vue-daum-map
       :appKey="this.appKey"
       :center.sync="this.center"
@@ -10,14 +10,11 @@
       :libraries="this.libraries"
       @load="this.onLoad"
       style="width:500px;height:400px;"/>
-</div>
-
-
+ </div>
 </template>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0574c7ce26ff4134a0dc5f831d6edd37&libraries=services"></script>
 <script>
-import VueDaumMap from 'vue-daum-map'   
-
+import VueDaumMap from 'vue-daum-map'x
 export default {
     data: () => ({
         appKey: '8227ff53a7c3554b706e45589733cb41', // 테스트용 appkey
@@ -38,5 +35,4 @@ export default {
 </script>
 
 <style>
-
 </style>
