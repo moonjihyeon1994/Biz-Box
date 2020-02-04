@@ -1,8 +1,5 @@
 import router from '../../router'
-// const Kakao = require('Kakao')
 
-const HOST = process.env.VUE_APP_SERVER_HOST
-// const KAKAOKEY = process.env.VUE_APP_SERVER
 const axios = require('axios')
 
 const state = {
@@ -31,7 +28,7 @@ const mutations = {
   },
   setUserEmail: (state, email) => {
     state.email = email
-    sessionStorage.setItem('login_user_name', email)
+    sessionStorage.setItem('login_user_email', email)
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = [])
@@ -62,6 +59,7 @@ const actions = {
     if (getters.isLoggedIn) {
       router.push('/')
     } else {
+      console.log(credentials)
       axios
         .post('http://70.12.246.137:8080/user/login/', credentials)
         .then(res => {
@@ -90,73 +88,38 @@ const actions = {
         })
     }
   },
-  loginWithKakao: ({ commit, getters }) => {
-    Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37')
-    Kakao.Auth.login({
-      success: function (authObj) {
-        const refreshToken = authObj.refresh_token
-        const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
-        console.log(authObj)
-
-        axios.get(getUrl)
-          .then(res => {
-            if (res.data.status) {
-              commit('setToken', res.headers['jwt-auth-token'])
-              commit('setUsername', 'heecheol')
-              commit('setUserEmail', res.data.data.email)
-              console.log(state)
-            }
-          })
-          .finally(() => {
-            router.push('/')
-          })
-      },
-      fail: function (err) {
-        alert(JSON.stringify(err))
-      }
-    })
-  },
-
-  signup: (
-    { commit, getters, dispatch },
-    { username, email, password, passwordConfirmation }
-  ) => {
-    commit('clearErrors')
-    if (getters.isLoggedIn) {
-      router.push('/')
-    } else {
-      commit('clearErrors')
-      if (!username) {
-        commit('pushError', 'ID를 입력하세요')
-      }
-      if (!email) {
-        commit('pushError', 'E-mail을 입력하세요')
-      }
-      if (password.length < 8) {
-        commit('pushError', '비밀번호는 8자 이상이어야 합니다')
-      } else {
-        if (password === passwordConfirmation) {
-          axios
-            .post(HOST + '/api/v1/user/', { username, email, password })
-            .then(message => {
-              const credentials = {
-                username,
-                password
-              }
-              dispatch('login', credentials)
-            })
-            .catch(err => {
-              if (!err.response) {
-                commit('pushError', 'Network Error..')
-              } else {
-                commit('pushError', 'Some error occured')
-              }
-            })
-        } else {
-          commit('pushError', '비밀번호가 일치하지 않습니다')
+  loginWithKakao: ({ commit }, getUrl) => {
+    axios.get(getUrl)
+      .then(res => {
+        if (res.data.status) {
+          commit('setToken', res.headers['jwt-auth-token'])
+          commit('setUsername', 'heecheol')
+          commit('setUserEmail', res.data.data.email)
+          // console.log('state')
+          console.log(state)
+          // console.log('sessionstorage')
+          // console.log(sessionStorage)
+          router.push('/')
         }
-      }
-    }
+      })
+  },
+  signup: ({ commit }, credentials) => {
+    const postUrl = 'http://70.12.246.137:8080/user/signup'
+    axios.post(postUrl, credentials)
+      .then(res => {
+        if (res.data.status === true) {
+          commit('setToken', res.headers['jwt-auth-token'])
+          commit('setUsername', res.data.data.name)
+          commit('setUserEmail', res.data.data.email)
+          // console.log('state')
+          console.log(state)
+          // console.log('sessionstorage')
+          // console.log(sessionStorage)
+          router.push('/')
+        } else {
+          alert('회원가입에 실패했습니다')
+        }
+      })
   }
 }
 

@@ -8,7 +8,7 @@
         required
         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
       />
-      <input v-model="credentials.ps"
+      <input v-model="credentials.pw"
         type="password"
         name="password"
         required
@@ -25,7 +25,7 @@
         <button>SIGN UP</button>
       </a>
 
-      <a id="kakao_btn" @click="loginWithKakao()">
+      <a id="kakao_btn" @click="requestKakao">
         <img src="@/assets/btn_kakao.png" alt="" />
       </a>
     </form>
@@ -39,7 +39,7 @@
 <script>
 import axios from 'axios'
 import router from'../../router'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'login',
@@ -47,12 +47,25 @@ export default {
     return {
       credentials: {
         email: '',
-        ps: ''
+        pw: ''
       }
     }
   },
   methods: {
     ...mapActions(['login', 'loginWithKakao']),
+    requestKakao () {
+      Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37')
+      Kakao.Auth.login({
+        success: (authObj) => {
+          const refreshToken = authObj.refresh_token
+          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
+          this.loginWithKakao(getUrl)
+        },
+        fail: function (err) {
+          alert(JSON.stringify(err))
+        }
+      })
+    },
     signup() {
       router.push('/signup')
     }
