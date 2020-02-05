@@ -2,36 +2,38 @@ $color1: rgb(232, 113, 91);
 $color2: rgb(15, 66, 95);
 
 #bz-container {
+  position: relative;
   background-color: white;
   width: 100%;
-  height: 750px;
+  height: 1080px;
+
+  /* Tablet */
+  @media screen and (max-width: 992px) {
+    & {
+      height: 650px;
+    }
+  }
+  
+  /* Smart Phone */
+  @media screen and (max-width: 600px) {
+    & {
+      height: 600px;
+    }
+  }
 
   div {
     position: absolute;
   }
 
   #bz-styleBox {
+    position: relative;
     background-image: url('../../../assets/home_main_resized.png');
     width: 100%;
-    height: 750px;
-
-     /* Tablet */
-     @media screen and (max-width: 992px) {
-      & {
-        height: 650px;
-      }
-    }
-    
-    /* Smart Phone */
-    @media screen and (max-width: 600px) {
-      & {
-        height: 600px;
-      }
-    }
+    height: 1080px;
   }
 
   #bz-styleText {
-    top: 80px;
+    top: 180px;
     left: 60px;
     color: black;
     font-size: 5em;
@@ -82,7 +84,7 @@ $color2: rgb(15, 66, 95);
   }
 
   #bz-styleTestSub {
-    top: 250px;
+    top: 350px;
     left: 120px;
     color: black;
     font-size: 3em;
@@ -137,7 +139,7 @@ $color2: rgb(15, 66, 95);
     background-color: rgba(0, 0, 0, 0.6);
     width: 600px;
     height: 200px;
-    top: 460px;
+    top: 610px;
     left: 50%;
     transform: translateX(-50%);
 

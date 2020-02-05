@@ -11,14 +11,14 @@ $color2: rgb(15, 66, 95);
     position: relative;
     // border: 1px solid black;
     width: 1200px;
-    height: 600px;
+    height: 1080px;
     margin: auto;
-    margin-bottom: 100px;
+    padding-top: 200px;
   }
 
   .bz-aboutTitle {
     position: absolute;
-    top: 80px;
+    top: 280px;
     font-size: 4em;
     font-weight: bold;
     color: $color2;
@@ -31,8 +31,6 @@ $color2: rgb(15, 66, 95);
 
     img {
       position: relative;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
 
@@ -40,7 +38,7 @@ $color2: rgb(15, 66, 95);
     position: absolute;
     width: 600px;
     font-size: 1.5em;
-    top: 300px; 
+    top: 500px; 
     text-align: justify;
     padding: 0 70px;
     font-weight: bold;
