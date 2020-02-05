@@ -40,6 +40,12 @@ div.v-input__control {
     flex: 1;
 }
 
+.biz-item-center-1 {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
 p {
     color: #000000;
     font-size: larger;
