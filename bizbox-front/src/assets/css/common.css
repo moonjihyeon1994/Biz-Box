@@ -1,0 +1,106 @@
+:root {
+    --nav-text-color: #fdc864;
+}
+
+#app {
+    text-align: center;
+    color: #000000;
+}
+
+/* Only for routerview container */
+.viewcontainer {
+    flex: 1;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+/* Set Background CSS */
+div.v-application--wrap {
+    background-color:#ffffff;
+    /* background-image: url("../../assets/garocity.jpg"); */
+    /* background-size: cover; */
+    display: -webkit-flex;
+    display: flex;
+}
+
+div.v-input__control {
+    color: #455054;
+}
+
+.biz-container {
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+}
+
+.biz-item-1 {
+    flex: 1;
+}
+
+.biz-item-center-1 {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    color: #000000;
+    font-size: larger;
+}
+
+.m-8px {
+    margin: 8px
+}
+
+@media (min-width:700px) {
+    .container {
+        display: -webkit-flex;
+        display: flex;
+        width: 100%
+    }
+}
+div.v-toolbar__content {
+    color: #ffffff;
+    background-color: transparent;
+}
+
+
+/* Nav bar */
+i.v-icon.notranslate.mdi.mdi-menu.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-account.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-information-outline.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
+    color: #ffffff;
+}
+
+div.v-list-item__title {
+    color: var(--nav-text-color);
+}
+
+div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
+    background-color: transparent;
+    color: var(--nav-text-color);
+}
+
+
+div.v-toolbar__title span {
+    color: var(--nav-text-color);
+}
+
+@media (max-width:700px) {
+    div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
+        display: none;
+    }
+}

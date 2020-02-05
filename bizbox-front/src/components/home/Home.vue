@@ -1,23 +1,31 @@
 <template>
-  <div class="container">
-    <div class="flex-item-1">
-    <Vsearch></Vsearch>
+  <div class="biz-container">
+    <div class="biz-item-1">
+      <start></start>
+      <h1>hello</h1>
     </div>
     <div class="flex-item-1">
-    <AddressList></AddressList>
+      <h1>hello</h1>
+    </div>
+    <div class="flex-item-1">
+      <h1>hello</h1>
+    </div>
+    <div class="flex-item-1">
+      <News></News>
     </div>
   </div>
 </template>
 
 <script>
-import Vsearch from './Vsearch.vue'
-import AddressList from './AddressList'
+import Start from './start/Start'
+import News from './news/News'
+
 export default {
-  name: 'Home',
   components: {
-    Vsearch,
-    AddressList
+    Start,
+    News
   }
 }
 </script>
-<style scoped src="./home.css"></style>
+
+<style scoped src="./Home.css"></style>
