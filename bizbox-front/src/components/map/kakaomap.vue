@@ -100,12 +100,14 @@ export default {
       // eslint-disable-next-line no-unused-vars
       let drawingOverlay // 그려지고 있는 원의 반경을 표시할 커스텀오버레이 입니다
 
+      // eslint-disable-next-line no-unused-vars
       let circles = []
 
       let vm = this
       // 지도에 클릭 이벤트를 등록합니다
       // eslint-disable-next-line no-undef
       kakao.maps.event.addListener(this.map, 'click', function (mouseEvent) {
+        removeCircles()
         // 클릭 이벤트가 발생했을 때 원을 그리고 있는 상태가 아니면 중심좌표를 클릭한 지점으로 설정합니다
         if (!vm.drawingFlag) {
           // 상태를 그리고있는 상태로 변경합니다
@@ -174,7 +176,7 @@ export default {
 
             // 반경 정보를 표시할 커스텀오버레이의 내용입니다
             var radius = Math.round(vm.drawingCircle.getRadius())
-            var content =
+            let content =
                 '<div class="overlay">반경 <span class="number">' +
                 radius +
                 '</span>m</div>'
@@ -214,12 +216,11 @@ export default {
           // eslint-disable-next-line no-undef
           var polyline = new kakao.maps.Polyline({
             path: [vm.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
-            strokeWeight: 3, // 선의 두께 입니다
+            strokeWeight: 1, // 선의 두께 입니다
             strokeColor: '#00a0e9', // 선의 색깔입니다
             strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
             strokeStyle: 'solid' // 선의 스타일입니다
           })
-
           // 원 객체를 생성합니다
           // eslint-disable-next-line no-undef
           var circle = new kakao.maps.Circle({
@@ -232,51 +233,50 @@ export default {
             fillColor: '#00a0e9', // 채우기 색깔입니다
             fillOpacity: 0.2 // 채우기 불투명도입니다
           })
-
           var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
-          var content = getTimeHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
-
+          // eslint-disable-next-line no-unused-vars
+          var html = getBoxHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
           // 반경정보를 표시할 커스텀 오버레이를 생성합니다
           // eslint-disable-next-line no-undef
           var radiusOverlay = new kakao.maps.CustomOverlay({
-            content: content, // 표시할 내용입니다
+            content: html, // 표시할 내용입니다
             position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
             xAnchor: 0.5,
             yAnchor: 1,
             zIndex: 1
           })
-
           // 원을 지도에 표시합니다
-          circle.setMap(this.map)
-
+          circle.setMap(vm.map)
           // 선을 지도에 표시합니다
-          polyline.setMap(this.map)
+          polyline.setMap(vm.map)
 
           // 반경 정보 커스텀 오버레이를 지도에 표시합니다
-          radiusOverlay.setMap(this.map)
-
+          radiusOverlay.setMap(vm.map)
           // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
-          var radiusObj = {
+          // eslint-disable-next-line no-unused-vars
+          let radiusObj = {
             polyline: polyline,
             circle: circle,
             overlay: radiusOverlay
           }
-
           // 배열에 추가합니다
           // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
           circles.push(radiusObj)
-
           // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
           vm.drawingFlag = false
 
           // 중심 좌표를 초기화 합니다
           vm.centerPosition = null
+          // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+          vm.drawingCircle.setMap(null)
+          vm.drawingLine.setMap(null)
+          vm.drawingOverlay.setMap(null)
         }
       })
 
       // 지도에 표시되어 있는 모든 원과 반경정보를 표시하는 선, 커스텀 오버레이를 지도에서 제거합니다
       // eslint-disable-next-line no-unused-vars
-      function removeCircle () {
+      function removeCircles () {
         for (var i = 0; i < circles.length; i++) {
           circles[i].circle.setMap(null)
           circles[i].polyline.setMap(null)
@@ -286,9 +286,8 @@ export default {
       }
 
       // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
-      // 그려진 원의 반경 정보와 반경에 대한 도보, 자전거 시간을 계산하여
       // HTML Content를 만들어 리턴하는 함수입니다
-      function getTimeHTML (distance) {
+      function getBoxHTML (distance) {
         // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
         var walkkTime = (distance / 67) | 0
         var walkHour = ''
@@ -334,7 +333,6 @@ export default {
           '        <span class="label">자전거</span>' + bycicleHour + bycicleMin
         content += '    </li>'
         content += '</ul>'
-
         return content
       }
     }
@@ -366,5 +364,7 @@ export default {
 }
 .overlay {
   background-color: pink;
+  width: 300px;
+  height: 180px;
 }
 </style>
