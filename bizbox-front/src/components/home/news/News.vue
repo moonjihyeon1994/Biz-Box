@@ -1,0 +1,63 @@
+<template>
+  <div class="biz-container">
+    <h3>오늘의 뉴스</h3>
+    <v-carousel height="100%"  :show-arrows="arrowAble" hide-delimiters vertical cycle interval="4000">
+      <v-carousel-item
+        v-for="news in newses"
+        :key="news.title"
+        class="news-container"
+      >
+        <a :href="news.url" target="_blank">{{ news.title }}</a>
+      </v-carousel-item>
+    </v-carousel>
+  </div>
+</template>
+
+<script>
+import axios from '../../../js/http-commons'
+export default {
+  data () {
+    return {
+      newses: [],
+      arrowAble: false
+    }
+  },
+  methods: {
+    getNews () {
+      axios
+        .get('/crawling/naver')
+        .then(res => {
+          this.newses = res.data.headlines
+        })
+        .catch(err => {
+          alert(err, '불러울 뉴스 데이터가 없습니다')
+        })
+    }
+  },
+  mounted () {
+    this.getNews()
+  }
+}
+</script>
+
+<style scoped>
+.biz-container {
+  text-align: center;
+}
+
+.news-container {
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+h3 {
+  font-size: 3vw;
+}
+a {
+  font-size: 2.5vw;
+  text-decoration: none;
+}
+a:hover {
+  color: hotpink;
+}
+</style>
