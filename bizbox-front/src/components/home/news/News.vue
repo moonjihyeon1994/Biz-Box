@@ -27,7 +27,6 @@ export default {
       axios
         .get('/crawling/naver')
         .then(res => {
-          console.log(res)
           this.newses = res.data.headlines
         })
         .catch(err => {

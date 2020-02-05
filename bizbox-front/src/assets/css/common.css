@@ -1,6 +1,10 @@
+:root {
+    --nav-text-color: #fdc864;
+}
+
 #app {
     text-align: center;
-    color: #0000;
+    color: #000000;
 }
 
 /* Only for routerview container */
@@ -52,6 +56,10 @@ p {
         width: 100%
     }
 }
+div.v-toolbar__content {
+    color: #ffffff;
+    background-color: transparent;
+}
 
 
 /* Nav bar */
@@ -71,23 +79,18 @@ i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
     color: #ffffff;
 }
 
-div.v-toolbar__content {
-    color: #ffffff;
-    background-color: transparent;
-}
-
 div.v-list-item__title {
-    color: #000000;
+    color: var(--nav-text-color);
 }
 
 div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
     background-color: transparent;
-    color: #000000;
+    color: var(--nav-text-color);
 }
 
 
 div.v-toolbar__title span {
-    color: #000000;
+    color: var(--nav-text-color);
 }
 
 @media (max-width:700px) {
