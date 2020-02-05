@@ -1,15 +1,28 @@
 <template>
-  <div id="chart1">
-    연령별 매출
-    <div id="back" :style="allowDiv"></div>
-    <spinner :loading="loadingStatus"></spinner>
-    <horizontal-bar-chart
-      v-if="searchOption === 1"
-      :chart-data="chartdata"
-      :options="chartoptions"
-      width="500px"
-      height="300px"
-    ></horizontal-bar-chart>
+  <div class="secition-content">
+    <div class="secition-content-title-area">
+      <h2 class="section-content-title">
+        연령별 매출
+        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon></span>
+        <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
+      </h2>
+      <div class="section-content-update">2020-02-05 업데이트</div>
+    </div>
+    <p class="point-content-area">
+      <span class="point-title">{{maxAgeMaker}}</span>
+      <span class="point-percent">{{percentMaker}}</span>
+      <span class="point-normal">매출이 가장 많아요.</span>
+    </p>
+    <div id="chart">
+      <div id="back" :style="allowDiv"></div>
+      <spinner :loading="loadingStatus"></spinner>
+      <horizontal-bar-chart
+        :chart-data="chartdata"
+        :options="chartoptions"
+        width="500px"
+        height="300px"
+      ></horizontal-bar-chart>
+    </div>
   </div>
 </template>
 
@@ -17,6 +30,7 @@
 import HorizontalBarChart from '@/lib/HorizontalBarChart'
 import axios from '@/js/http-commons'
 import Spinner from '../../../../result/Spinner'
+import './graphs.css'
 export default {
   components: {
     HorizontalBarChart,
@@ -24,6 +38,8 @@ export default {
   },
   data () {
     return {
+      data: null,
+      popflag: false,
       chartdata: null,
       chartoptions: null,
       result: null,
@@ -54,10 +70,32 @@ export default {
       }
     }
   },
+  computed: {
+    percentMaker: function () {
+      if (this.result == null) return
+      let totalNum = Math.max.apply(null, this.data)
+      return '(' + totalNum + '원' + ')'
+    },
+    maxAgeMaker: function () {
+      if (this.result == null) return
+      let labels = ['10대', '20대', '30대', '40대', '50대', '60대 이상']
+      let maxAge = -1
+      for (let index = 0; index < this.data.length; index++) {
+        if (maxAge < this.data[index]) {
+          maxAge = index
+        }
+      }
+      return labels[maxAge]
+    }
+  },
   mounted () {
     this.draw()
   },
   methods: {
+    popup () {
+      console.log('popup')
+      this.popflag = !this.popflag
+    },
     draw () {
       this.chartdata = null
       this.chartoptions = null
@@ -103,7 +141,7 @@ export default {
             sumOf50 += Number(this.result[index].ad)
             sumOf60 += Number(this.result[index].ae)
           }
-
+          this.data = [sumOf10, sumOf20, sumOf30, sumOf40, sumOf50, sumOf60]
           sumOf10 /= 100000000
           sumOf20 /= 100000000
           sumOf30 /= 100000000
@@ -169,6 +207,12 @@ export default {
 <style scoped lang="scss">
 [v-cloak] {
     display: none;
+}
+
+#chart {
+  width: 500px;
+  height: 300px;
+  overflow: hidden;
 }
 
 #chart1 {

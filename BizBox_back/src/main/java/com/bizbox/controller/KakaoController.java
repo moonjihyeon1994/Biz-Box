@@ -44,7 +44,7 @@ public class KakaoController {
 		String access_Token = kakao.getAccessToken(refresh_token);
 		log.info("controller access_token : {}" + access_Token);
 		HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
-
+		kakao.kakaoLogout(access_Token);
 		String nickname = "";
 		String email = "";
 		if (userInfo.get("email") != null) {
