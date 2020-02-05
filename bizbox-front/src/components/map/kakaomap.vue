@@ -163,7 +163,6 @@ export default {
           vm.drawingLine.setPath(linePath)
           // 원의 반지름을 선 객체를 이용해서 얻어옵니다
           var length = vm.drawingLine.getLength()
-          console.log(vm.drawingLine)
           if (length > 0) {
             // 그려지고 있는 원의 중심좌표와 반지름입니다
             var circleOptions = {
@@ -176,7 +175,7 @@ export default {
             // 반경 정보를 표시할 커스텀오버레이의 내용입니다
             var radius = Math.round(vm.drawingCircle.getRadius())
             var content =
-                '<div class="info">반경 <span class="number">' +
+                '<div class="overlay">반경 <span class="number">' +
                 radius +
                 '</span>m</div>'
 
@@ -242,8 +241,8 @@ export default {
           var radiusOverlay = new kakao.maps.CustomOverlay({
             content: content, // 표시할 내용입니다
             position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
-            xAnchor: 0,
-            yAnchor: 0,
+            xAnchor: 0.5,
+            yAnchor: 1,
             zIndex: 1
           })
 
@@ -277,7 +276,7 @@ export default {
 
       // 지도에 표시되어 있는 모든 원과 반경정보를 표시하는 선, 커스텀 오버레이를 지도에서 제거합니다
       // eslint-disable-next-line no-unused-vars
-      function removeCircles () {
+      function removeCircle () {
         for (var i = 0; i < circles.length; i++) {
           circles[i].circle.setMap(null)
           circles[i].polyline.setMap(null)
@@ -364,5 +363,8 @@ export default {
   top: 100px;
   left: 50px;
   border-radius: 3px;
+}
+.overlay {
+  background-color: pink;
 }
 </style>
