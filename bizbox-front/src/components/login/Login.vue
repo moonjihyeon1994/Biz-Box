@@ -55,15 +55,18 @@ export default {
     ...mapActions(['login', 'loginWithKakao']),
     requestKakao () {
       Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37')
-      Kakao.Auth.login({
+      Kakao.Auth.loginForm({
         success: (authObj) => {
+          console.log(authObj)
           const refreshToken = authObj.refresh_token
+
           const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
           this.loginWithKakao(getUrl)
         },
         fail: function (err) {
           alert(JSON.stringify(err))
-        }
+        },
+        persistAccessToken: false
       })
     },
     signup() {
