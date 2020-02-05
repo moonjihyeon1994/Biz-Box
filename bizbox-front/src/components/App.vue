@@ -12,6 +12,20 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <v-list dense v-if="isLoggedIn">
+        <v-list-item>
+          <v-list-item-content @click.prevent="logout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-list dense v-else v-for="item in logList" :key="item">
+        <v-list-item link :to="item.routeto">
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-app-bar>
     <div class="viewcontainer" v-scroll="onScroll">
       <router-view />
@@ -26,11 +40,12 @@ export default {
   name: 'app',
   data: () => ({
     drawer: null,
-    routeon: true,
     navList: [
-      { routeto: '/login', icon: 'mdi-account', title: 'Login' },
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' }
+    ],
+    logList: [
+      { routeto: '/login', icon: 'mdi-account', title: 'Login' }
     ],
     navColor: 'transparent'
   }),
@@ -40,7 +55,7 @@ export default {
       if (document.documentElement.scrollTop === 0) {
         this.navColor = 'transparent'
       } else {
-        this.navColor = '#324043'
+        this.navColor = '#0f196e'
       }
     }
   },
