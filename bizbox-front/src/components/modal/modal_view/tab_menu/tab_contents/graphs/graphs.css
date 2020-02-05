@@ -1,0 +1,45 @@
+.point-content-area {
+    font-size: 22px;
+    word-break: keep-all;
+    clear: both;
+    content: '';
+}
+
+.point-title {
+    color: red;
+}
+
+.point-percent {
+    color: #e27398;
+}
+
+.point-normal {
+    margin-left: 5px;
+    
+}
+
+.icon-popup {
+    font-size: 15px;
+    float: right;
+    margin-top: 5px;
+}
+
+.secition-content {
+    box-sizing: border-box;
+    border: 5px;
+}
+
+.section-content-title {
+    font-size: 15px;
+    position: relative;
+    float: left;
+}
+
+.section-content-update {
+    font-size: 11px;
+    float: right;
+}
+
+.secition-content-title-area {
+    margin-bottom: 30px;
+}
