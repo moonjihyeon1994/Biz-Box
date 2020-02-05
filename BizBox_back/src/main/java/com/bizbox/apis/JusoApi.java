@@ -457,4 +457,32 @@ public class JusoApi {
 		}
 		return LNm;
 	}
+	
+	public JSONArray findEveryStore(String xy, String radius) throws IOException {
+		int idx = 1;
+		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		java.util.List<String> names = new ArrayList<String>();
+		JSONArray itemsArray = null;
+		while (true) {
+			String str = findStore(xy, radius, String.valueOf(idx));
+			idx++;
+			try {
+				JSONParser jsonParse = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParse.parse(str);
+
+				JSONObject header = (JSONObject) jsonObj.get("header");
+				String resultCode = (String) header.get("resultCode");
+				if (resultCode.equals("03"))
+					break;
+				JSONObject body = (JSONObject) jsonObj.get("body");
+				itemsArray = (JSONArray) body.get("items");
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				log.error("find every store 에러 : {}", e);
+			}
+		}
+		return itemsArray;
+	}
 }

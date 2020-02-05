@@ -61,6 +61,7 @@ public class UserController {
 		HttpStatus status = null;
 		try {
 			if(userService.loginUser(user)) {
+//				User loginuser = 
 				String token = jwtService.create(user);
 				res.setHeader("jwt-auth-token", token);
 				resultMap.put("status", true);
