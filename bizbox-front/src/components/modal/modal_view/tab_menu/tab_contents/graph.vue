@@ -22,4 +22,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.chart1 [
+  
+]
+</style>

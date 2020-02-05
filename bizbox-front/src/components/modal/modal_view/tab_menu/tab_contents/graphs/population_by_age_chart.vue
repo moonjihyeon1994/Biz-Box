@@ -6,8 +6,8 @@
     <bar-chart
       :chart-data="chartdata"
       :options="chartoptions"
-      width="300px"
-      height="100px"
+      width="400px"
+      height="200px"
     ></bar-chart>
   </div>
 </template>

@@ -1,5 +1,6 @@
 package com.bizbox.controller;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,18 @@ public class StoreCountController {
 			String xy = api.getAddressByXY(num);
 			JSONObject total = api.findAllStore(xy, range);
 			
+			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping("/storecountByxy/{x}/{y}/{range}")
+	public ResponseEntity<Object> getEveryStore(@PathVariable String x, @PathVariable String y, @PathVariable String range){
+		try {
+			String xy = x+","+y;
+			JSONObject total = api.findAllStore(xy, range);
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

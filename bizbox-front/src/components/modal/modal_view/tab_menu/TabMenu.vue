@@ -73,7 +73,7 @@ export default {
   cursor: pointer;
   padding: 5px 16px;
   transition: 0.3s;
-  width: 20%;
+  width: 80px;
   margin: 0;
 }
 .close-button{
