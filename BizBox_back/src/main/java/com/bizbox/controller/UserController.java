@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +33,9 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/signup")
+	@Transactional
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user, HttpServletResponse res) {
-		System.out.println(user.toString());
+		log.info("유저 가입중 : {}", user.toString());
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {
@@ -52,7 +54,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
+	@Transactional
 	public ResponseEntity<Map<String, Object>> Login(@RequestBody User user, HttpServletResponse res) {
+		log.info("유저 로그인중 : {}", user.toString());
 		Map<String, Object>resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {

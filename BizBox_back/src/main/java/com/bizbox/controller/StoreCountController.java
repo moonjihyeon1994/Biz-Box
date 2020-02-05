@@ -26,7 +26,6 @@ public class StoreCountController {
 		try {
 			String num = api.getAddressByName(address);
 			String xy = api.getAddressByXY(num);
-			System.out.println(xy);
 			JSONObject total = api.findAllStore(xy, range);
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
 		} catch (Exception e) {

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         maxBytesLocalHeap="300M" updateCheck="false"> <!-- CacheManager에 의해 관리되는 캐시의 메모리를 300M로 제한 -->
+
+    <!-- 임시저장 경로를 설정 -->
+    <diskStore path="java.io.tmpdir" />
+    <!-- 
+        Cache에 저장할 레퍼런스의 최대값을 100000으로 지정,
+        maxDepthExceededBehavior = "continue" :  초과 된 최대 깊이에 대해 경고하지만 크기가 조정 된 요소를 계속 탐색
+        maxDepthExceededBehavior = "abort" : 순회를 중지하고 부분적으로 계산 된 크기를 즉시 반환
+    -->
+    <sizeOfPolicy maxDepth="100000" maxDepthExceededBehavior="continue"/>
+
+   <!-- default Cache 설정 (반드시 선언해야 하는 Cache) -->
+    <defaultCache
+            eternal="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="1200"
+            overflowToDisk="false"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+
+    <!-- 사용하고자 하는 캐시 별 설정 -->
+    <cache name="salesInfosub"
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1200"
+           overflowToDisk="false"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+   <cache name="StoreCount"
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1200"
+           overflowToDisk="false"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+</ehcache>
