@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app dark color="#041b2d">
+    <v-app-bar app :color="navColor" flat>
       <v-toolbar-title style="width: 300px">
         <span>BizBox</span>
       </v-toolbar-title>
@@ -12,44 +12,57 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <v-list dense v-if="isLoggedIn">
+        <v-list-item>
+          <v-list-item-content @click.prevent="logout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-list dense v-else v-for="item in logList" :key="item">
+        <v-list-item link :to="item.routeto">
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-app-bar>
-    <div class="container view">
+    <div class="viewcontainer" v-scroll="onScroll">
       <router-view />
     </div>
   </v-app>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import '@/assets/css/reset.css'
+import '@/assets/css/common.css'
 export default {
   name: 'app',
   data: () => ({
     drawer: null,
-    titleon: true,
     navList: [
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
-      { routeto: '/result', icon: 'mdi-information-outline', title: 'Result' },
-      { routeto: '/about', icon: 'mdi-information-outline', title: 'About' },
+      { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' },
+      { routeto: '/modal', icon: 'mdi-information-outline', title: 'Modal' }
+      // 바꾼거
+    ],
+    logList: [
       { routeto: '/login', icon: 'mdi-account', title: 'Login' }
-    ]
+    ],
+    navColor: 'transparent'
   }),
   methods: {
     ...mapActions(['logout']),
-    onResize () {
-      if (window.innerWidth > 700) {
-        this.titleon = true
+    onScroll () {
+      if (document.documentElement.scrollTop === 0) {
+        this.navColor = 'transparent'
       } else {
-        this.titleon = false
+        this.navColor = '#0f196e'
       }
     }
-  },
-  created () {
-    this.onResize()
   },
   computed: {
     ...mapGetters(['isLoggedIn'])
   }
 }
 </script>
-
-<style src="@/components/common/common.css"></style>
-<style scoped src="@/components/common/Navbar.css"></style>
