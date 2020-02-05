@@ -3,6 +3,7 @@
    <div  class="a ssearchbox" >
     <input v-model="name" type="text" placeholder="검색어입력">
     <button  v-on:click="asdf">검색</button>
+    <textarea id="result" v-model="message"></textarea>
   </div>
     <div class="map" id="map" style="width:500px;height:400px;"></div>
   </div>
@@ -18,12 +19,14 @@ export default {
       clusterer: null,
       marker: null, 
       infowindow: null,
-      message: '안녕하세요',
+      message: null,
       ifchanege: null,
       addListener:null
     }
   },
   mounted() {
+    let Message='ddddd'
+    this.message=Message
     var container = document.getElementById('map')
 
     var options = {
@@ -32,6 +35,7 @@ export default {
     }
     this.geocoder = new kakao.maps.services.Geocoder()//코더생성
     this.map = new kakao.maps.Map(container, options)//맵 생성
+    let Map=this.map
     this.marker = new kakao.maps.Marker({//마커생성
             map: this.map,
             position: new kakao.maps.LatLng(37.505691, 127.0298106)
@@ -41,10 +45,26 @@ export default {
              this.name
           })
     this.ifchanege = this.map.getCenter();
-    console.log(kakao)
-    kakao.maps.event.addListener(this.map, 'idle', function() {
-    alert("ddddddddddddddddd")
+    // console.log(kakao)
+   
+      kakao.maps.event.addListener(this.map, 'bounds_changed', () => 
+      {             
+      // 지도 영역정보를 얻어옵니다 
+      var bounds = Map.getBounds();
+      
+      // 영역정보의 남서쪽 정보를 얻어옵니다 
+      var swLatlng = bounds.getSouthWest();
+      
+      // 영역정보의 북동쪽 정보를 얻어옵니다 
+      var neLatlng = bounds.getNorthEast();
+      
+      this.message = '영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString()  + '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 <'
+      console.log(this.message)
+      // this.message = '영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString()  + '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 <'
       });
+    
+  var resultDiv = document.getElementById('result');   
+    resultDiv.innerHTML = Message;
   },
   watch: {
     ifchanege: function (newVal, oldVal) {
