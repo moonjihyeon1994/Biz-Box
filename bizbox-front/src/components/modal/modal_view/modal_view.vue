@@ -3,7 +3,7 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <button class="close-button" @click="$emit('close')">x</button>
+          <button class="close-button" @click="$emit('close')"><v-icon>mdi-close-circle-outline</v-icon></button>
           <TabMenu />
           <hr />
         </div>

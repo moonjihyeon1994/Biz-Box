@@ -61,11 +61,12 @@ public class UserController {
 		HttpStatus status = null;
 		try {
 			if(userService.loginUser(user)) {
-//				User loginuser = 
-				String token = jwtService.create(user);
+				User loginuser = userService.checkUser(user);
+				System.out.println(loginuser.toString());
+				String token = jwtService.create(loginuser);
 				res.setHeader("jwt-auth-token", token);
 				resultMap.put("status", true);
-				resultMap.put("data", user);
+				resultMap.put("data", loginuser);
 				status = HttpStatus.ACCEPTED;
 			}else {
 				resultMap.put("status", false);
