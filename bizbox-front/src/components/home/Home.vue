@@ -13,17 +13,20 @@
     <div class="flex-item-1">
       <News></News>
     </div>
+    <HomeFooter></HomeFooter>
   </div>
 </template>
 
 <script>
 import Start from './start/Start'
 import News from './news/News'
+import HomeFooter from './homefooter/HomeFooter'
 
 export default {
   components: {
     Start,
-    News
+    News,
+    HomeFooter
   }
 }
 </script>

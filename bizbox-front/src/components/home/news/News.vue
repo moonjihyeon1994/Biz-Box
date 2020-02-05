@@ -40,24 +40,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.biz-container {
-  text-align: center;
-}
-
-.news-container {
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-}
-h3 {
-  font-size: 3vw;
-}
-a {
-  font-size: 2.5vw;
-  text-decoration: none;
-}
-a:hover {
-  color: hotpink;
-}
-</style>
+<style scoped src="./News.css"></style>

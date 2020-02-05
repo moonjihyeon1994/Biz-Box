@@ -1,0 +1,39 @@
+.foot-container {
+    color: #ffffff;
+    background-color: #1f1242;
+    justify-content: space-around;
+    padding: 15px;
+}
+
+.foot-item {
+    margin: 15px;
+    flex: 1;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.foot-button {
+    flex: 1;
+    background-color: #8696df;
+}
+
+h1 {
+    font-size: 30px
+}
+
+p {
+    font-size: 10px
+}
+
+@media screen and (min-width: 600px) {
+    .foot-container {
+        display: flex;
+        color: #ffffff;
+        background-color: #1f1242;
+        justify-content: space-around;
+        padding: 15px;
+    }
+}
