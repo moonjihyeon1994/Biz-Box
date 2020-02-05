@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Dong from '../../../asset/json/New.json'
+import Dong from '../../assets/json/New.json' 
 export default {
   data: () => {
     return {
@@ -59,31 +59,25 @@ export default {
       let points = []
       // console.log(coordinates)
       for (let i = 0; i < length; i++) {
-        console.log(coordinates.length)
-    
-        console.log(coordinates[0])
-        console.log(coordinates[i][1])
-        console.log(coordinates[i][0])
-        
         path.push(new kakao.maps.LatLng(coordinates[i][1], coordinates[i][0]))
       }
-      console.log(path.length)
-      console.log(Mmap)
-      console.log(path)
-      console.log(name)
-      
       polygon = new kakao.maps.Polygon({
         map: Mmap, // 다각형을 표시할 지도 객체
         path: path,
-        strokeWeight: 2,
+        strokeWeight: 3,
         strokeColor: '#004c80',
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.6,
         fillColor: '#fff',
-        fillOpacity: 0.7
+        fillOpacity: 0.4
       })
-      console.log(pp)
+      kakao.maps.event.addListener(polygon, 'mouseover', () => {
+      // 지도 영역정보를 얻어옵니다
+      polygon.setOption({
+        fillColor : '#09f'
+      })
+      
+    })
     }
-    console.log(this.polygon)
     this.marker = new kakao.maps.Marker({// 마커생성
       map: this.map,
       position: new kakao.maps.LatLng(37.505691, 127.0298106)
@@ -101,15 +95,15 @@ export default {
       // 영역정보의 북동쪽 정보를 얻어옵니다
       var neLatlng = bounds.getNorthEast()
       this.message = '영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString()  + '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 <'
-      console.log(this.message)
       // this.message = '영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString()  + '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 <'
     })
+    console.log(this.polygon)
+    console.log(pp)
     var resultDiv = document.getElementById('result')
     resultDiv.innerHTML = Message
   },
   watch: {
     ifchanege: function (newVal, oldVal) {
-      alert('!!!!!!!!!!!')
     }
   },
   components:{
