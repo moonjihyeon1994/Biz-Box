@@ -17,7 +17,7 @@
       </v-toolbar>
     </v-card>
     <condition></condition>
-    <div class="map" id="map" v-on:click="makeCircle"></div>
+    <div class="map" id="map"></div>
   </div>
   <!-- <div class="mapContainer">
    <div  class="a ssearchbox" >
@@ -32,6 +32,9 @@
 <script>
 import Dong from '../../assets/json/New.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
+import axios from '../../js/http-commons'
+import BzMapManager from '../../common/BzMapManager'
+
 export default {
   data: () => {
     return {
@@ -64,6 +67,8 @@ export default {
     // --코더 생성------------------------------------------------------------------------------------
     this.geocoder = new kakao.maps.services.Geocoder() // 코더생성
     // --맵 생성--------------------------------------------------------------------------------------
+    BzMapManager.init()
+
     this.map = new kakao.maps.Map(container, options) // 맵 생성
     kakao.maps.event.addListener(this.map, 'bounds_changed', () => {
       var bounds = Map.getBounds() // 지도 영역정보
@@ -73,6 +78,13 @@ export default {
         '영역좌표 :' + swLatlng.toString() + '/' + neLatlng.toString() + ''
     })
     let Map = this.map
+
+    // Map 받기
+    let Map = BzMapManager.getMap()
+    
+    BzMapManager.createMarker()
+    BzMapManager.createPolygon({})
+
     let vm = this
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
@@ -120,10 +132,14 @@ export default {
       })
 
       kakao.maps.event.addListener(polygon, 'mouseover', () => {
+        let Name = name
         // 각 폴리곤에 마우스 오버 이벤트 등록
         polygon.setOptions({
           fillColor: '#09f'
         })
+        if (vm.$store.state.mode === 'timeCheckPeopleCount') {
+          vm.timeCheckPeopleCount(Name)
+        }
       })
       kakao.maps.event.addListener(polygon, 'mouseout', () => {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
@@ -167,9 +183,23 @@ export default {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
       this.map.panTo(moveLatLon)
+
+      BzMapManager.panTo(33.45058, 126.574942)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
     serch (name) {
+      BzMapManager.serch(name, this.marker, this.infowindow, function (result, status) {
+        // 정상적으로 검색이 완료되면
+        if (status === kakao.maps.services.Status.OK) {
+          var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
+          Marker.setPosition(coords)
+          InfoWindow.close() // 전에 있던 인포위도우 클로즈
+          InfoWindow.setContent(Name) //  인포위도우 내용 세팅
+          InfoWindow.open(Map, Marker) // 마커위에 인포위도우 열림
+          Map.setCenter(coords) // 새로 세팅된 센터 값으로 맵 세팅
+        }
+      })
+
       let Ifchange = this.ifchanege
       let Name = this.name
       let Map = this.map
@@ -344,8 +374,18 @@ export default {
           return content
         }
       }
-    }
+    },
     // 반경 그리기 함수 끝-----------------------------------------------------------------------------------------
+    timeCheckPeopleCount: function (name) {
+      axios.get('/population/getPopulationByDong/' + name).then(res => {
+        var x = document.getElementById('map')
+        x.style.cursor = 'wait'
+        console.log(x.style)
+        
+      }).catch(err => alert(err, '검색어를 확인해주세요'))
+        .finally(() => {
+        })
+    }
   }
 }
 </script>

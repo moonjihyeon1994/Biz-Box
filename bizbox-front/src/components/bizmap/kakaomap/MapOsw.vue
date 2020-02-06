@@ -16,6 +16,7 @@
 <script>
 import VueDaumMap from 'vue-daum-map'
 import MapSearch from './MapSearch.vue'
+import axios from '../../js/http-commons'
 
 export default {
 //   created() {
@@ -27,7 +28,7 @@ export default {
     level: 3, // 지도의 레벨(확대, 축소 정도),
     mapTypeId: VueDaumMap.MapTypeId.NORMAL, // 맵 타입
     libraries: [], // 추가로 불러올 라이브러리
-    map: null // 지도 객체. 지도가 로드되면 할당됨.
+    map: null, // 지도 객체. 지도가 로드되면 할당됨.
   }),
   computed:{//getter
         Map(){
