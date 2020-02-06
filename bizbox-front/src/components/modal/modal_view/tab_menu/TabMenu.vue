@@ -16,14 +16,16 @@
     </div>
 
     <div id="Graph" class="tabcontent">
-      <!-- 여기에 내꺼 -->
+      <graphItem />
     </div>
   </div>
 </template>
 
 <script>
+import graphItem from './tab_contents/graph.vue'
 export default {
   components: {
+    graphItem
   },
   mounted () {
     document.getElementById('defaultOpen').click()
@@ -58,6 +60,7 @@ export default {
   background-color: #f1f1f1;
   border-radius: 3px 3px 0px 0px;
   clear: both;
+  margin: 0;
 }
 .tab div {
   border: 0;
@@ -71,8 +74,15 @@ export default {
   cursor: pointer;
   padding: 5px 16px;
   transition: 0.3s;
+  width: 80px;
+  margin: 0;
 }
-
+.close-button{
+  float: right;
+  width: 0;
+  margin: 0;
+  padding: 0;
+}
 /* Change background color of buttons on hover */
 .tab button:hover {
   background-color: #ddd;

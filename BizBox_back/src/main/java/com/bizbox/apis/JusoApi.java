@@ -18,6 +18,7 @@ import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.jhlabs.map.proj.Projection;
@@ -335,6 +336,8 @@ public class JusoApi {
 		return sb.toString();
 	}
 
+	// json을 parsing하여 상권 정보얻어오기!
+	@Cacheable(cacheNames = "StoreCount")
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();

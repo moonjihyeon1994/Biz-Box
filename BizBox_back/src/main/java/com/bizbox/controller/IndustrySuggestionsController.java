@@ -35,12 +35,16 @@ import com.bizbox.apis.*;
 @RestController
 @RequestMapping("/suggestion")
 public class IndustrySuggestionsController {
+	
 	@Autowired
 	JusoApi api;
+	
 	@Autowired
 	IndustrySuggestionsService suggestionservice;
+	
 	@Autowired
 	SalesService saliesservice;
+	
 	@Autowired
 	ChangeBusinessService changeservice;
 
@@ -65,7 +69,6 @@ public class IndustrySuggestionsController {
 			int[] BusinessesLank = new int[NumberOfBusinesses.size()];
 			int max = 0;
 			int min = Integer.MAX_VALUE;
-			System.out.println("왜안됨?");
 			
 			List<String> maxstore = new LinkedList<String>();
 			for (Map.Entry<String, Integer> entry : NumberOfBusinesses.entrySet()) {
@@ -98,20 +101,10 @@ public class IndustrySuggestionsController {
 				bllist.add(BL);
 				BusinessesLank[index] = value;
 			}
-			System.out.println(minstore);
 			Collections.sort(bllist);
 			
-			for (BusinessLank bl : bllist) {
-				System.out.println(bl.getName() + " " + bl.getValue());
-			}
-
-			System.out.println("----------------------");
-			for (BusinessLank bl : bllist) {
-				System.out.println(bl.getName() + " " + bl.getSalespderstore());
-			}
-
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		String maxss = "";
 		String mincouts="";
