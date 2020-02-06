@@ -7,8 +7,10 @@ import Home from '@/components/home/Home.vue'
 // import Result from '@/components/result/Result.vue'
 // import ResultSearch from '@/components/result/ResultSearch.vue'
 import map from '@/components/map/Newmap.vue'
+import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'
 import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
+import tap from '@/components/countstore/CountStores.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +41,11 @@ const routes = [
     component: map
   },
   {
+    path: '/eummap',
+    name: 'mapcd .',
+    component: Map
+  },
+  {
     path: '/bizmap',
     name: 'bizmap',
     component: BizMap
@@ -47,6 +54,11 @@ const routes = [
     path: '/modal',
     name: 'modal',
     component: Modal
+  },
+  {
+    path: '/tap',
+    name: 'tap',
+    component: tap
   }
   // 바꿈
 ]
