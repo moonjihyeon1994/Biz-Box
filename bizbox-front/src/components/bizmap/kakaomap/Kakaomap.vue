@@ -33,7 +33,7 @@ export default {
       countResult: '',
       searchX: '',
       searchY: '',
-      range: 300,
+      range: '',
       CountInfo: {
         '소매': '',
         '학문교육': '',
@@ -275,6 +275,7 @@ export default {
           vm.range = radius // API 검색 범위 받아오기
 
           // eslint-disable-next-line no-unused-vars
+          vm.getData()
           var html = getBoxHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
           // 반경정보를 표시할 커스텀 오버레이를 생성합니다
           // eslint-disable-next-line no-undef
@@ -327,7 +328,6 @@ export default {
       // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
       // HTML Content를 만들어 리턴하는 함수입니다
       function getBoxHTML (distance) {
-        vm.getData()
         let 소매 = vm.CountInfo.소매
         if (소매 === undefined) {
           소매 = 0
