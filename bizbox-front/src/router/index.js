@@ -3,10 +3,10 @@ import VueRouter from 'vue-router'
 import Signup from '@/components/signup/Signup.vue'
 import Login from '@/components/login/Login.vue'
 import Home from '@/components/home/Home.vue'
-import ResultSearch from '@/components/result/ResultSearch.vue'
-import Map from '@/components/map/KakaoMap.vue'
+import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'
 import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
+import tap from '@/components/countstore/CountStores.vue'
 
 Vue.use(VueRouter)
 
@@ -27,11 +27,6 @@ const routes = [
     component: Signup
   },
   {
-    path: '/result2',
-    name: 'newResult',
-    component: ResultSearch
-  },
-  {
     path: '/map',
     name: 'mapcd .',
     component: Map
@@ -45,6 +40,11 @@ const routes = [
     path: '/modal',
     name: 'modal',
     component: Modal
+  },
+  {
+    path: '/tap',
+    name: 'tap',
+    component: tap
   }
   // 바꿈
 ]
