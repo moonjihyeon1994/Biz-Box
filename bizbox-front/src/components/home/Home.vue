@@ -28,4 +28,4 @@ export default {
 }
 </script>
 
-<style scoped src="./Home.css"></style>
+<style scoped></style>

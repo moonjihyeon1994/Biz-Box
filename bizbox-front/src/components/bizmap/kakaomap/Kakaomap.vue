@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import condition from '@/components/map/SearchCondition.vue'
+import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
 
 export default {
   data: () => {
@@ -120,7 +120,7 @@ export default {
             vm.drawingLine = new kakao.maps.Polyline({
               strokeWeight: 3, // 선의 두께입니다
               strokeColor: '#00a0e9', // 선의 색깔입니다
-              strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+              strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
               strokeStyle: 'solid' // 선의 스타일입니다
             })
           }
@@ -131,7 +131,7 @@ export default {
             vm.drawingCircle = new kakao.maps.Circle({
               strokeWeight: 1, // 선의 두께입니다
               strokeColor: '#00a0e9', // 선의 색깔입니다
-              strokeOpacity: 0.1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+              strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
               strokeStyle: 'solid', // 선의 스타일입니다
               fillColor: '#00a0e9', // 채우기 색깔입니다
               fillOpacity: 0.2 // 채우기 불투명도입니다
@@ -177,7 +177,7 @@ export default {
             // 반경 정보를 표시할 커스텀오버레이의 내용입니다
             var radius = Math.round(vm.drawingCircle.getRadius())
             let content =
-                '<div class="overlay">반경 <span class="number">' +
+                '<div class="overlay" style="background-color:white">반경 <span class="number">' +
                 radius +
                 '</span>m</div>'
 
@@ -218,7 +218,7 @@ export default {
             path: [vm.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
             strokeWeight: 1, // 선의 두께 입니다
             strokeColor: '#00a0e9', // 선의 색깔입니다
-            strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
             strokeStyle: 'solid' // 선의 스타일입니다
           })
           // 원 객체를 생성합니다
@@ -226,9 +226,9 @@ export default {
           var circle = new kakao.maps.Circle({
             center: vm.centerPosition, // 원의 중심좌표입니다
             radius: polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
-            strokeWeight: 1, // 선의 두께입니다
+            strokeWeight: 0, // 선의 두께입니다
             strokeColor: '#00a0e9', // 선의 색깔입니다
-            strokeOpacity: 0.1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
             strokeStyle: 'solid', // 선의 스타일입니다
             fillColor: '#00a0e9', // 채우기 색깔입니다
             fillOpacity: 0.2 // 채우기 불투명도입니다
@@ -288,51 +288,16 @@ export default {
       // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
       // HTML Content를 만들어 리턴하는 함수입니다
       function getBoxHTML (distance) {
-        // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
-        var walkkTime = (distance / 67) | 0
-        var walkHour = ''
-        var walkMin = ''
-
-        // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
-        if (walkkTime > 60) {
-          walkHour =
-            '<span class="number">' +
-            Math.floor(walkkTime / 60) +
-            '</span>시간 '
-        }
-        walkMin = '<span class="number">' + (walkkTime % 60) + '</span>분'
-
-        // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
-        var bycicleTime = (distance / 227) | 0
-        var bycicleHour = ''
-        var bycicleMin = ''
-
-        // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
-        if (bycicleTime > 60) {
-          bycicleHour =
-            '<span class="number">' +
-            Math.floor(bycicleTime / 60) +
-            '</span>시간 '
-        }
-        bycicleMin = '<span class="number">' + (bycicleTime % 60) + '</span>분'
-
-        // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
-        var content = '<ul class="info">'
-        content += '    <li>'
+        var content = '<div class="v-sheet theme--light elevation-14" style="margin-leftauto;display:block;text-align:center;" id="mapSheet">'
+        content += '    <div style="display:flex;justify-content:space-around;">'
+        content += '    <div style="width:70px;height:70px;">'
         content +=
-          '        <span class="label">총거리</span><span class="number">' +
-          distance +
-          '</span>m'
-        content += '    </li>'
-        content += '    <li>'
+          '        <img style="width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 20
         content +=
-          '        <span class="label">도보</span>' + walkHour + walkMin
-        content += '    </li>'
-        content += '    <li>'
+          '</span></div>'
         content +=
-          '        <span class="label">자전거</span>' + bycicleHour + bycicleMin
-        content += '    </li>'
-        content += '</ul>'
+          '</div>'
+        content += '</div>'
         return content
       }
     }
