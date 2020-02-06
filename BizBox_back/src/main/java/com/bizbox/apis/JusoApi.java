@@ -335,6 +335,11 @@ public class JusoApi {
 		return sb.toString();
 	}
 
+<<<<<<< HEAD
+=======
+	// json을 parsing하여 상권 정보얻어오기!
+	@Cacheable(cacheNames = "StoreCount")
+>>>>>>> back_cache
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
