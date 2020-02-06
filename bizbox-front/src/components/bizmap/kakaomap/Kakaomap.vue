@@ -87,24 +87,16 @@ export default {
       })
     },
     makeCircle: function () {
-      // eslint-disable-next-line no-unused-vars
       let drawingFlag = false // 원이 그려지고 있는 상태를 가지고 있을 변수입니다
-      // eslint-disable-next-line no-unused-vars
       let centerPosition // 원의 중심좌표 입니다
-      // eslint-disable-next-line no-unused-vars
       let drawingCircle // 그려지고 있는 원을 표시할 원 객체입니다
-      // eslint-disable-next-line no-unused-vars
-      // eslint-disable-next-line no-unused-vars
       let drawingLine // 그려지고 있는 원의 반지름을 표시할 선 객체입니다
-      // eslint-disable-next-line no-unused-vars
       let drawingOverlay // 그려지고 있는 원의 반경을 표시할 커스텀오버레이 입니다
 
-      // eslint-disable-next-line no-unused-vars
       let circles = []
 
       let vm = this
       // 지도에 클릭 이벤트를 등록합니다
-      // eslint-disable-next-line no-undef
       kakao.maps.event.addListener(this.map, 'click', function (mouseEvent) {
         removeCircles()
         // 클릭 이벤트가 발생했을 때 원을 그리고 있는 상태가 아니면 중심좌표를 클릭한 지점으로 설정합니다
@@ -126,7 +118,6 @@ export default {
 
           // 그려지고 있는 원을 표시할 원 객체를 생성합니다
           if (!vm.drawingCircle) {
-            // eslint-disable-next-line no-undef
             vm.drawingCircle = new kakao.maps.Circle({
               strokeWeight: 1, // 선의 두께입니다
               strokeColor: '#00a0e9', // 선의 색깔입니다
