@@ -15,91 +15,159 @@
       <v-icon size="15">mdi-map-marker</v-icon>{{ key }}</span>
     </p>
     <ul class="list-distance">
-      <li class=""><button>500m</button></li>
-      <li class=""><button>1km</button></li>
-      <li class="on"><button>2km</button></li>
-      <li class=""><button>3km</button></li>
+      <li><button class="list-distance-items" @click="checkBtn(0)">500m</button></li>
+      <li><button class="list-distance-items" @click="checkBtn(1)">750m</button></li>
+      <li><button class="list-distance-items" @click="checkBtn(2)">1km</button></li>
+      <li><button class="list-distance-items" @click="checkBtn(3)">2km</button></li>
     </ul>
+    <div class="category-list-select">
+      <select>
+        <option value="none">거리</option>
+        <option value="item" v-for="item in largeItems" :key="item" >{{item}}</option>
+      </select>
+    </div>
+    <div class="slider-content">
+      <div class="slidecontainer">
+        <input type="range" min="100" max="2000" value="1000" class="slider" id="myRange">
+        <p class="slidecontainer-text"><span id="demo"></span>m</p>
+      </div>
+    </div>
     <div class="content-inside">
       만들자
+      {{range}}
+      <button @click="getData">눌러줘</button>
+      {{result}}
     </div>
   </div>
 </template>
 
 <script>
-// import axios from '@/js/http-commons'
+import axios from '@/js/http-commons'
 // import Spinner from '../../../../result/Spinner'
 import './graphs.css'
+import largeScale from '@/assets/json/largeScale.json'
 export default {
   components: {
     // Spinner
   },
   data () {
     return {
+      largeItems: largeScale.large,
       popflag: false,
-      chartdata: null,
-      chartoptions: null,
+      range: 0,
       result: null,
       road: '',
-      key: '오류동',
+      key: '경인로 248-14',
       searchOption: 1,
       title: '연도별 상권 변화 지표',
-      point: 0,
-      btnStyle1: {
-        backgroundColor: '#d9d9d9',
-        cursor: 'pointer'
-      },
-      btnStyle2: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      btnStyle3: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      btnStyle4: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      chartStyle: {
-        display: 'contents'
-      },
-      loadingStatus: false,
-      allowDiv: {
-        display: 'none'
-      }
+      point: 0
     }
   },
   computed: {
-    percentMaker: function () {
-      if (this.result == null) return
-      let preYear = this.result[4].g
-      let thisYear = this.result[5].g * 2
-      let percent = ((thisYear - preYear) / preYear) * 100
-      return '(' + Math.round(percent * 100) / 100 + '%' + ')'
-    },
-    maxAgeMaker: function () {
-      if (this.result == null) return
-      let preYear = this.result[4].g
-      let thisYear = this.result[5].g * 2
-      if (preYear >= thisYear) {
-        return '하강'
-      } else {
-        return '상승'
-      }
+    asdf: function () {
+      return ''
     }
   },
-  mounted () {},
+  mounted () {
+    this.slider()
+  },
   methods: {
+    slider () {
+      let slider = document.getElementById('myRange')
+      let output = document.getElementById('demo')
+      output.innerHTML = slider.value
+
+      slider.oninput = (res) => {
+        output.innerHTML = res.target.value
+        console.log(res)
+        this.range = res.target.value
+        // console.log('asdf' + this.range)
+      }
+    },
     popup () {
       console.log('popup')
       this.popflag = !this.popflag
+    },
+    checkBtn (e) {
+      let listDistanceItems = document.getElementsByClassName('list-distance-items')
+      for (let i = 0; i < listDistanceItems.length; i++) {
+        listDistanceItems[i].className = listDistanceItems[i].className.replace(' click', '')
+      }
+      listDistanceItems[e].className += ' click'
+      if (e === 0) this.range = 500
+      if (e === 1) this.range = 1000
+      if (e === 2) this.range = 2000
+      if (e === 3) this.range = 3000
+    },
+    getData () {
+      console.log(this.range)
+      axios
+        .get('/storecount/' + this.key + '/' + this.range)
+        .then(res => {
+          console.log(res.data)
+          this.result = res.data
+        })
+        .finally(() => {})
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+
+.slidecontainer-text {
+  clear: both;
+  position: relative;
+  top: 5px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  border-radius: 9px;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: rgb(216, 74, 162);
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: rgb(216, 74, 162);
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+button {
+  outline: none;
+}
+button.click {
+  background-color: #fe2c54;
+  color: white;
+}
+
 #chart1 {
   position: relative;
   width: 500px;
@@ -107,68 +175,4 @@ export default {
   overflow: hidden;
 }
 
-#back {
-  position: absolute;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(255, 255, 255);
-}
-
-#point {
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 500px;
-  height: 40px;
-  line-height: 40px;
-  top: 5px;
-  font-size: 24px;
-  margin-top: 10px;
-  background-color: white;
-}
-
-#searchOptions {
-  margin: auto;
-
-  button {
-    font-size: 16px;
-    display: inline-block;
-    border: 1px solid black;
-    border-radius: 5px;
-    width: 200px;
-    height: 30px;
-    margin-right: 10px;
-    background-color: white;
-    transition: 0.1s all ease;
-
-    &:hover {
-      font-weight: bold;
-    }
-  }
-}
-
-#searchOptions button:hover {
-  background-color: #e38fe3;
-}
-
-#search input {
-  border: 1px solid black;
-  border-radius: 5px 0 0 5px;
-  width: 200px;
-  height: 30px;
-  margin-top: 10px;
-  padding: 5px;
-  background-color: white;
-}
-
-#search-btn {
-  border-radius: 0 5px 5px 0;
-  width: 50px;
-  height: 30px;
-  background-color: rgb(172, 172, 172);
-}
-
-#search-result {
-  margin-top: 5px;
-}
 </style>
