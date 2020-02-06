@@ -102,6 +102,7 @@ export default {
     }
     function displayArea (polygon, Mmap, coordinates, name, length) {
       // 다각형을 생성 ,이벤트를 등록
+      let mode = vm.$store.state.mode
       let path = []
       for (let i = 0; i < length; i++) {
         // 좌표의 개수만큼 반복문을 돌며 경계 바운더리 생성(path생성)
@@ -131,22 +132,24 @@ export default {
         })
       })
       kakao.maps.event.addListener(polygon, 'click', () => {
+        if(mode === 0) {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
-        let Name = name
-        let Marker = vm.marker
-        let InfoWindow = vm.infowindow
-        vm.geocoder.addressSearch(Name, function (result, status) {
+          let Name = name
+          let Marker = vm.marker
+          let InfoWindow = vm.infowindow
+          vm.geocoder.addressSearch(Name, function (result, status) {
           // 정상적으로 검색이 완료되면
-          if (status === kakao.maps.services.Status.OK) {
-            console.log(Name)
-            var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
-            Marker.setPosition(coords)
-            InfoWindow.close()
-            InfoWindow.setContent(Name)
-            InfoWindow.open(Map, Marker)
-            Map.setCenter(coords)
-          }
-        })
+            if (status === kakao.maps.services.Status.OK) {
+              console.log(Name)
+              var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
+              Marker.setPosition(coords)
+              InfoWindow.close()
+              InfoWindow.setContent(Name)
+              InfoWindow.open(Map, Marker)
+              Map.setCenter(coords)
+            }
+          })
+        }
       })
     }
     this.ifchanege = this.map.getCenter()
@@ -187,7 +190,7 @@ export default {
     // -----------------------------------------------------------------------------------------
     // 뱐경 그리기 함수 시작-----------------------------------------------------------------------------------------
     makeCircle: function () {
-      if (this.mode == 'asdf') {
+      if (this.$store.state.mode === 1) {
         let drawingFlag = false // 원이 그려지고 있는 상태를 
         let centerPosition // 원의 중심좌표 
         let drawingCircle // 그려지고 있는 원을 표시할 원 객체
@@ -220,7 +223,6 @@ export default {
                 fillOpacity: 0.2
               })
             }
-
             if (!vm.drawingOverlay) {// 그려지고 있는 원의 반경 정보를 표시할 커스텀오버레이를 생성합니다
               vm.drawingOverlay = new kakao.maps.CustomOverlay({
                 xAnchor: 0,
