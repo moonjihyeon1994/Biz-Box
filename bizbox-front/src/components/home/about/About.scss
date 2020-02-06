@@ -11,14 +11,14 @@ $color2: rgb(15, 66, 95);
     position: relative;
     // border: 1px solid black;
     width: 1200px;
-    height: 1080px;
+    height: 700px;
     margin: auto;
-    padding-top: 200px;
+    margin-bottom: 100px;
   }
 
   .bz-aboutTitle {
     position: absolute;
-    top: 280px;
+    top: 80px;
     font-size: 4em;
     font-weight: bold;
     color: $color2;
@@ -38,10 +38,22 @@ $color2: rgb(15, 66, 95);
     position: absolute;
     width: 600px;
     font-size: 1.5em;
-    top: 500px; 
+    top: 300px; 
     text-align: justify;
     padding: 0 70px;
     font-weight: bold;
+  }
+
+  .bz-aboutText.before-enter {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1.5s ease-in-out;
+    transition-delay: 0.5s;
+  }
+  
+  .bz-aboutText.enter {
+    opacity: 1;
+    transform: translateX(0px);
   }
 
   #bz-about1 {
@@ -51,8 +63,30 @@ $color2: rgb(15, 66, 95);
       right: 0;
     }
 
+    .bz-imgBox.before-enter {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .bz-imgBox.enter {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
     .bz-aboutTitle {
       left: 100px;
+    }
+
+    .bz-aboutTitle.before-enter {
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .bz-aboutTitle.enter {
+      opacity: 1;
+      transform: translateX(0px);
     }
 
     .colorBox {
@@ -62,17 +96,62 @@ $color2: rgb(15, 66, 95);
       height: 600px;
       background-color: $color1;
     }
+
+    .colorBox.before-enter {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .colorBox.enter {
+      opacity: 1;
+      transform: translateX(0px);
+    }
   }
   
   #bz-about2 {
     position: relative;
 
+    .bz-imgBox.before-enter {
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .bz-imgBox.enter {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
     .bz-aboutTitle {
       right: 100px;
     }
 
+    .bz-aboutTitle.before-enter {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .bz-aboutTitle.enter {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
     .bz-aboutText {
       right: 0;
+    }
+
+    .bz-aboutText.before-enter {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 1.5s ease-in-out;
+      transition-delay: 0.5s;
+    }
+    
+    .bz-aboutText.enter {
+      opacity: 1;
+      transform: translateX(0px);
     }
 
     .colorBox {
@@ -81,6 +160,17 @@ $color2: rgb(15, 66, 95);
       width: 400px;
       height: 600px;
       background-color: $color1;
+    }
+
+    .colorBox.before-enter {
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .colorBox.enter {
+      opacity: 1;
+      transform: translateX(0px);
     }
   }
 
@@ -91,8 +181,30 @@ $color2: rgb(15, 66, 95);
       right: 0;
     }
 
+    .bz-imgBox.before-enter {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .bz-imgBox.enter {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
     .bz-aboutTitle {
       left: 100px;
+    }
+
+    .bz-aboutTitle.before-enter {
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .bz-aboutTitle.enter {
+      opacity: 1;
+      transform: translateX(0px);
     }
 
     .colorBox {
@@ -101,6 +213,17 @@ $color2: rgb(15, 66, 95);
       width: 400px;
       height: 600px;
       background-color: $color1;
+    }
+
+    .colorBox.before-enter {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 1.5s ease-in-out;
+    }
+    
+    .colorBox.enter {
+      opacity: 1;
+      transform: translateX(0px);
     }
   }
 

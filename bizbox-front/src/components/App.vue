@@ -22,6 +22,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
+
 export default {
   name: 'app',
   data: () => ({

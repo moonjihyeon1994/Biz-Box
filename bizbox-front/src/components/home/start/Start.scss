@@ -39,37 +39,11 @@ $color2: rgb(15, 66, 95);
     font-size: 5em;
     color: $color1;
 
-    animation-name: mainTitle;
-    animation-duration: 1.5s;
-    animation-timing-function: ease-in;
-
-    @keyframes mainTitle {
-      from {
-        opacity: 0;
-        left: 0;
-      }
-      to {
-        opacity: 1;
-        left: 60px;
-      }
-    }
-
     /* Tablet */
     @media screen and (max-width: 992px) {
       & {
         font-size: 4em;
         left: 20px;
-      }
-
-      @keyframes mainTitle {
-        from {
-          opacity: 0;
-          left: 0;
-        }
-        to {
-          opacity: 1;
-          left: 20px;
-        }
       }
     }
     
@@ -83,45 +57,29 @@ $color2: rgb(15, 66, 95);
     }
   }
 
-  #bz-styleTestSub {
+  #bz-styleText.before-enter {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s ease-in-out;
+  }
+
+  #bz-styleText.enter {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  #bz-styleTextSub {
     top: 350px;
     left: 120px;
     color: black;
     font-size: 3em;
     color: rgb(255, 255, 255);
 
-    animation-name: mainSub;
-    animation-duration: 1.5s;
-    animation-delay: 0.2s;
-    animation-timing-function: ease-in;
-
-    @keyframes mainSub {
-      0% {
-        opacity: 0;
-        left: 0;
-      }
-      100% {
-        opacity: 1;
-        left: 120px;
-      }
-    }
-
      /* Tablet */
      @media screen and (max-width: 992px) {
       & {
         font-size: 2em;
         left: 30px;
-      }
-
-      @keyframes mainSub {
-        0% {
-          opacity: 0;
-          left: 0;
-        }
-        100% {
-          opacity: 1;
-          left: 30px;
-        }
       }
     }
     
@@ -133,6 +91,18 @@ $color2: rgb(15, 66, 95);
         top: 200px;
       }
     }
+  }
+
+  #bz-styleTextSub.before-enter {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s ease-in-out;
+    transition-delay: 1s;
+  }
+
+  #bz-styleTextSub.enter {
+    opacity: 1;
+    transform: translateX(0px);
   }
 
   #bz-startBox {
@@ -192,19 +162,17 @@ $color2: rgb(15, 66, 95);
         background-color: #2d81b5e8;
       }
     }
+  }
 
-    animation-name: startBox;
-    animation-duration: 1.5s;
-    animation-delay: 0.5s;
-    animation-timing-function: ease-in;
+  #bz-startBox.before-enter {
+    opacity: 0;
+    transform: translateY(100px) translateX(-50%);
+    transition: all 1s ease-in-out;
+    transition-delay: 2s;
+  }
 
-    @keyframes startBox {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
+  #bz-startBox.enter {
+    opacity: 1;
+    transform: translateY(0px) translateX(-50%);
   }
 }
