@@ -2,30 +2,57 @@
     color: #ffffff;
     background-color: #1f1242;
     justify-content: space-around;
-    padding: 15px;
 }
 
 .foot-item {
-    margin: 15px;
-    flex: 1;
+    margin: 5px
 }
 
 .button-group {
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
 }
 
 .foot-button {
+    width: 80%;
+    text-align: center;
+    background-color: cornflowerblue;
+    border-radius: 5px;
+    margin: 10px
+}
+
+a.foot-button {
+    color: #ffffff;
+}
+
+a.foot-button:hover {
+    background-color: hotpink;
+}
+
+.member-list {
+    display: flex;
+}
+
+h1.foot-title {
+    color: var(--our-orange);
+}
+
+.member {
     flex: 1;
-    background-color: #8696df;
+    display: flex;
 }
 
-h1 {
-    font-size: 30px
+.member-name {
+    flex: 1;
+    align-self: center;
 }
 
-p {
-    font-size: 10px
+.member-role {
+    flex: 1;
+    font-size: medium;
+    align-self: center;
+    margin-left: 10px;
 }
 
 @media screen and (min-width: 600px) {
@@ -35,5 +62,9 @@ p {
         background-color: #1f1242;
         justify-content: space-around;
         padding: 15px;
+    }
+    .foot-item {
+        margin: 15px;
+        flex: 1;
     }
 }
