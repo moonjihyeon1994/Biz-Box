@@ -1,6 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Signup from '@/components/signup/Signup.vue'
+import Login from '@/components/login/Login.vue'
 import Home from '@/components/home/Home.vue'
+// import About from '@/components/about/About.vue'
+// import Result from '@/components/result/Result.vue'
+// import ResultSearch from '@/components/result/ResultSearch.vue'
+import map from '@/components/map/Newmap.vue'
+import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'
+import BizMap from '@/components/bizmap/BizMap'
+import Modal from '@/components/modal/Modal.vue'
+import tap from '@/components/countstore/CountStores.vue'
 
 Vue.use(VueRouter)
 
@@ -11,13 +21,46 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '@/components/about/About.vue')
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: Signup
+  },
+  // {
+  //   path: '/result2',
+  //   name: 'newResult',
+  //   component: ResultSearch
+  // },
+  {
+    path: '/map',
+    name: 'newResult',
+    component: map
+  },
+  {
+    path: '/eummap',
+    name: 'mapcd .',
+    component: Map
+  },
+  {
+    path: '/bizmap',
+    name: 'bizmap',
+    component: BizMap
+  },
+  {
+    path: '/modal',
+    name: 'modal',
+    component: Modal
+  },
+  {
+    path: '/tap',
+    name: 'tap',
+    component: tap
   }
+  // 바꿈
 ]
 
 const router = new VueRouter({
