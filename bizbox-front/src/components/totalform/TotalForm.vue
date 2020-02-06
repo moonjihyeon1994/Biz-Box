@@ -1,5 +1,5 @@
 <template>
-<div class="total-form">
+<div class="form-container">
   <v-tabs  grow v-model="tab">
     <v-tab v-for="form in formList" :key="form">
       <span>{{ form }}</span>
