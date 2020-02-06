@@ -22,12 +22,28 @@
 </template>
 <script>
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
+import axios from '../../../js/http-commons'
+
 export default {
   data: () => {
     return {
       map: null,
       searchWord: null,
-      state: 1
+      state: 1,
+      countResult: '',
+      searchX: '',
+      searchY: '',
+      range: 300,
+      CountInfo: {
+        '소매': '',
+        '학문교육': '',
+        '숙박': '',
+        '생활서비스': '',
+        '음식': '',
+        '부동산': '',
+        '의료': '',
+        '관광여가오락': ''
+      }
     }
   },
   components: {
@@ -37,6 +53,24 @@ export default {
     this.makeMap()
   },
   methods: {
+    // ----------------------------- 영현 ----
+    // 범위내 상가정보 받아오는 매서드
+    getData () {
+      axios.get('/storecountByxy/' + this.searchX + '/' + this.searchY + '/' + this.range).then(res => {
+        var jsonlarge = res.data.large
+        this.CountInfo.소매 = jsonlarge.소매
+        this.CountInfo.학문교육 = jsonlarge.학문교육
+        this.CountInfo.숙박 = jsonlarge.숙박
+        this.CountInfo.생활서비스 = jsonlarge.생활서비스
+        this.CountInfo.음식 = jsonlarge.음식
+        this.CountInfo.부동산 = jsonlarge.부동산
+        this.CountInfo.의료 = jsonlarge.의료
+        this.CountInfo.관광여가오락 = jsonlarge.관광여가오락
+      }).catch(err => alert(err, '검색어를 확인해주세요'))
+    },
+
+    // 맵 만드는 매서드
+
     makeMap: function () {
       var container = document.getElementById('map') // 지도를 담을 영역의 DOM 레퍼런스
       var options = {
@@ -113,7 +147,11 @@ export default {
           vm.drawingFlag = true
           // 원이 그려질 중심좌표를 클릭한 위치로 설정합니다
           vm.centerPosition = mouseEvent.latLng
+          vm.searchX = vm.centerPosition.Ga
+          vm.searchY = vm.centerPosition.Ha
+
           // 그려지고 있는 원의 반경을 표시할 선 객체를 생성합니다
+
           if (!vm.drawingLine) {
             // eslint-disable-next-line no-undef
             vm.drawingLine = new kakao.maps.Polyline({
@@ -233,6 +271,9 @@ export default {
             fillOpacity: 0.2 // 채우기 불투명도입니다
           })
           var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+
+          vm.range = radius // API 검색 범위 받아오기
+
           // eslint-disable-next-line no-unused-vars
           var html = getBoxHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
           // 반경정보를 표시할 커스텀 오버레이를 생성합니다
@@ -283,15 +324,87 @@ export default {
         }
         circles = []
       }
-
+      vm.getData()
       // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
       // HTML Content를 만들어 리턴하는 함수입니다
       function getBoxHTML (distance) {
-        var content = '<div class="v-sheet theme--light elevation-14" style="margin-leftauto;display:block;text-align:center;" id="mapSheet">'
+        let 소매 = vm.CountInfo.소매
+        if (소매 === undefined) {
+          소매 = 0
+        }
+        let 학문교육 = vm.CountInfo.학문교육
+        if (학문교육 === undefined) {
+          학문교육 = 0
+        }
+        let 숙박 = vm.CountInfo.숙박
+        if (숙박 === undefined) {
+          숙박 = 0
+        }
+        let 생활서비스 = vm.CountInfo.생활서비스
+        if (생활서비스 === undefined) {
+          생활서비스 = 0
+        }
+        let 음식 = vm.CountInfo.음식
+        if (음식 === undefined) {
+          음식 = 0
+        }
+        let 부동산 = vm.CountInfo.부동산
+        if (부동산 === undefined) {
+          부동산 = 0
+        }
+        let 의료 = vm.CountInfo.의료
+        if (의료 === undefined) {
+          의료 = 0
+        }
+        let 관광여가오락 = vm.CountInfo.관광여가오락
+        if (관광여가오락 === undefined) {
+          관광여가오락 = 0
+        }
+
+        var content = '<div class="v-sheet theme--light elevation-14" style="width:300px;height:150px;margin:auto;display:block;text-align:center;" id="mapSheet">'
+        content += '    <div style="padding-top:10px;display:flex;justify-content:space-around;">'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 소매
+
+        content +=
+          '</span></div>'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 학문교육
+        content +=
+          '</span></div>'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 숙박
+        content +=
+          '</span></div>'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 생활서비스
+        content +=
+          '</span></div>'
+        content +=
+          '</div>'
         content += '    <div style="display:flex;justify-content:space-around;">'
         content += '    <div style="width:70px;height:70px;">'
         content +=
-          '        <img style="width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 20
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 음식
+        content +=
+          '</span></div>'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 부동산
+        content +=
+          '</span></div>'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 의료
+        content +=
+          '</span></div>'
+        content += '    <div style="width:70px;height:70px;">'
+        content +=
+          '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' + '<span style="width:100%;">' + 관광여가오락
         content +=
           '</span></div>'
         content +=
