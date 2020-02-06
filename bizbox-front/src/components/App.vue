@@ -5,7 +5,7 @@
         <span>BizBox</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-list dense v-for="nav in navList" :key="nav.routeto">
+      <v-list dense v-for="(nav, index) in navList" :key="'N' + index">
         <v-list-item link :to="nav.routeto">
           <v-list-item-content>
             <v-list-item-title>{{ nav.title }}</v-list-item-title>
@@ -19,7 +19,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <v-list dense v-else v-for="item in logList" :key="item">
+      <v-list dense v-else v-for="(item, index) in logList" :key="'L' + index">
         <v-list-item link :to="item.routeto">
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -39,12 +39,10 @@ import '@/assets/css/common.css'
 export default {
   name: 'app',
   data: () => ({
-    drawer: null,
     navList: [
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' },
       { routeto: '/modal', icon: 'mdi-information-outline', title: 'Modal' }
-      // 바꾼거
     ],
     logList: [
       { routeto: '/login', icon: 'mdi-account', title: 'Login' }
@@ -57,7 +55,7 @@ export default {
       if (document.documentElement.scrollTop === 0) {
         this.navColor = 'transparent'
       } else {
-        this.navColor = '#0f196e'
+        this.navColor = '#ffffff'
       }
     }
   },
