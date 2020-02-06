@@ -12,7 +12,7 @@
 
     <!-- Tab content -->
     <div id="Total" class="tabcontent">
-      <!-- 여기에 형꺼 -->
+      <totalView></totalView>
     </div>
 
     <div id="Graph" class="tabcontent">
@@ -22,8 +22,10 @@
 </template>
 
 <script>
+import totalView from './tab_contents/total.vue'
 export default {
   components: {
+    totalView
   },
   mounted () {
     document.getElementById('defaultOpen').click()
@@ -71,8 +73,15 @@ export default {
   cursor: pointer;
   padding: 5px 16px;
   transition: 0.3s;
+  width: 20%;
+  margin: 0;
 }
-
+.close-button{
+  float: right;
+  width: 0;
+  margin: 0;
+  padding: 0;
+}
 /* Change background color of buttons on hover */
 .tab button:hover {
   background-color: #ddd;
