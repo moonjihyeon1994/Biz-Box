@@ -13,32 +13,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.bizbox.interceptor.JwtInterceptor;
 
 @SpringBootApplication
-public class BizBoxApplication implements WebMvcConfigurer{
+public class BizBoxApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BizBoxApplication.class, args);
 	}
-	
+
 	@Autowired
 	private JwtInterceptor jwtInterceptor;
-	
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(jwtInterceptor).addPathPatterns("/user/**")
-				.excludePathPatterns(Arrays.asList("/kakao/login/**"))
+		registry.addInterceptor(jwtInterceptor).addPathPatterns("/user/**") // 검사하는 부분
+				.excludePathPatterns(Arrays.asList("/kakao/login/**")) // 예외처리하는 부분
 				.excludePathPatterns(Arrays.asList("/user/login/**"))
 				.excludePathPatterns(Arrays.asList("/user/signup/**"));
 	}
-	
+
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedOrigins("*")
-						.allowedMethods("*")
-						.allowedHeaders("*")
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*")
 						.exposedHeaders("jwt-auth-token");
 			}
 		};

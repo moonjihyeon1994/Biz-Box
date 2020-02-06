@@ -1,9 +1,13 @@
 <template>
   <div>
-    <popByAge/>
-    <popByTime/>
-    <salByAge/>
-    <salBySex/>
+    <div class="section-modal">
+      <popByAge />
+      <popByTime />
+    <!-- </div>
+    <div class="section-modal"> -->
+      <salByAge />
+      <salBySex />
+    </div>
   </div>
 </template>
 
@@ -22,4 +26,15 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+@media screen and (max-width: 992px){
+  .section-modal {
+    display: grid;
+    grid-template-columns: 1fr
+  }
+}
+.section-modal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+</style>
