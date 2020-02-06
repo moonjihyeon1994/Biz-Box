@@ -36,6 +36,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
+
 export default {
   name: 'app',
   data: () => ({
@@ -64,3 +65,10 @@ export default {
   }
 }
 </script>
+
+<style>
+@font-face {
+  font-family: 'OG';
+  src: url('../assets/fonts/OmniGothicL.woff');
+}
+</style>
