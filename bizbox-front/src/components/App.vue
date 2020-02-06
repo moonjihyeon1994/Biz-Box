@@ -13,13 +13,13 @@
         </v-list-item>
       </v-list>
       <v-list dense v-if="isLoggedIn">
-        <v-list-item>
+        <v-list-item link>
           <v-list-item-content @click.prevent="logout">
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <v-list dense v-else v-for="(item, index) in logList" :key="'L' + index">
+      <v-list dense v-else v-for="(item, index) in logList" :key="'L'+index">
         <v-list-item link :to="item.routeto">
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -49,7 +49,8 @@ export default {
     logList: [
       { routeto: '/login', icon: 'mdi-account', title: 'Login' }
     ],
-    navColor: 'transparent'
+    navColor: 'transparent',
+    showForm: false,
   }),
   methods: {
     ...mapActions(['logout']),
