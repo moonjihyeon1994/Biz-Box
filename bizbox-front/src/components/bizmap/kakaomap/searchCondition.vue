@@ -55,36 +55,36 @@ export default {
   methods: {
     choice1: function (event) {
       this.selected = 1
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 1 })
     },
     choice2: function (event) {
       this.selected = 2
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     },
     choice3: function (event) {
       this.selected = 3
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     },
     choice4: function (event) {
       this.selected = 4
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     },
     choice5: function (event) {
       this.selected = 5
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     },
     choice6: function (event) {
       this.selected = 6
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     },
     choice7: function (event) {
       this.selected = 7
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     },
     choice8: function (event) {
       this.selected = 8
-      alert('clicked : ' + this.selected)
+      // alert('clicked : ' + this.selected)
     }
   }
 }
