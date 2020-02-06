@@ -324,10 +324,10 @@ export default {
         }
         circles = []
       }
-      vm.getData()
       // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
       // HTML Content를 만들어 리턴하는 함수입니다
       function getBoxHTML (distance) {
+        vm.getData()
         let 소매 = vm.CountInfo.소매
         if (소매 === undefined) {
           소매 = 0
