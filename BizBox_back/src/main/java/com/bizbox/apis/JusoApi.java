@@ -328,7 +328,7 @@ public class JusoApi {
 		return sb.toString();
 	}
 
-	// json을 parsing하여 상권 정보얻기
+	// json을 parsing하여 상권 정보얻어오기!
 	@Cacheable(cacheNames = "StoreCount")
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
