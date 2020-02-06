@@ -4,10 +4,9 @@
       <start></start>
     </div>
     <div class="flex-item-1">
-      <h1>hello</h1>
-    </div>
-    <div class="flex-item-1">
-      <h1>hello</h1>
+      <div class="biz-container">
+        <TotalForm></TotalForm>
+      </div>
     </div>
     <div class="flex-item-1">
       <News></News>
@@ -20,12 +19,14 @@
 import Start from './start/Start'
 import News from './news/News'
 import HomeFooter from './homefooter/HomeFooter'
+import TotalForm from '../totalform/TotalForm'
 
 export default {
   components: {
     Start,
     News,
-    HomeFooter
+    HomeFooter,
+    TotalForm
   }
 }
 </script>

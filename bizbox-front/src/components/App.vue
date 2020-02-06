@@ -32,6 +32,8 @@
     </div>
   </v-app>
 </template>
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import '@/assets/css/reset.css'
@@ -57,10 +59,13 @@ export default {
       } else {
         this.navColor = '#ffffff'
       }
-    }
+    },
   },
   computed: {
     ...mapGetters(['isLoggedIn'])
+  },
+  created () {
+    this.$store.dispatch('initialLogin')
   }
 }
 </script>

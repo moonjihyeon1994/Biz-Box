@@ -1,0 +1,10 @@
+.total-form {
+    align-self: center;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+
+form {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

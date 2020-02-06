@@ -64,12 +64,9 @@ const actions = {
         .post('http://70.12.246.137:8080/user/login/', credentials)
         .then(res => {
           if (res.data.status === true) {
-            console.log(res)
             commit('setToken', res.headers['jwt-auth-token'])
             commit('setUsername', res.data.data.name)
             commit('setUserEmail', res.data.data.email)
-            console.log('state')
-            console.log(state)
             // console.log(sessionStorage)
             router.push('/')
           } else {
@@ -95,12 +92,9 @@ const actions = {
     axios.get(getUrl)
       .then(res => {
         if (res.data.status) {
-          console.log(res)
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
-          console.log('state')
-          console.log(state)
           // console.log('sessionstorage')
           // console.log(sessionStorage)
           router.push('/')
@@ -116,8 +110,6 @@ const actions = {
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
-          console.log('state')
-          console.log(state)
           // console.log('sessionstorage')
           // console.log(sessionStorage)
           router.push('/')
