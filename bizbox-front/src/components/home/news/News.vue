@@ -1,6 +1,6 @@
 <template>
   <div class="biz-container">
-    <h3>오늘의 뉴스</h3>
+    <h3><b>오늘의 뉴스</b></h3>
     <v-carousel height="100%"  :show-arrows="arrowAble" hide-delimiters vertical cycle interval="4000">
       <v-carousel-item
         v-for="news in newses"
