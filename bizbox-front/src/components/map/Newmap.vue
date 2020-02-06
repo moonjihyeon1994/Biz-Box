@@ -17,7 +17,7 @@
       </v-toolbar>
     </v-card>
     <condition></condition>
-    <div class="map" id="map" v-on:click="makeCircle"></div>
+    <div class="map" id="map"></div>
   </div>
   <!-- <div class="mapContainer">
    <div  class="a ssearchbox" >
@@ -45,7 +45,13 @@ export default {
       message: null,
       ifchanege: null,
       addListener: null,
-      mode: null // 여기 반경 하고 싶으면 asdf 로 
+      mode: null, // 여기 반경 하고 싶으면 asdf 로
+      drawingFlag: false, // 원이 그려지고 있는 상태를
+      centerPosition: false, // 원의 중심좌표
+      drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
+      drawingLine: false, // 그려지고 있는 원의 반지름을 표시할 선 객체
+      drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
+      circles: []
     }
   },
   mounted () {
@@ -74,6 +80,7 @@ export default {
     })
     let Map = this.map
     let vm = this
+    //let Mode = this.$store.state.mode
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
       // 마커생성
@@ -85,7 +92,20 @@ export default {
     this.infowindow = new kakao.maps.InfoWindow({
       content: 'name'
     })
-    // -------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------
+
+    // 반경 그리는 이벤트 시작-------------------------------------------------------------------
+    kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
+      vm.CircleMouseClick(mouseEvent)
+    }) // 지도에 클릭 이벤트를 등록
+    kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
+      vm.CircleMoveClick(mouseEvent)
+    }) // 지도에 무브 이벤트를 등록
+    kakao.maps.event.addListener(this.map, 'rightclick', function(mouseEvent) {
+      vm.RightMouseClick(mouseEvent)
+    })
+    // -------------------------------------------------------------------------------------
+
 
     // --폴리곤 생성---------------------------------------------------------------------------------------
     for (var i = 0, len = data.length; i < len; i++) {
@@ -100,7 +120,8 @@ export default {
         this.coordinates[0][0].length
       )
     }
-    function displayArea (polygon, Mmap, coordinates, name, length) {
+
+    function displayArea(polygon, Mmap, coordinates, name, length) {
       // 다각형을 생성 ,이벤트를 등록
       let mode = vm.$store.state.mode
       let path = []
@@ -132,13 +153,13 @@ export default {
         })
       })
       kakao.maps.event.addListener(polygon, 'click', () => {
-        if(mode === 0) {
-        //  각 폴리곤에 마우스 아웃 이벤트 등록
+        if (vm.$store.state.mode === 0) {
+          //  각 폴리곤에 마우스 아웃 이벤트 등록
           let Name = name
           let Marker = vm.marker
           let InfoWindow = vm.infowindow
-          vm.geocoder.addressSearch(Name, function (result, status) {
-          // 정상적으로 검색이 완료되면
+          vm.geocoder.addressSearch(Name, function(result, status) {
+            // 정상적으로 검색이 완료되면
             if (status === kakao.maps.services.Status.OK) {
               console.log(Name)
               var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
@@ -157,25 +178,25 @@ export default {
     // resultDiv.innerHTML = Message
   },
   watch: {
-    ifchanege: function (newVal, oldVal) {}
+    ifchanege: function(newVal, oldVal) {}
   },
   components: {
     condition
   },
   methods: {
-    panTo () {
+    panTo() {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
       this.map.panTo(moveLatLon)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
-    serch (name) {
+    serch(name) {
       let Ifchange = this.ifchanege
       let Name = this.name
       let Map = this.map
       let Marker = this.marker
       let InfoWindow = this.infowindow
-      this.geocoder.addressSearch(this.name, function (result, status) {
+      this.geocoder.addressSearch(this.name, function(result, status) {
         // 정상적으로 검색이 완료되면
         if (status === kakao.maps.services.Status.OK) {
           var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
@@ -187,164 +208,323 @@ export default {
         }
       })
     },
-    // -----------------------------------------------------------------------------------------
-    // 뱐경 그리기 함수 시작-----------------------------------------------------------------------------------------
-    makeCircle: function () {
+    CircleMouseClick(mouseEvent) {
+      // 지도에 클릭 이벤트를 등록
+
+      this.removeCircles()
       if (this.$store.state.mode === 1) {
-        let drawingFlag = false // 원이 그려지고 있는 상태를 
-        let centerPosition // 원의 중심좌표 
-        let drawingCircle // 그려지고 있는 원을 표시할 원 객체
-        let drawingLine // 그려지고 있는 원의 반지름을 표시할 선 객체
-        let drawingOverlay // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
-
-        let circles = []
-
-        let vm = this
-        kakao.maps.event.addListener(this.map, 'click', function (mouseEvent) { // 지도에 클릭 이벤트를 등록
-          removeCircles()
-          if (!vm.drawingFlag) { // 클릭 이벤트가 발생했을 때 원을 그리고 있는 상태가 아니면 중심좌표를 클릭한 지점으로 설정
-            vm.drawingFlag = true
-            vm.centerPosition = mouseEvent.latLng// 원이 그려질 중심좌표를 클릭한 위치로 설정합니다
-            if (!vm.drawingLine) { // 그려지고 있는 원의 반경을 표시할 선 객체를 생성합니다
-              vm.drawingLine = new kakao.maps.Polyline({
-                strokeWeight: 3, // 선의 두께
-                strokeColor: '#00a0e9', // 선의 색깔
-                strokeOpacity: 0, // 선의 불투명도
-                strokeStyle: 'solid' // 선의 스타일
-              })
-            }
-            if (!vm.drawingCircle) { // 그려지고 있는 원을 표시할 원 객체를 생성합니다
-              vm.drawingCircle = new kakao.maps.Circle({
-                strokeWeight: 1,
-                strokeColor: '#00a0e9',
-                strokeOpacity: 0,
-                strokeStyle: 'solid',
-                fillColor: '#00a0e9',
-                fillOpacity: 0.2
-              })
-            }
-            if (!vm.drawingOverlay) {// 그려지고 있는 원의 반경 정보를 표시할 커스텀오버레이를 생성합니다
-              vm.drawingOverlay = new kakao.maps.CustomOverlay({
-                xAnchor: 0,
-                yAnchor: 0,
-                zIndex: 1
-              })
-            }
-          }
-        })
-        kakao.maps.event.addListener(this.map, 'mousemove', function ( // 지도에 마우스무브 이벤트를 등록합니다
-          mouseEvent
-        ) {
-          if (vm.drawingFlag) {// 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
-            var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
-            var linePath = [vm.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
-            vm.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
-            var length = vm.drawingLine.getLength()// 원의 반지름을 선 객체를 이용해서 얻어옵니다
-            if (length > 0) {
-              var circleOptions = {// 그려지고 있는 원의 중심좌표와 반지름입니다
-                center: vm.centerPosition,
-                radius: length
-              }
-              vm.drawingCircle.setOptions(circleOptions) // 그려지고 있는 원의 옵션을 설정합니다
-              var radius = Math.round(vm.drawingCircle.getRadius()) // 반경 정보를 표시할 커스텀오버레이의 내용입니다
-              let content =
-                '<div class="overlay" style="background-color:white">반경 <span class="number">' +
-                radius +
-                '</span>m</div>'
-              vm.drawingOverlay.setPosition(mousePosition)// 반경 정보를 표시할 커스텀 오버레이의 좌표를 마우스커서 위치로 설정합니다
-              vm.drawingOverlay.setContent(content)// 반경 정보를 표시할 커스텀 오버레이의 표시할 내용을 설정합니다
-              vm.drawingCircle.setMap(vm.map)// 그려지고 있는 원을 지도에 표시합니다
-              vm.drawingLine.setMap(vm.map)// 그려지고 있는 선을 지도에 표시합니다
-              vm.drawingOverlay.setMap(vm.map) // 그려지고 있는 원의 반경정보 커스텀 오버레이를 지도에 표시합니다
-            } else {
-              vm.drawingCircle.setMap(null)
-              vm.drawingLine.setMap(null)
-              vm.drawingOverlay.setMap(null)
-            }
-          }
-        })
-        kakao.maps.event.addListener(this.map, 'rightclick', function (// 지도에 마우스 오른쪽 클릭이벤트를 등록합니다
-        // 마우스 오른쪽 클릭한 위치를 기준으로 원과 원의 반경정보를 표시하는 선과 커스텀 오버레이를 표시하고 그리기를 종료합니다
-          mouseEvent
-        ) {
-          if (vm.drawingFlag) {
-            var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-            var polyline = new kakao.maps.Polyline({// 원의 반경을 표시할 선 객체를 생성합니다
-              path: [vm.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
-              strokeWeight: 1, // 선의 두께 입니다
-              strokeColor: '#00a0e9', // 선의 색깔입니다
-              strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-              strokeStyle: 'solid' // 선의 스타일입니다
+        if (!this.drawingFlag) {
+          // 클릭 이벤트가 발생했을 때 원을 그리고 있는 상태가 아니면 중심좌표를 클릭한 지점으로 설정
+          this.drawingFlag = true
+          this.centerPosition = mouseEvent.latLng // 원이 그려질 중심좌표를 클릭한 위치로 설정합니다
+          if (!this.drawingLine) {
+            // 그려지고 있는 원의 반경을 표시할 선 객체를 생성합니다
+            this.drawingLine = new kakao.maps.Polyline({
+              strokeWeight: 3, // 선의 두께
+              strokeColor: '#00a0e9', // 선의 색깔
+              strokeOpacity: 0, // 선의 불투명도
+              strokeStyle: 'solid' // 선의 스타일
             })
-            var circle = new kakao.maps.Circle({// 원 객체를 생성합니다
-              center: vm.centerPosition, // 원의 중심좌표입니다
-              radius: polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
-              strokeWeight: 0, // 선의 두께입니다
-              strokeColor: '#00a0e9', // 선의 색깔입니다
-              strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-              strokeStyle: 'solid', // 선의 스타일입니다
-              fillColor: '#00a0e9', // 채우기 색깔입니다
-              fillOpacity: 0.2 // 채우기 불투명도입니다
+          }
+          if (!this.drawingCircle) {
+            // 그려지고 있는 원을 표시할 원 객체를 생성합니다
+            this.drawingCircle = new kakao.maps.Circle({
+              strokeWeight: 1,
+              strokeColor: '#00a0e9',
+              strokeOpacity: 0,
+              strokeStyle: 'solid',
+              fillColor: '#00a0e9',
+              fillOpacity: 0.2
             })
-            var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
-            var html = getBoxHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
-            var radiusOverlay = new kakao.maps.CustomOverlay({// 반경정보를 표시할 커스텀 오버레이를 생성합니다
-              content: html, // 표시할 내용입니다
-              position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
-              xAnchor: 0.5,
-              yAnchor: 1,
+          }
+          if (!this.drawingOverlay) {
+            // 그려지고 있는 원의 반경 정보를 표시할 커스텀오버레이를 생성합니다
+            this.drawingOverlay = new kakao.maps.CustomOverlay({
+              xAnchor: 0,
+              yAnchor: 0,
               zIndex: 1
             })
-           
-            circle.setMap(vm.map) // 원을 지도에 표시합니다
-            polyline.setMap(vm.map) // 선을 지도에 표시합니다
-            radiusOverlay.setMap(vm.map)// 반경 정보 커스텀 오버레이를 지도에 표시합니다
-            let radiusObj = { // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
-              polyline: polyline,
-              circle: circle,
-              overlay: radiusOverlay
-            }
-            circles.push(radiusObj)// 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
-            vm.drawingFlag = false// 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
-            vm.centerPosition = null// 중심 좌표를 초기화 합니다
-            vm.drawingCircle.setMap(null)// 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
-            vm.drawingLine.setMap(null)
-            vm.drawingOverlay.setMap(null)
           }
-        })
-
-        // 지도에 표시되어 있는 모든 원과 반경정보를 표시하는 선, 커스텀 오버레이를 지도에서 제거합니다
-        // eslint-disable-next-line no-unused-vars
-        // eslint-disable-next-line no-inner-declarations
-        function removeCircles () {
-          for (var i = 0; i < circles.length; i++) {
-            circles[i].circle.setMap(null)
-            circles[i].polyline.setMap(null)
-            circles[i].overlay.setMap(null)
-          }
-          circles = []
-        }
-
-        // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
-        // HTML Content를 만들어 리턴하는 함수입니다
-        // eslint-disable-next-line no-inner-declarations
-        function getBoxHTML (distance) {
-          var content =
-            '<div class="v-sheet theme--light elevation-14" style="margin-leftauto;display:block;text-align:center;" id="mapSheet">'
-          content +=
-            '    <div style="display:flex;justify-content:space-around;">'
-          content += '    <div style="width:70px;height:70px;">'
-          content +=
-            '        <img style="width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
-            '<span style="width:100%;">' +
-            20
-          content += '</span></div>'
-          content += '</div>'
-          content += '</div>'
-          return content
         }
       }
+    },
+    CircleMoveClick (mouseEvent) {
+      if (this.drawingFlag) {
+        // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
+        var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
+        var linePath = [this.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
+        this.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
+        var length = this.drawingLine.getLength() // 원의 반지름을 선 객체를 이용해서 얻어옵니다
+        if (length > 0) {
+          var circleOptions = {
+            // 그려지고 있는 원의 중심좌표와 반지름입니다
+            center: this.centerPosition,
+            radius: length
+          }
+          this.drawingCircle.setOptions(circleOptions) // 그려지고 있는 원의 옵션을 설정합니다
+          var radius = Math.round(this.drawingCircle.getRadius()) // 반경 정보를 표시할 커스텀오버레이의 내용입니다
+          let content =
+            '<div class="overlay" style="background-color:white">반경 <span class="number">' +
+            radius +
+            '</span>m</div>'
+          this.drawingOverlay.setPosition(mousePosition) // 반경 정보를 표시할 커스텀 오버레이의 좌표를 마우스커서 위치로 설정합니다
+          this.drawingOverlay.setContent(content) // 반경 정보를 표시할 커스텀 오버레이의 표시할 내용을 설정합니다
+          this.drawingCircle.setMap(this.map) // 그려지고 있는 원을 지도에 표시합니다
+          this.drawingLine.setMap(this.map) // 그려지고 있는 선을 지도에 표시합니다
+          this.drawingOverlay.setMap(this.map) // 그려지고 있는 원의 반경정보 커스텀 오버레이를 지도에 표시합니다
+        } else {
+          this.drawingCircle.setMap(null)
+          this.drawingLine.setMap(null)
+          this.drawingOverlay.setMap(null)
+        }
+      }
+    },
+    RightMouseClick (mouseEvent) {
+      if (this.drawingFlag) {
+        var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+        var polyline = new kakao.maps.Polyline({
+          // 원의 반경을 표시할 선 객체를 생성합니다
+          path: [this.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+          strokeWeight: 1, // 선의 두께 입니다
+          strokeColor: '#00a0e9', // 선의 색깔입니다
+          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+          strokeStyle: 'solid' // 선의 스타일입니다
+        })
+        var circle = new kakao.maps.Circle({
+          // 원 객체를 생성합니다
+          center: this.centerPosition, // 원의 중심좌표입니다
+          radius: polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+          strokeWeight: 0, // 선의 두께입니다
+          strokeColor: '#00a0e9', // 선의 색깔입니다
+          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+          strokeStyle: 'solid', // 선의 스타일입니다
+          fillColor: '#00a0e9', // 채우기 색깔입니다
+          fillOpacity: 0.2 // 채우기 불투명도입니다
+        })
+        var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+        var html = this.getBoxHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
+        var radiusOverlay = new kakao.maps.CustomOverlay({
+          // 반경정보를 표시할 커스텀 오버레이를 생성합니다
+          content: html, // 표시할 내용입니다
+          position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
+          xAnchor: 0.5,
+          yAnchor: 1,
+          zIndex: 1
+        })
+
+        circle.setMap(this.map) // 원을 지도에 표시합니다
+        polyline.setMap(this.map) // 선을 지도에 표시합니다
+        radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+        let radiusObj = {
+          // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
+          polyline: polyline,
+          circle: circle,
+          overlay: radiusOverlay
+        }
+        this.circles.push(radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
+        this.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+        this.centerPosition = null // 중심 좌표를 초기화 합니다
+        this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+        this.drawingLine.setMap(null)
+        this.drawingOverlay.setMap(null)
+      }
+      this.$store.state.mode = 0
+    },
+    getBoxHTML (distance) {
+      var content =
+        '<div class="v-sheet theme--light elevation-14" style="margin-leftauto;display:block;text-align:center;" id="mapSheet">'
+      content += '    <div style="display:flex;justify-content:space-around;">'
+      content += '    <div style="width:70px;height:70px;">'
+      content +=
+        '        <img style="width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '<span style="width:100%;">' +
+        20
+      content += '</span></div>'
+      content += '</div>'
+      content += '</div>'
+      return content
+    },
+    removeCircles() {
+      for (var i = 0; i < this.circles.length; i++) {
+        this.circles[i].circle.setMap(null)
+        this.circles[i].polyline.setMap(null)
+        this.circles[i].overlay.setMap(null)
+      }
+      this.circles = []
     }
+
+    // -----------------------------------------------------------------------------------------
+    // 뱐경 그리기 함수 시작-----------------------------------------------------------------------------------------
+    // makeCircle: function() {
+    //   // if (this.$store.state.mode === 1)
+    //   let drawingFlag = false // 원이 그려지고 있는 상태를
+    //   let centerPosition // 원의 중심좌표
+    //   let drawingCircle // 그려지고 있는 원을 표시할 원 객체
+    //   let drawingLine // 그려지고 있는 원의 반지름을 표시할 선 객체
+    //   let drawingOverlay // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
+
+    //   let circles = []
+
+    //   let vm = this
+    //   kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
+    //     // 지도에 클릭 이벤트를 등록
+    //     removeCircles()
+    //     if (!vm.drawingFlag) {
+    //       // 클릭 이벤트가 발생했을 때 원을 그리고 있는 상태가 아니면 중심좌표를 클릭한 지점으로 설정
+    //       vm.drawingFlag = true
+    //       vm.centerPosition = mouseEvent.latLng // 원이 그려질 중심좌표를 클릭한 위치로 설정합니다
+    //       if (!vm.drawingLine) {
+    //         // 그려지고 있는 원의 반경을 표시할 선 객체를 생성합니다
+    //         vm.drawingLine = new kakao.maps.Polyline({
+    //           strokeWeight: 3, // 선의 두께
+    //           strokeColor: '#00a0e9', // 선의 색깔
+    //           strokeOpacity: 0, // 선의 불투명도
+    //           strokeStyle: 'solid' // 선의 스타일
+    //         })
+    //       }
+    //       if (!vm.drawingCircle) {
+    //         // 그려지고 있는 원을 표시할 원 객체를 생성합니다
+    //         vm.drawingCircle = new kakao.maps.Circle({
+    //           strokeWeight: 1,
+    //           strokeColor: '#00a0e9',
+    //           strokeOpacity: 0,
+    //           strokeStyle: 'solid',
+    //           fillColor: '#00a0e9',
+    //           fillOpacity: 0.2
+    //         })
+    //       }
+    //       if (!vm.drawingOverlay) {
+    //         // 그려지고 있는 원의 반경 정보를 표시할 커스텀오버레이를 생성합니다
+    //         vm.drawingOverlay = new kakao.maps.CustomOverlay({
+    //           xAnchor: 0,
+    //           yAnchor: 0,
+    //           zIndex: 1
+    //         })
+    //       }
+    //     }
+    //   })
+    //   kakao.maps.event.addListener(this.map, 'mousemove', function(
+    //     // 지도에 마우스무브 이벤트를 등록합니다
+    //     mouseEvent
+    //   ) {
+    //     if (vm.drawingFlag) {
+    //       // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
+    //       var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
+    //       var linePath = [vm.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
+    //       vm.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
+    //       var length = vm.drawingLine.getLength() // 원의 반지름을 선 객체를 이용해서 얻어옵니다
+    //       if (length > 0) {
+    //         var circleOptions = {
+    //           // 그려지고 있는 원의 중심좌표와 반지름입니다
+    //           center: vm.centerPosition,
+    //           radius: length
+    //         }
+    //         vm.drawingCircle.setOptions(circleOptions) // 그려지고 있는 원의 옵션을 설정합니다
+    //         var radius = Math.round(vm.drawingCircle.getRadius()) // 반경 정보를 표시할 커스텀오버레이의 내용입니다
+    //         let content =
+    //           '<div class="overlay" style="background-color:white">반경 <span class="number">' +
+    //           radius +
+    //           '</span>m</div>'
+    //         vm.drawingOverlay.setPosition(mousePosition) // 반경 정보를 표시할 커스텀 오버레이의 좌표를 마우스커서 위치로 설정합니다
+    //         vm.drawingOverlay.setContent(content) // 반경 정보를 표시할 커스텀 오버레이의 표시할 내용을 설정합니다
+    //         vm.drawingCircle.setMap(vm.map) // 그려지고 있는 원을 지도에 표시합니다
+    //         vm.drawingLine.setMap(vm.map) // 그려지고 있는 선을 지도에 표시합니다
+    //         vm.drawingOverlay.setMap(vm.map) // 그려지고 있는 원의 반경정보 커스텀 오버레이를 지도에 표시합니다
+    //       } else {
+    //         vm.drawingCircle.setMap(null)
+    //         vm.drawingLine.setMap(null)
+    //         vm.drawingOverlay.setMap(null)
+    //       }
+    //     }
+    //   })
+    //   kakao.maps.event.addListener(this.map, 'rightclick', function(
+    //     // 지도에 마우스 오른쪽 클릭이벤트를 등록합니다
+    //     // 마우스 오른쪽 클릭한 위치를 기준으로 원과 원의 반경정보를 표시하는 선과 커스텀 오버레이를 표시하고 그리기를 종료합니다
+    //     mouseEvent
+    //   ) {
+    //     // alert(vm.$store.state.mode)
+    //     // vm.$store.state.mode = 0
+    //     if (vm.drawingFlag) {
+    //       var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+    //       var polyline = new kakao.maps.Polyline({
+    //         // 원의 반경을 표시할 선 객체를 생성합니다
+    //         path: [vm.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+    //         strokeWeight: 1, // 선의 두께 입니다
+    //         strokeColor: '#00a0e9', // 선의 색깔입니다
+    //         strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+    //         strokeStyle: 'solid' // 선의 스타일입니다
+    //       })
+    //       var circle = new kakao.maps.Circle({
+    //         // 원 객체를 생성합니다
+    //         center: vm.centerPosition, // 원의 중심좌표입니다
+    //         radius: polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+    //         strokeWeight: 0, // 선의 두께입니다
+    //         strokeColor: '#00a0e9', // 선의 색깔입니다
+    //         strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+    //         strokeStyle: 'solid', // 선의 스타일입니다
+    //         fillColor: '#00a0e9', // 채우기 색깔입니다
+    //         fillOpacity: 0.2 // 채우기 불투명도입니다
+    //       })
+    //       var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+    //       var html = getBoxHTML(radius) // 커스텀 오버레이에 표시할 반경 정보입니다
+    //       var radiusOverlay = new kakao.maps.CustomOverlay({
+    //         // 반경정보를 표시할 커스텀 오버레이를 생성합니다
+    //         content: html, // 표시할 내용입니다
+    //         position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
+    //         xAnchor: 0.5,
+    //         yAnchor: 1,
+    //         zIndex: 1
+    //       })
+
+    //       circle.setMap(vm.map) // 원을 지도에 표시합니다
+    //       polyline.setMap(vm.map) // 선을 지도에 표시합니다
+    //       radiusOverlay.setMap(vm.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+    //       let radiusObj = {
+    //         // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
+    //         polyline: polyline,
+    //         circle: circle,
+    //         overlay: radiusOverlay
+    //       }
+    //       circles.push(radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
+    //       vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+    //       vm.centerPosition = null // 중심 좌표를 초기화 합니다
+    //       vm.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+    //       vm.drawingLine.setMap(null)
+    //       vm.drawingOverlay.setMap(null)
+    //     }
+    //   })
+
+    //   // 지도에 표시되어 있는 모든 원과 반경정보를 표시하는 선, 커스텀 오버레이를 지도에서 제거합니다
+    //   // eslint-disable-next-line no-unused-vars
+    //   // eslint-disable-next-line no-inner-declarations
+    //   function removeCircles() {
+    //     for (var i = 0; i < circles.length; i++) {
+    //       circles[i].circle.setMap(null)
+    //       circles[i].polyline.setMap(null)
+    //       circles[i].overlay.setMap(null)
+    //     }
+    //     circles = []
+    //   }
+
+    //   // 마우스 우클릭 하여 원 그리기가 종료됐을 때 호출하여
+    //   // HTML Content를 만들어 리턴하는 함수입니다
+    //   // eslint-disable-next-line no-inner-declarations
+    //   function getBoxHTML(distance) {
+    //     var content =
+    //       '<div class="v-sheet theme--light elevation-14" style="margin-leftauto;display:block;text-align:center;" id="mapSheet">'
+    //     content +=
+    //       '    <div style="display:flex;justify-content:space-around;">'
+    //     content += '    <div style="width:70px;height:70px;">'
+    //     content +=
+    //       '        <img style="width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+    //       '<span style="width:100%;">' +
+    //       20
+    //     content += '</span></div>'
+    //     content += '</div>'
+    //     content += '</div>'
+    //     return content
+    //   }
+    // }
     // 반경 그리기 함수 끝-----------------------------------------------------------------------------------------
   }
 }
