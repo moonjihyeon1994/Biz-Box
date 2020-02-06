@@ -34,7 +34,15 @@ export default {
 .section-modal {
   display: grid;
   grid-gap: 5px;
-  grid-template-columns: repeat(auto-fit, 500px);
+  grid-template-columns: repeat(2, 550px);
   grid-template-rows: repeat(auto-fit, 1fr);
+}
+@media screen and (max-width: 1477px) {
+  .section-modal {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 500px;
+    grid-template-rows: repeat(auto-fit, 1fr);
+  }
 }
 </style>
