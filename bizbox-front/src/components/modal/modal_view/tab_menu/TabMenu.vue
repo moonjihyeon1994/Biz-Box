@@ -57,7 +57,10 @@ export default {
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border-top: 0px solid transparent;
+  border-left: 0px solid transparent;
+  border-right: 0px;
+  /* background-color: #f1f1f1; */
   border-radius: 3px 3px 0px 0px;
   clear: both;
   margin: 0;
@@ -67,12 +70,12 @@ export default {
 }
 /* Style the buttons that are used to open the tab content */
 .tab button {
-  background-color: inherit;
+  background-color: #f1f1f1;
   float: left;
-  border: none;
+  border: 1px solid #ccc;
   outline: none;
   cursor: pointer;
-  padding: 5px 16px;
+  padding: 5px;
   transition: 0.3s;
   width: 80px;
   margin: 0;
