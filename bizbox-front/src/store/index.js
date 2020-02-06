@@ -10,11 +10,16 @@ const store = new Vuex.Store({
       center: {
         lat: 37.505691, lng: 127.0298106
       }
-    }
+    },
+    mode: 0
   },
   actions: {
     'ChangeCenter': (store, payload) => {
       store.commit('ChangeCenter', { xy: payload.xy })
+    },
+    'ChangeMode': (store, payload) => {
+      console.log(payload.mode)
+      store.commit('ChangeMode', { mode: payload.mode })
     }
     // 'GetCenter': store => {
     //   store.commit('GetCenter', );
@@ -24,6 +29,10 @@ const store = new Vuex.Store({
     'ChangeCenter': (state, payload) => {
       state.Map.center.lat = payload.x
       state.Map.center.lng = payload.y
+    },
+    'ChangeMode': (state, payload) => {
+      state.mode = payload.mode
+      console.log( state.mode)
     }
   },
   // mutations: {

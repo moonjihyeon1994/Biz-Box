@@ -31,7 +31,7 @@ export default {
     let coordinates = []      //행정 구 이름
     let name = ''
     let Message = ''
-    let pp = null;
+    let pp = null
     this.message = Message
     var container = document.getElementById('map')
 
