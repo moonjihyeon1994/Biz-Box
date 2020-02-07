@@ -7,17 +7,20 @@ const state = {
   username: null,
   email: null,
   errors: [],
-  loading: false
+  loading: false,
+  dialog: false
 }
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
-  isLoading: state => state.loading
+  isLoading: state => state.loading,
+  isPopup: state => state.dialog
 }
 
 const mutations = {
   setLoading: (state, flag) => (state.loading = flag),
+  setPopup: (state, flag) => (state.dialog = flag),
   setToken: (state, token) => {
     state.token = token
     sessionStorage.setItem('jwt-auth-token', token)
@@ -35,6 +38,9 @@ const mutations = {
 }
 
 const actions = {
+  popupDialog: ({ commit }) => {
+    commit('setPopup', true)
+  },
   initialLogin: ({ commit }) => {
     const token = sessionStorage.getItem('jwt-auth-token')
     if (token) {
@@ -47,7 +53,6 @@ const actions = {
     sessionStorage.removeItem('jwt-auth-token')
     sessionStorage.removeItem('login_user_name')
     sessionStorage.removeItem('login_user_email')
-    router.push('/login')
   },
 
   pushError ({ commit }, error) {
@@ -67,8 +72,8 @@ const actions = {
             commit('setToken', res.headers['jwt-auth-token'])
             commit('setUsername', res.data.data.name)
             commit('setUserEmail', res.data.data.email)
+            commit('setPopup', false)
             // console.log(sessionStorage)
-            router.push('/')
           } else {
             alert('로그인에 실패했습니다.')
           }
@@ -95,9 +100,9 @@ const actions = {
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
+          commit('setPopup', false)
           // console.log('sessionstorage')
           // console.log(sessionStorage)
-          router.push('/')
         }
       })
   },
@@ -110,9 +115,9 @@ const actions = {
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
+          commit('setPopup', false)
           // console.log('sessionstorage')
           // console.log(sessionStorage)
-          router.push('/')
         } else {
           alert('회원가입에 실패했습니다')
         }

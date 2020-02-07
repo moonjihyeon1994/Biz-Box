@@ -5,6 +5,7 @@
         <span>BizBox</span>
       </v-toolbar-title>
       <v-spacer />
+      <!-- Basic Nav items -->
       <v-list dense v-for="(nav, index) in navList" :key="'N' + index">
         <v-list-item link :to="nav.routeto">
           <v-list-item-content>
@@ -12,6 +13,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <!-- Logout -->
       <v-list dense v-if="isLoggedIn">
         <v-list-item link>
           <v-list-item-content @click.prevent="logout">
@@ -19,10 +21,11 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <v-list dense v-else v-for="(item, index) in logList" :key="'L' + index">
-        <v-list-item link :to="item.routeto">
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+      <!-- Login Button + Modal -->
+      <v-list dense v-else>
+        <v-list-item link>
+          <v-list-item-content @click="popupDialog">
+            <v-list-item-title>Login</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -39,19 +42,18 @@ export default {
       { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
       { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' },
       { routeto: '/modal', icon: 'mdi-information-outline', title: 'Modal' }
-    ],
-    logList: [{ routeto: '/login', icon: 'mdi-account', title: 'Login' }]
+    ]
   }),
-  computed: {
-    ...mapGetters(['isLoggedIn'])
-  },
-  methods: {
-    ...mapActions(['logout'])
-  },
   props: {
     navColor: {
       type: String
     }
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn'])
+  },
+  methods: {
+    ...mapActions(['logout', 'popupDialog'])
   }
 }
 </script>

@@ -5,11 +5,6 @@
       <about></about>
     </div>
     <div class="flex-item-1">
-      <div class="biz-container">
-        <TotalForm></TotalForm>
-      </div>
-    </div>
-    <div class="flex-item-1">
       <News></News>
     </div>
     <HomeFooter></HomeFooter>

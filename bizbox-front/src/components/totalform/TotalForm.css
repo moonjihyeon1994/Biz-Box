@@ -11,5 +11,9 @@ form {
 }
 
 div.v-tab.v-tab--active {
-  background-color: yellow;
+  background-color: #ffffff;
+}
+
+div.v-tab {
+  background-color: grey;
 }
