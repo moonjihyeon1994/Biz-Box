@@ -3,7 +3,8 @@
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
         연령별 유동인구
-        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon></span>
+        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
+        <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
@@ -19,8 +20,8 @@
       <bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
-        width="400px"
-        height="200px"
+        width="500px"
+        height="300px"
       ></bar-chart>
     </div>
   </div>
