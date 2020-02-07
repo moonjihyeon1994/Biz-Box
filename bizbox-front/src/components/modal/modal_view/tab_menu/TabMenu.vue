@@ -7,12 +7,10 @@
       <button class="tablinks" @click="openContents($event, 'Graph')">
         그래프
       </button>
-      <!-- <button class="tablinks" @click="openCity($event, 'Tokyo')">Tokyo</button> -->
     </div>
 
-    <!-- Tab content -->
     <div id="Total" class="tabcontent">
-      <!-- 여기에 형꺼 -->
+      <totalView></totalView>
     </div>
 
     <div id="Graph" class="tabcontent">
@@ -23,9 +21,11 @@
 
 <script>
 import graphItem from './tab_contents/graph.vue'
+import totalView from './tab_contents/total.vue'
 export default {
   components: {
-    graphItem
+    graphItem,
+    totalView
   },
   mounted () {
     document.getElementById('defaultOpen').click()
