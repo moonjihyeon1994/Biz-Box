@@ -14,7 +14,7 @@
 
           <div class='mapBtn' @click="choice3()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>상권변화지수</span>
           </div>
           <div class='mapBtn' @click="choice4()">
             <img src="@/assets/logo.png">
@@ -65,6 +65,8 @@ export default {
     choice3: function (event) {
       this.selected = 3
       // alert('clicked : ' + this.selected)
+      // alert("mode : "+ this.$store.state.mode)
+      this.$store.dispatch('ChangeMode', { mode: 3 })
     },
     choice4: function (event) {
       this.selected = 4

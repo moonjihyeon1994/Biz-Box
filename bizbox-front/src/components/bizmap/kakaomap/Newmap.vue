@@ -72,8 +72,8 @@ export default {
       })
       kakao.maps.event.addListener(polygon, 'mouseover', () => {
       // 지도 영역정보를 얻어옵니다
-      polygon.setOption({
-        fillColor : '#09f'
+        polygon.setOption({
+          fillColor : '#09f'
       })
       
     })

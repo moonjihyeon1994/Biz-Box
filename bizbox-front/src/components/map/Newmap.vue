@@ -29,6 +29,7 @@ import axios from '../../js/http-commons'
 export default {
   data: () => {
     return {
+      overlay: null,
       polygon: null,
       geocoder: null,
       map: null,
@@ -63,7 +64,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     let data = Dong.features // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
     let name = '멀티캠퍼스'
@@ -131,7 +132,14 @@ export default {
       )
     }
 
-    function displayArea(polygon, Mmap, coordinates, name, length, customOverlay) {
+    function displayArea(
+      polygon,
+      Mmap,
+      coordinates,
+      name,
+      length,
+      customOverlay
+    ) {
       // 다각형을 생성 ,이벤트를 등록
       let mode = vm.$store.state.mode
       let path = []
@@ -162,17 +170,11 @@ export default {
         polygon.setOptions({
           fillColor: '#09f'
         })
-        customOverlay.setContent('<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' + name + '</div>')
-    //     width: 30px;
-    // height: 30px;
-    // position: absolute;
-    // background: #fff;
-    // border: 1px solid #888;
-    // border-radius: 3px;
-    // font-size: 12px;
-    // top: -5px;
-    // left: 50%;
-    // padding:2px;
+        customOverlay.setContent(
+          '<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' +
+            name +
+            '</div>'
+        )
         customOverlay.setPosition(position)
         customOverlay.setMap(Mmap)
       })
@@ -188,7 +190,7 @@ export default {
         })
         customOverlay.setMap(null)
       })
-      kakao.maps.event.addListener(polygon, 'click', () => {
+      kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         if (vm.$store.state.mode === 0) {
           //  각 폴리곤에 마우스 아웃 이벤트 등록
           let Name = name
@@ -207,6 +209,44 @@ export default {
             }
           })
         }
+        if (vm.$store.state.mode === 3) {
+          //  각 폴리곤에 마우스 아웃 이벤트 등록
+          // 각 폴리곤에 마우스 오버 이벤트 등록
+          let pos = mouseEvent.latLng
+          var content =
+            '<div class="wrap">' +
+            '    <div class="info">' +
+            '        <div class="title">' +
+            '            카카오 스페이스닷원' +
+            '            <div class="overlayClose" onclick="closeOverlay()" title="닫기"></div>' +
+            '        </div>' +
+            '        <div class="body">' +
+            '            <div class="img">' +
+            '                <img src="http://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
+            '           </div>' +
+            '            <div class="desc">' +
+            '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
+            '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
+            '                <div><a href="http://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
+            '            </div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>'
+          // eslint-disable-next-line no-undef
+          let ChangeBusinessTable = new kakao.maps.CustomOverlay({
+            content: content,
+            map: Map,
+            position: pos
+          })
+          if (ChangeBusinessTable != null) {
+            // eslint-disable-next-line no-undef
+            console.log(closeOverlay())
+            closeOverlay()
+          }
+          ChangeBusinessTable.setContent(content)
+          ChangeBusinessTable.setPosition(pos)
+          ChangeBusinessTable.setMap(Mmap)
+        }
       })
     }
     this.ifchanege = this.map.getCenter()
@@ -218,13 +258,13 @@ export default {
     condition
   },
   methods: {
-    panTo () {
+    panTo() {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
       this.map.panTo(moveLatLon)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
-    serch (name) {
+    serch(name) {
       let Ifchange = this.ifchanege
       let Name = this.name
       let Map = this.map
@@ -242,7 +282,7 @@ export default {
         }
       })
     },
-    CircleMouseClick (mouseEvent) {
+    CircleMouseClick(mouseEvent) {
       // 지도에 클릭 이벤트를 등록
 
       this.removeCircles()
@@ -286,7 +326,7 @@ export default {
         }
       }
     },
-    CircleMoveClick (mouseEvent) {
+    CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
         // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
         var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
@@ -317,7 +357,7 @@ export default {
         }
       }
     },
-    RightMouseClick (mouseEvent) {
+    RightMouseClick(mouseEvent) {
       if (this.drawingFlag) {
         var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
         var polyline = new kakao.maps.Polyline({
@@ -369,7 +409,12 @@ export default {
       }
       this.$store.state.mode = 0
     },
-    getBoxHTML () {
+    // overay 삭제 매서드
+    closeOverlay () {
+      console.log(this.overlay)
+      this.overlay.setMap(null)
+    },
+    getBoxHTML() {
       this.getData()
       console.log(this.CountInfo)
       let 소매 = this.CountInfo.소매
@@ -462,7 +507,7 @@ export default {
       content += '</div>'
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    getData () {
+    getData() {
       axios
         .get(
           '/storecountByxy/' +
@@ -485,7 +530,7 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
-    removeCircles () {
+    removeCircles() {
       for (var i = 0; i < this.circles.length; i++) {
         this.circles[i].circle.setMap(null)
         this.circles[i].polyline.setMap(null)
@@ -496,7 +541,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang='scss'>
 .map {
   position: absolute;
   top: 0;
@@ -554,18 +599,110 @@ button {
   border-radius: 3px;
 }
 .area {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid #888;
-    border-radius: 3px;
-    font-size: 12px;
-    top: -5px;
-    left: 50%;
-    padding:2px;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #888;
+  border-radius: 3px;
+  font-size: 12px;
+  top: -5px;
+  left: 50%;
+  padding: 2px;
 }
 :-ms-input-placeholder {
   color: tomato;
+}
+.wrap {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  width: 288px;
+  height: 132px;
+  margin-left: -144px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+  line-height: 1.5;
+  .wrap * {
+  padding: 0;
+  margin: 0;
+  .info {
+    width: 286px;
+    height: 120px;
+    border-radius: 5px;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    overflow: hidden;
+    background: #fff;
+    .info:nth-child(1) {
+      border: 0;
+      box-shadow: 0px 1px 2px #888;
+    }
+    .title {
+      padding: 5px 0 0 10px;
+      height: 30px;
+      background: #eee;
+      border-bottom: 1px solid #ddd;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .overlayClose {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #888;
+      width: 17px;
+      height: 17px;
+      background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+    }
+    .overlayClose:hover {
+      cursor: pointer;
+    }
+    .body {
+      position: relative;
+      overflow: hidden;
+    }
+    .desc {
+      position: relative;
+      margin: 13px 0 0 90px;
+      height: 75px;
+      .ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .jibun {
+        font-size: 11px;
+        color: #888;
+        margin-top: -2px;
+      }
+    }
+    .img {
+      position: absolute;
+      top: 6px;
+      left: 5px;
+      width: 73px;
+      height: 71px;
+      border: 1px solid #ddd;
+      color: #888;
+      overflow: hidden;
+    }
+    :after {
+      content: '';
+      position: absolute;
+      margin-left: -12px;
+      left: 50%;
+      bottom: 0;
+      width: 22px;
+      height: 12px;
+      background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+    }
+    .link {
+      color: #5085bb;
+    }
+  }
+}
 }
 </style>
