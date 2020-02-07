@@ -26,7 +26,7 @@ public class StoreCountController {
 	public ResponseEntity<Object> getStoreNumByCount(@PathVariable String address,@PathVariable String range){
 		try {
 			String num = api.getAddressByName(address);
-			String xy = api.getAddressByXY(num);
+			String xy = api.XYtoLatLong(num);
 			JSONObject total = api.findAllStore(xy, range);
 			
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
@@ -52,7 +52,7 @@ public class StoreCountController {
 	public ResponseEntity<Object> getStoreNumByLarge(@PathVariable String address,@PathVariable String range){
 		try {
 			String num = api.getAddressByName(address);
-			String xy = api.getAddressByXY(num);
+			String xy = api.XYtoLatLong(num);
 			JSONObject total = api.findAllStoreByLarge(xy, range);
 			
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
