@@ -95,6 +95,7 @@ button {
     position: relative;
     overflow: hidden;
     margin-top: 10px;
+    margin-bottom: 10px;
     border-radius: 4px;
     background: #f9fafb;
     z-index: 1;
