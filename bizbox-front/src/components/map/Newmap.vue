@@ -89,6 +89,8 @@ export default {
     })
     let Map = this.map
     let vm = this
+    // 오버레이 생성--------------------------------------------------------
+    this.customOverlay = new kakao.maps.CustomOverlay({})
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
       // 마커생성
@@ -124,11 +126,12 @@ export default {
         this.map,
         this.coordinates[0][0],
         name,
-        this.coordinates[0][0].length
+        this.coordinates[0][0].length,
+        this.customOverlay
       )
     }
 
-    function displayArea(polygon, Mmap, coordinates, name, length) {
+    function displayArea(polygon, Mmap, coordinates, name, length, customOverlay) {
       // 다각형을 생성 ,이벤트를 등록
       let mode = vm.$store.state.mode
       let path = []
@@ -156,17 +159,24 @@ export default {
         // 각 폴리곤에 마우스 오버 이벤트 등록
         let Name = name
         let position = mouseEvent.latLng
-        console.log(position)
         polygon.setOptions({
           fillColor: '#09f'
         })
-        vm.overlay(Name, position)
+        customOverlay.setContent('<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' + name + '</div>')
+        customOverlay.setPosition(position)
+        customOverlay.setMap(Mmap)
+      })
+      kakao.maps.event.addListener(polygon, 'mousemove', mouseEvent => {
+        // 각 폴리곤에 마우스 오버 이벤트 등록
+        let position = mouseEvent.latLng
+        customOverlay.setPosition(position)
       })
       kakao.maps.event.addListener(polygon, 'mouseout', () => {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         polygon.setOptions({
           fillColor: '#fff'
         })
+        customOverlay.setMap(null)
       })
       kakao.maps.event.addListener(polygon, 'click', () => {
         if (vm.$store.state.mode === 0) {
@@ -198,16 +208,6 @@ export default {
     condition
   },
   methods: {
-    overlay (name, position) {
-      this.customOverlay = new kakao.maps.CustomOverlay({
-        position: position,
-        content: '<div class="area" style="width:30px;height:30px;background-color:white">' + name + '</div>',
-        zIndex: 2
-      })
-      this.customOverlay.setMap(this.map)
-      console.log(this.customOverlay)
-      console.log(position)
-    },
     panTo () {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
@@ -542,6 +542,18 @@ button {
   top: 100px;
   left: 50px;
   border-radius: 3px;
+}
+.area {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #888;
+    border-radius: 3px;
+    font-size: 12px;
+    top: -5px;
+    left: 50%;
+    padding:2px;
 }
 :-ms-input-placeholder {
   color: tomato;
