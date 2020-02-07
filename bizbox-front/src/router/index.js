@@ -5,6 +5,7 @@ import Login from '@/components/login/Login.vue'
 import Home from '@/components/home/Home.vue'
 import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
+import result from '@/components/modal/result/Result.vue'
 
 Vue.use(VueRouter)
 
@@ -33,8 +34,12 @@ const routes = [
     path: '/modal',
     name: 'modal',
     component: Modal
+  },
+  {
+    path: '/result',
+    name: 'result',
+    component: result
   }
-  // 바꿈
 ]
 
 const router = new VueRouter({
