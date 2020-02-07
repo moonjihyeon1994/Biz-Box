@@ -20,12 +20,6 @@
       <li><button class="list-distance-items" @click="checkBtn(2)">1km</button></li>
       <li><button class="list-distance-items" @click="checkBtn(3)">2km</button></li>
     </ul>
-    <div class="category-list-select">
-      <select>
-        <option value="none">거리</option>
-        <option value="item" v-for="item in largeItems" :key="item" >{{item}}</option>
-      </select>
-    </div>
     <div class="slider-content">
       <div class="slidecontainer">
         <input type="range" min="100" max="2000" value="1000" class="slider" id="myRange">
@@ -33,10 +27,12 @@
       </div>
     </div>
     <div class="content-inside">
-      만들자
-      {{range}}
       <button @click="getData">눌러줘</button>
-      {{result}}
+      <ul v-show="drawflag">
+        <li v-for="item in icons" :key="item">
+          <span><v-icon size="15">{{item.keyset}}</v-icon>{{item.nameset}}:{{item.valueset}}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -52,9 +48,13 @@ export default {
   },
   data () {
     return {
-      largeItems: largeScale.large,
+      largeItems: largeScale,
+      icons: [],
       popflag: false,
-      range: 0,
+      clickflag: false,
+      drawflag: false,
+      slidervalue: 1000,
+      range: 1000,
       result: null,
       road: '',
       key: '경인로 248-14',
@@ -79,35 +79,64 @@ export default {
 
       slider.oninput = (res) => {
         output.innerHTML = res.target.value
-        console.log(res)
         this.range = res.target.value
+        this.slidervalue = res.target.value
       }
     },
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     checkBtn (e) {
       let listDistanceItems = document.getElementsByClassName('list-distance-items')
+      if (listDistanceItems[e].className.includes('click')) {
+        listDistanceItems[e].className = listDistanceItems[e].className.replace(' click', '')
+        document.getElementById('demo').innerHTML = this.slidervalue
+        this.clickflag = false
+        return
+      }
       for (let i = 0; i < listDistanceItems.length; i++) {
         listDistanceItems[i].className = listDistanceItems[i].className.replace(' click', '')
       }
-      console.log(listDistanceItems[e].className)
       listDistanceItems[e].className += ' click'
-      if (e === 0) this.range = 500
-      if (e === 1) this.range = 750
-      if (e === 2) this.range = 1000
-      if (e === 3) this.range = 2000
+      this.clickflag = true
+      if (e === 0) {
+        this.range = 500
+        document.getElementById('demo').innerHTML = 500
+      } else if (e === 1) {
+        this.range = 750
+        document.getElementById('demo').innerHTML = 750
+      } else if (e === 2) {
+        this.range = 1000
+        document.getElementById('demo').innerHTML = 1000
+      } else if (e === 3) {
+        this.range = 2000
+        document.getElementById('demo').innerHTML = 2000
+      }
     },
     getData () {
-      console.log('데이타' + this.range)
+      if (!this.clickflag) {
+        this.range = this.slidervalue
+      }
+      console.log('click')
       axios
-        .get('/storecount/' + this.key + '/' + this.range)
+        .get('/storecountByLarge/' + this.key + '/' + this.range)
         .then(res => {
-          console.log(res.data)
-          this.result = res.data
+          res.data.large.forEach(el => {
+            let data = new Object()
+            let itemkey = Object.keys(el)[0]
+            let itemValue = Object.values(el)[0]
+            let iconName = this.largeItems.large[itemkey]
+
+            data.keyset = iconName
+            data.valueset = itemValue
+            data.nameset = itemkey
+            this.icons.push(data)
+          })
         })
-        .finally(() => {})
+        .finally(() => {
+          this.drawflag = true
+          console.log(this.icons)
+        })
     }
   }
 }
