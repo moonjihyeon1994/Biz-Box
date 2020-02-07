@@ -1,0 +1,15 @@
+.form-container {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px 0;
+}
+
+form {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+div.v-tab.v-tab--active {
+  background-color: yellow;
+}
