@@ -431,6 +431,7 @@ public class JusoApi {
 			idx++;
 			try {
 				JSONParser jsonParse = new JSONParser();
+				System.out.println(str);
 				JSONObject jsonObj = (JSONObject) jsonParse.parse(str);
 
 				JSONObject header = (JSONObject) jsonObj.get("header");
