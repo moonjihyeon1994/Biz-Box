@@ -33,7 +33,6 @@
       </div>
     </div>
     <div class="content-inside">
-      만들자
       {{range}}
       <button @click="getData">눌러줘</button>
       {{result}}
