@@ -44,6 +44,7 @@
           <td>{{ population.유동 }}</td>
         </tr>
       </table>
+      <!-- 도움말  -->
     </div>
 
     <h1><strong>상권 주요차트</strong></h1>
