@@ -28,15 +28,18 @@
     </div>
     <div class="content-inside">
       <button @click="getData">눌러줘</button>
-      <div class="content-inside-list">
-
-      </div>
+      <!-- <div v-if="resul!=null" class="content-inside-list">
+        <ul>
+          <li v-for="item in result.large" :key="index"><v-icon size="15">mdi-help-circle-outline</v-icon></li>
+        </ul>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 import axios from '@/js/http-commons'
+import largeScale from '@/assets/json/largeScale.json'
 // import Spinner from '../../../../result/Spinner'
 import './graphs.css'
 export default {
@@ -45,8 +48,10 @@ export default {
   },
   data () {
     return {
+      largeScale,
       popflag: false,
       clickflag: false,
+      icons: [],
       range: 0,
       clickrange: 0,
       sliderange: 1000,
@@ -116,7 +121,13 @@ export default {
           console.log(res.data)
           this.result = res.data
         })
-        .finally(() => {})
+        .finally(() => {
+          this.setIcon()
+        })
+    },
+    setIcon () {
+      let data = this.result.large
+      console.log(data)
     }
   }
 }
