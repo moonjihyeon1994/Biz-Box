@@ -163,16 +163,6 @@ export default {
           fillColor: '#09f'
         })
         customOverlay.setContent('<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' + name + '</div>')
-    //     width: 30px;
-    // height: 30px;
-    // position: absolute;
-    // background: #fff;
-    // border: 1px solid #888;
-    // border-radius: 3px;
-    // font-size: 12px;
-    // top: -5px;
-    // left: 50%;
-    // padding:2px;
         customOverlay.setPosition(position)
         customOverlay.setMap(Mmap)
       })
