@@ -1,6 +1,6 @@
 <template>
   <div class="biz-container">
-    <h3>오늘의 뉴스</h3>
+    <h3><b>오늘의 뉴스</b></h3>
     <v-carousel height="100%"  :show-arrows="arrowAble" hide-delimiters vertical cycle interval="4000">
       <v-carousel-item
         v-for="news in newses"
@@ -40,24 +40,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.biz-container {
-  text-align: center;
-}
-
-.news-container {
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-}
-h3 {
-  font-size: 3vw;
-}
-a {
-  font-size: 2.5vw;
-  text-decoration: none;
-}
-a:hover {
-  color: hotpink;
-}
-</style>
+<style scoped src="./News.css"></style>

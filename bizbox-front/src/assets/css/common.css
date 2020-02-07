@@ -1,10 +1,31 @@
 :root {
     --nav-text-color: #fdc864;
+    --our-orange: #ecb744;
 }
 
 #app {
     text-align: center;
     color: #000000;
+}
+
+h1 {
+    font-size: 33px;
+}
+
+h2 {
+    font-size: 27px;
+}
+
+h3 {
+    font-size: 23px;
+}
+
+h4 {
+    font-size: 19px;
+}
+
+span {
+    font-size: 17px
 }
 
 /* Only for routerview container */
@@ -59,7 +80,6 @@ p {
     .container {
         display: -webkit-flex;
         display: flex;
-        width: 100%
     }
 }
 div.v-toolbar__content {
