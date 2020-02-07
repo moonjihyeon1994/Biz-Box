@@ -1,5 +1,8 @@
 <template>
   <div class="mapContainer">
+    <div id="spinnerBox" :style="spinnerBoxStyle">
+      <spinner :loading='loadingStatus' id="spinner"></spinner>
+    </div>
     <v-card>
       <v-toolbar class="searchBox">
         <v-text-field
@@ -22,16 +25,22 @@
 </template>
 <script>
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
+import Spinner from '@/components/bizmap/kakaomap/spinner/Spinner.vue'
 export default {
   data: () => {
     return {
       map: null,
       searchWord: null,
-      state: 1
+      state: 1,
+      loadingStatus: true,
+      spinnerBoxStyle: {
+        display: 'block'
+      }
     }
   },
   components: {
-    condition
+    condition,
+    Spinner
   },
   mounted () {
     this.makeMap()
@@ -47,6 +56,8 @@ export default {
       }
       // eslint-disable-next-line no-undef
       this.map = new kakao.maps.Map(container, options)
+      this.loadingStatus = false
+      this.spinnerBoxStyle.display = 'none'
     },
     submit: function (event) {
       // 주소-좌표 변환 객체를 생성합니다
@@ -330,5 +341,19 @@ export default {
   background-color: pink;
   width: 300px;
   height: 180px;
+}
+#spinnerBox {
+  position: absolute;
+  z-index: 3;
+  width:100%;
+  height:100%;
+  background-color: white;
+
+  #spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
 }
 </style>
