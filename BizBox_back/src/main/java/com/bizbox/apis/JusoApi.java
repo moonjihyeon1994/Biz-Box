@@ -479,4 +479,51 @@ public class JusoApi {
 		}
 		return LNm;
 	}
+	
+	//큰스케일만
+	public JSONObject findAllStoreByLarge(String xy, String radius) throws IOException {
+		int idx = 1;
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		java.util.List<String> names = new ArrayList<String>();
+		while (true) {
+			String str = findStore(xy, radius, String.valueOf(idx));
+			idx++;
+			try {
+				JSONParser jsonParse = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParse.parse(str);
+
+				JSONObject header = (JSONObject) jsonObj.get("header");
+				String resultCode = (String) header.get("resultCode");
+				if (resultCode.equals("03"))
+					break;
+				JSONObject body = (JSONObject) jsonObj.get("body");
+				JSONArray itemsArray = (JSONArray) body.get("items");
+
+				for (int i = 0; i < itemsArray.size(); i++) {
+					JSONObject items = (JSONObject) itemsArray.get(i);
+					String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
+
+					if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
+						LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
+					} else {
+						LNm.put(indsLclsNm, 1);
+					}
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		JSONObject jsonObject = new JSONObject();
+		JSONArray array = new JSONArray();
+		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
+			JSONObject jsonObject1 = new JSONObject();
+			String key = entry.getKey();
+			int value = entry.getValue();
+			jsonObject1.put(key, value);
+			array.add(jsonObject1);
+		}
+		jsonObject.put("large", array);
+		return jsonObject;
+	}
 }

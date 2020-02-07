@@ -48,4 +48,17 @@ public class StoreCountController {
 		}
 	}
 	
+	@GetMapping("/storecountByLarge/{address}/{range}")
+	public ResponseEntity<Object> getStoreNumByLarge(@PathVariable String address,@PathVariable String range){
+		try {
+			String num = api.getAddressByName(address);
+			String xy = api.getAddressByXY(num);
+			JSONObject total = api.findAllStoreByLarge(xy, range);
+			
+			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
+		}
+	}
 }
