@@ -20,6 +20,12 @@
       <li><button class="list-distance-items" @click="checkBtn(2)">1km</button></li>
       <li><button class="list-distance-items" @click="checkBtn(3)">2km</button></li>
     </ul>
+    <div class="category-list-select">
+      <select>
+        <option value="none">거리</option>
+        <option value="item" v-for="item in largeItems" :key="item" >{{item}}</option>
+      </select>
+    </div>
     <div class="slider-content">
       <div class="slidecontainer">
         <input type="range" min="100" max="2000" value="1000" class="slider" id="myRange">
@@ -27,34 +33,28 @@
       </div>
     </div>
     <div class="content-inside">
+      만들자
+      {{range}}
       <button @click="getData">눌러줘</button>
-      <!-- <div v-if="resul!=null" class="content-inside-list">
-        <ul>
-          <li v-for="item in result.large" :key="index"><v-icon size="15">mdi-help-circle-outline</v-icon></li>
-        </ul>
-      </div> -->
+      {{result}}
     </div>
   </div>
 </template>
 
 <script>
 import axios from '@/js/http-commons'
-import largeScale from '@/assets/json/largeScale.json'
 // import Spinner from '../../../../result/Spinner'
 import './graphs.css'
+import largeScale from '@/assets/json/largeScale.json'
 export default {
   components: {
     // Spinner
   },
   data () {
     return {
-      largeScale,
+      largeItems: largeScale.large,
       popflag: false,
-      clickflag: false,
-      icons: [],
       range: 0,
-      clickrange: 0,
-      sliderange: 1000,
       result: null,
       road: '',
       key: '경인로 248-14',
@@ -64,6 +64,9 @@ export default {
     }
   },
   computed: {
+    asdf: function () {
+      return ''
+    }
   },
   mounted () {
     this.slider()
@@ -76,58 +79,35 @@ export default {
 
       slider.oninput = (res) => {
         output.innerHTML = res.target.value
-        this.sliderange = res.target.value
+        console.log(res)
+        this.range = res.target.value
       }
     },
     popup () {
+      console.log('popup')
       this.popflag = !this.popflag
     },
     checkBtn (e) {
       let listDistanceItems = document.getElementsByClassName('list-distance-items')
-      if (listDistanceItems[e].className.includes('click')) {
-        listDistanceItems[e].className = listDistanceItems[e].className.replace(' click', '')
-        this.clickflag = false
-        document.getElementById('demo').innerHTML = this.sliderange
-        return
-      }
       for (let i = 0; i < listDistanceItems.length; i++) {
         listDistanceItems[i].className = listDistanceItems[i].className.replace(' click', '')
       }
+      console.log(listDistanceItems[e].className)
       listDistanceItems[e].className += ' click'
-      this.clickflag = true
-      if (e === 0) {
-        this.clickrange = 500
-        document.getElementById('demo').innerHTML = 500
-      } else if (e === 1) {
-        this.clickrange = 750
-        document.getElementById('demo').innerHTML = 750
-      } else if (e === 2) {
-        this.clickrange = 1000
-        document.getElementById('demo').innerHTML = 1000
-      } else if (e === 3) {
-        this.clickrange = 2000
-        document.getElementById('demo').innerHTML = 2000
-      }
+      if (e === 0) this.range = 500
+      if (e === 1) this.range = 750
+      if (e === 2) this.range = 1000
+      if (e === 3) this.range = 2000
     },
     getData () {
-      if (this.clickflag) {
-        this.range = this.clickrange
-      } else {
-        this.range = this.sliderange
-      }
+      console.log('데이타' + this.range)
       axios
         .get('/storecount/' + this.key + '/' + this.range)
         .then(res => {
           console.log(res.data)
           this.result = res.data
         })
-        .finally(() => {
-          this.setIcon()
-        })
-    },
-    setIcon () {
-      let data = this.result.large
-      console.log(data)
+        .finally(() => {})
     }
   }
 }
