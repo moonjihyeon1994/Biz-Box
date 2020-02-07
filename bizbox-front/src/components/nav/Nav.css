@@ -1,0 +1,36 @@
+/* Nav bar */
+i.v-icon.notranslate.mdi.mdi-menu.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-account.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-information-outline.theme--light {
+    color: #ffffff;
+}
+
+i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
+    color: #ffffff;
+}
+
+div.v-list-item__title {
+    color: var(--nav-text-color);
+}
+
+div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
+    background-color: transparent;
+    color: var(--nav-text-color);
+}
+
+
+div.v-toolbar__title span {
+    color: var(--nav-text-color);
+}
+
+@media (max-width:700px) {
+    div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
+        display: none;
+    }
+}
