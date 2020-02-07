@@ -63,7 +63,7 @@ public class IndustrySuggestionsController {
 			Changebusiness cb = cblist.get(5);
 
 			String num = api.getAddressByName(address);
-			String xy = api.getAddressByXY(num);
+			String xy = api.XYtoLatLong(num);
 			HashMap<String, Integer> NumberOfBusinesses = api.findStoreToSpring(xy, "350");
 			
 			int[] BusinessesLank = new int[NumberOfBusinesses.size()];

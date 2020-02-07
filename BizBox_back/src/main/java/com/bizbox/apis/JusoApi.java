@@ -27,10 +27,14 @@ import com.bizbox.utils.*;
 
 @Service
 public class JusoApi {
-
-//	도로명주소로 입력
-	public String getAddressByName(String name) throws IOException {
-		// 요청변수 설정
+	
+	/**
+	 * 도로명 주소입력하여 해당하는 동네 데이터 얻어오는 API
+	 * @param name (도로명주소)
+	 * @return JsonString(해당하는 동네의 데이터들 Json)
+	 * @throws IOException
+	 */
+	public String DoroNameApi(String name) throws IOException {
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -51,195 +55,18 @@ public class JusoApi {
 			sb.append(tempStr);
 		}
 		br.close();
-		int size = 0;
-		StringBuilder temp = new StringBuilder();
-		try {
-			JSONParser jsonParse = new JSONParser();
-			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
-			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
-			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
-			size = jsonArray.size();
-			boolean isfind = false;
-			for (int i = 0; i < size; i++) {
-				temp = new StringBuilder();
-				JSONObject personObject = (JSONObject) jsonArray.get(i);
-				temp.append(personObject.get("admCd"));
-				temp.append(",");
-				temp.append(personObject.get("rnMgtSn"));
-				temp.append(",");
-				temp.append(personObject.get("udrtYn"));
-				temp.append(",");
-				temp.append(personObject.get("buldMnnm"));
-				temp.append(",");
-				temp.append(personObject.get("buldSlno"));
-				temp.append(",");
-				temp.append(personObject.get("emdNm"));
-				temp.append(",");
-				temp.append(personObject.get("emdNo"));
-				temp.append(",");
-				temp.append(personObject.get("liNm"));
-				temp.append(",");
-				temp.append(personObject.get("Rn"));
-				temp.append(",");
-				temp.append(personObject.get("lnbrMnnm"));
-				temp.append(",");
-				temp.append(personObject.get("jibunAddr"));
-				temp.append(",");
-				temp.append(personObject.get("roadAddrPart1"));
-				if (personObject.get("roadAddrPart1").toString().contains(name)
-						|| name.contains(personObject.get("roadAddrPart1").toString().substring(0,
-								personObject.get("roadAddrPart1").toString().length() - 1))) {
-					System.out.println("그만!!!!" + personObject.get("roadAddrPart1"));
-					isfind = true;
-					break;
-				}
-			}
-			if (isfind == false) {
-				for (int i = 0; i < size; i++) {
-					temp = new StringBuilder();
-					JSONObject personObject = (JSONObject) jsonArray.get(i);
-					temp.append(personObject.get("admCd"));
-					temp.append(",");
-					temp.append(personObject.get("rnMgtSn"));
-					temp.append(",");
-					temp.append(personObject.get("udrtYn"));
-					temp.append(",");
-					temp.append(personObject.get("buldMnnm"));
-					temp.append(",");
-					temp.append(personObject.get("buldSlno"));
-					temp.append(",");
-					temp.append(personObject.get("emdNm"));
-					temp.append(",");
-					temp.append(personObject.get("emdNo"));
-					temp.append(",");
-					temp.append(personObject.get("liNm"));
-					temp.append(",");
-					temp.append(personObject.get("Rn"));
-					temp.append(",");
-					temp.append(personObject.get("lnbrMnnm"));
-					temp.append(",");
-					temp.append(personObject.get("jibunAddr"));
-					temp.append(",");
-					temp.append(personObject.get("roadAddrPart1"));
-				
-					if (personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm")
-							.toString().substring(0, personObject.get("emdNm").toString().length() - 1))) {
-						System.out.println("그만!!!!" + personObject.get("emdNm"));
-						break;
-					}
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("해당주소가 존재하지않습니다.");
-			e.printStackTrace();
-		}
-		System.out.println(size);
-		return temp.toString();
+		return sb.toString();
 	}
-
-	public List<String> getAddressSetByName(String name) throws IOException {
+	
+	/**
+	 * 동정보를 입력하여 xy를 위도 경도로 변환하는 API 
+	 * @param num (동데이터 정보들:admCd,rnMgtSn,udrtYn,buldMnnm,buldMnnm)
+	 * @return String (x,y) 위도,경도
+	 * @throws IOException
+	 */
+	public String XYtoLatLong(String num) throws IOException {
 		// 요청변수 설정
-		String currentPage = "0";
-		String countPerPage = "100";
-		String resultType = "json";
-		String confmKey = "devU01TX0FVVEgyMDIwMDEyMDE2MjcwNjEwOTQwNzE=";
-		String keyword = name;
-		String apiUrl = "http://www.juso.go.kr/addrlink/addrLinkApi.do?" + "currentPage=" + currentPage
-				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey="
-				+ confmKey + "&resultType=" + resultType;
-
-		URL url = new URL(apiUrl);
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-		StringBuffer sb = new StringBuffer();
-		String tempStr = null;
-		while (true) {
-			tempStr = br.readLine();
-			if (tempStr == null)
-				break;
-			sb.append(tempStr);
-		}
-		br.close();
-		int size = 0;
-		List<String> addresslist = new LinkedList<String>();
-		try {
-			JSONParser jsonParse = new JSONParser();
-			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
-			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
-			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
-			size = jsonArray.size();
-
-			for (int i = 0; i < size; i++) {
-				JSONObject personObject = (JSONObject) jsonArray.get(i);
-				String sp[] = personObject.get("roadAddrPart1").toString().split(" ");
-				String ad = sp[2];
-				addresslist.add(ad);
-			}
-		} catch (Exception e) {
-			System.out.println("해당주소가 존재하지않습니다.");
-		}
-		Set Address = new HashSet<String>();
-		AddressUtil util = new AddressUtil();
-		for (int i = 0; i < addresslist.size(); i++) {
-			String ad = util.RemoveNumber(addresslist.get(i));
-			Address.add(ad);
-		}
-		List<String> setlist = new LinkedList<String>(Address);
-		return setlist;
-	}
-
-	public List<String> getDongSetByName(String name) throws IOException {
-		// 요청변수 설정
-		String currentPage = "0";
-		String countPerPage = "100";
-		String resultType = "json";
-		String confmKey = "devU01TX0FVVEgyMDIwMDEyMDE2MjcwNjEwOTQwNzE=";
-		String keyword = name;
-		String apiUrl = "http://www.juso.go.kr/addrlink/addrLinkApi.do?" + "currentPage=" + currentPage
-				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey="
-				+ confmKey + "&resultType=" + resultType;
-
-		URL url = new URL(apiUrl);
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-		StringBuffer sb = new StringBuffer();
-		String tempStr = null;
-		while (true) {
-			tempStr = br.readLine();
-			if (tempStr == null)
-				break;
-			sb.append(tempStr);
-		}
-		br.close();
-		int size = 0;
-		List<String> donglist = new LinkedList<String>();
-		try {
-			JSONParser jsonParse = new JSONParser();
-			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
-			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
-			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
-			size = jsonArray.size();
-
-			for (int i = 0; i < size; i++) {
-				JSONObject personObject = (JSONObject) jsonArray.get(i);
-				String sp = personObject.get("emdNm").toString();
-				donglist.add(sp);
-			}
-		} catch (Exception e) {
-			System.out.println("해당주소가 존재하지않습니다.");
-		}
-		Set Dong = new HashSet<String>();
-		AddressUtil util = new AddressUtil();
-		for (int i = 0; i < donglist.size(); i++) {
-			String ad = util.RemoveDong(donglist.get(i));
-			Dong.add(ad);
-		}
-		List<String> setlist = new LinkedList<String>(Dong);
-		return setlist;
-	}
-
-//	xy좌표로 입력
-	public String getAddressByXY(String num) throws IOException {
 		String[] nums = num.split(",");
-		// 요청변수 설정
 		String admCd = nums[0];
 		String rnMgtSn = nums[1];
 		String udrtYn = nums[2];
@@ -291,30 +118,34 @@ public class JusoApi {
 		temp.append(dstProjec.y);
 		return temp.toString();
 	}
-
-	//	반경내 상가업소 조회
+	
+	/**
+	 * 반경내 상가업소 조회하여 JsonString으로 주는 API
+	 * @param xy
+	 * @param radius
+	 * @param pageNo
+	 * @return JsonString
+	 * @throws IOException
+	 */
 	public String findStore(String xy, String radius, String pageNo) throws IOException {
 		String[] cxcy = xy.split(",");
 
 		StringBuilder urlBuilder = new StringBuilder(
 				"http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius"); /* URL */
 		urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8")
-				+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); /*
-																														 * Service
-																														 * Key
-																														 */
+				+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); 
 		urlBuilder.append(
-				"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8")); /* 파라미터설명 */
+				"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8"));
 		urlBuilder.append(
-				"&" + URLEncoder.encode("cx", "UTF-8") + "=" + URLEncoder.encode(cxcy[0], "UTF-8")); /* 파라미터설명 */
+				"&" + URLEncoder.encode("cx", "UTF-8") + "=" + URLEncoder.encode(cxcy[0], "UTF-8"));
 		urlBuilder.append(
-				"&" + URLEncoder.encode("cy", "UTF-8") + "=" + URLEncoder.encode(cxcy[1], "UTF-8")); /* 파라미터설명 */
+				"&" + URLEncoder.encode("cy", "UTF-8") + "=" + URLEncoder.encode(cxcy[1], "UTF-8"));
 		urlBuilder.append(
-				"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8")); /* 파라미터설명 */
+				"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
 		urlBuilder.append(
-				"&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /* 파라미터설명 */
+				"&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
 		urlBuilder.append(
-				"&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("300", "UTF-8")); /* 파라미터설명 */
+				"&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("300", "UTF-8"));
 
 		URL url = new URL(urlBuilder.toString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -335,8 +166,168 @@ public class JusoApi {
 		conn.disconnect();
 		return sb.toString();
 	}
+	
+	/**
+	 * 도로명주소로 입력 하여 정보를 String으로 받음
+	 * @param name (도로명 주소)
+	 * @return String (동네 정보 : admCd, rnMgtSn, udrtYn, buldMnnm, buldSlno, emdNm, emdNo, liNm, Rn, lnbrMnnm, jibunAddr, roadAddrPart1)
+	 * @throws IOException
+	 */
+	public String getAddressByName(String name) throws IOException {
+		String sb = DoroNameApi(name);
+		
+		int size = 0;
+		StringBuilder temp = new StringBuilder();
+		try {
+			JSONParser jsonParse = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
+			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
+			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
+			size = jsonArray.size();
+			boolean isfind = false;
+			for (int i = 0; i < size; i++) {
+				temp = new StringBuilder();
+				JSONObject personObject = (JSONObject) jsonArray.get(i);
+				temp.append(personObject.get("admCd"));
+				temp.append(",");
+				temp.append(personObject.get("rnMgtSn"));
+				temp.append(",");
+				temp.append(personObject.get("udrtYn"));
+				temp.append(",");
+				temp.append(personObject.get("buldMnnm"));
+				temp.append(",");
+				temp.append(personObject.get("buldSlno"));
+				temp.append(",");
+				temp.append(personObject.get("emdNm"));
+				temp.append(",");
+				temp.append(personObject.get("emdNo"));
+				temp.append(",");
+				temp.append(personObject.get("liNm"));
+				temp.append(",");
+				temp.append(personObject.get("Rn"));
+				temp.append(",");
+				temp.append(personObject.get("lnbrMnnm"));
+				temp.append(",");
+				temp.append(personObject.get("jibunAddr"));
+				temp.append(",");
+				temp.append(personObject.get("roadAddrPart1"));
+				if (personObject.get("roadAddrPart1").toString().contains(name)
+						|| name.contains(personObject.get("roadAddrPart1").toString().substring(0,
+								personObject.get("roadAddrPart1").toString().length() - 1))) {
+					isfind = true;
+					break;
+				}
+			}
+			if (isfind == false) {
+				for (int i = 0; i < size; i++) {
+					temp = new StringBuilder();
+					JSONObject personObject = (JSONObject) jsonArray.get(i);
+					temp.append(personObject.get("admCd"));
+					temp.append(",");
+					temp.append(personObject.get("rnMgtSn"));
+					temp.append(",");
+					temp.append(personObject.get("udrtYn"));
+					temp.append(",");
+					temp.append(personObject.get("buldMnnm"));
+					temp.append(",");
+					temp.append(personObject.get("buldSlno"));
+					temp.append(",");
+					temp.append(personObject.get("emdNm"));
+					temp.append(",");
+					temp.append(personObject.get("emdNo"));
+					temp.append(",");
+					temp.append(personObject.get("liNm"));
+					temp.append(",");
+					temp.append(personObject.get("Rn"));
+					temp.append(",");
+					temp.append(personObject.get("lnbrMnnm"));
+					temp.append(",");
+					temp.append(personObject.get("jibunAddr"));
+					temp.append(",");
+					temp.append(personObject.get("roadAddrPart1"));
+				
+					if (personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm")
+							.toString().substring(0, personObject.get("emdNm").toString().length() - 1))) {
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("해당주소가 존재하지않습니다.");
+			e.printStackTrace();
+		}
+		System.out.println(size);
+		return temp.toString();
+	}
+	
+	public List<String> getAddressSetByName(String name) throws IOException {
+		String sb = DoroNameApi(name);
+		
+		int size = 0;
+		List<String> addresslist = new LinkedList<String>();
+		try {
+			JSONParser jsonParse = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
+			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
+			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
+			size = jsonArray.size();
 
-	// json을 parsing하여 상권 정보얻어오기!
+			for (int i = 0; i < size; i++) {
+				JSONObject personObject = (JSONObject) jsonArray.get(i);
+				String sp[] = personObject.get("roadAddrPart1").toString().split(" ");
+				String ad = sp[2];
+				addresslist.add(ad);
+			}
+		} catch (Exception e) {
+			System.out.println("해당주소가 존재하지않습니다.");
+		}
+		Set Address = new HashSet<String>();
+		AddressUtil util = new AddressUtil();
+		for (int i = 0; i < addresslist.size(); i++) {
+			String ad = util.RemoveNumber(addresslist.get(i));
+			Address.add(ad);
+		}
+		List<String> setlist = new LinkedList<String>(Address);
+		return setlist;
+	}
+
+	public List<String> getDongSetByName(String name) throws IOException {
+		String sb = DoroNameApi(name);
+		
+		int size = 0;
+		List<String> donglist = new LinkedList<String>();
+		try {
+			JSONParser jsonParse = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
+			JSONObject jsonObj1 = (JSONObject) jsonObj.get("results");
+			JSONArray jsonArray = (JSONArray) jsonObj1.get("juso");
+			size = jsonArray.size();
+
+			for (int i = 0; i < size; i++) {
+				JSONObject personObject = (JSONObject) jsonArray.get(i);
+				String sp = personObject.get("emdNm").toString();
+				donglist.add(sp);
+			}
+		} catch (Exception e) {
+			System.out.println("해당주소가 존재하지않습니다.");
+		}
+		Set Dong = new HashSet<String>();
+		AddressUtil util = new AddressUtil();
+		for (int i = 0; i < donglist.size(); i++) {
+			String ad = util.RemoveDong(donglist.get(i));
+			Dong.add(ad);
+		}
+		List<String> setlist = new LinkedList<String>(Dong);
+		return setlist;
+	}
+
+	/**
+	 * 위도 경도 좌표로 상권정보 받기
+	 * @param xy
+	 * @param radius
+	 * @return Json(대분류 개수, 중분류에 해당하는 각각의 소분류 개수)
+	 * @throws IOException
+	 */
 	@Cacheable(cacheNames = "StoreCount")
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
@@ -420,8 +411,6 @@ public class JusoApi {
 	}
 
 	public HashMap<String, Integer> findStoreToSpring(String xy, String radius) throws IOException {
-		
-		System.out.println("상점개수 찾는중........");
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
@@ -480,7 +469,13 @@ public class JusoApi {
 		return LNm;
 	}
 	
-	//큰스케일만
+	/**
+	 * 위도,경도, 반경 입력하여 대분류 갯수 받기
+	 * @param xy (String 위도,경도)
+	 * @param radius (m, 미터)
+	 * @return Json(대분류당 개수)
+	 * @throws IOException
+	 */
 	public JSONObject findAllStoreByLarge(String xy, String radius) throws IOException {
 		int idx = 1;
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
