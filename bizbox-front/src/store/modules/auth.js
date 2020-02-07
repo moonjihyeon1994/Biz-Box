@@ -59,23 +59,22 @@ const actions = {
     if (getters.isLoggedIn) {
       router.push('/')
     } else {
-      console.log(credentials)
+      // console.log(credentials)
       axios
         .post('http://70.12.246.137:8080/user/login/', credentials)
         .then(res => {
           if (res.data.status === true) {
-            // console.log(res)
             commit('setToken', res.headers['jwt-auth-token'])
-            commit('setUsername', 'heecheol')
+            commit('setUsername', res.data.data.name)
             commit('setUserEmail', res.data.data.email)
-            console.log(state)
-            console.log(sessionStorage)
+            // console.log(sessionStorage)
             router.push('/')
           } else {
             alert('로그인에 실패했습니다.')
           }
         })
         .catch(err => {
+          alert('로그인에 실패했습니다.')
           if (!err.response) {
             commit('pushError', 'Network Error..')
           } else if (err.response.status === 400) {
@@ -94,28 +93,25 @@ const actions = {
       .then(res => {
         if (res.data.status) {
           commit('setToken', res.headers['jwt-auth-token'])
-          commit('setUsername', 'heecheol')
+          commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
-          console.log('state')
-          console.log(state)
-          console.log('sessionstorage')
-          console.log(sessionStorage)
+          // console.log('sessionstorage')
+          // console.log(sessionStorage)
           router.push('/')
         }
       })
   },
   signup: ({ commit }, credentials) => {
     const postUrl = 'http://70.12.246.137:8080/user/signup'
+    // const postUrl = 'http://70.12.247.78:8080/user/signup'
     axios.post(postUrl, credentials)
       .then(res => {
         if (res.data.status === true) {
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
-          console.log('state')
-          console.log(state)
-          console.log('sessionstorage')
-          console.log(sessionStorage)
+          // console.log('sessionstorage')
+          // console.log(sessionStorage)
           router.push('/')
         } else {
           alert('회원가입에 실패했습니다')

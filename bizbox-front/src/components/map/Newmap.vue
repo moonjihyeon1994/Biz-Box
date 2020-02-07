@@ -45,6 +45,7 @@ export default {
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
       drawingLine: false, // 그려지고 있는 원의 반지름을 표시할 선 객체
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
+      customOverlay: false,
       circles: [],
       countResult: '',
       searchX: '',
@@ -62,7 +63,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     let data = Dong.features // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
     let name = '멀티캠퍼스'
@@ -154,7 +155,8 @@ export default {
       kakao.maps.event.addListener(polygon, 'mouseover', mouseEvent => {
         // 각 폴리곤에 마우스 오버 이벤트 등록
         let Name = name
-        let position = mouseEvent.LatLng
+        let position = mouseEvent.latLng
+        console.log(position)
         polygon.setOptions({
           fillColor: '#09f'
         })
@@ -197,11 +199,14 @@ export default {
   },
   methods: {
     overlay (name, position) {
-      var customOverlay = new kakao.maps.CustomOverlay({
+      this.customOverlay = new kakao.maps.CustomOverlay({
         position: position,
-        content: '<div class="area">' + name + '</div>'
+        content: '<div class="area" style="width:30px;height:30px;background-color:white">' + name + '</div>',
+        zIndex: 2
       })
-      customOverlay.setMap(this.map)
+      this.customOverlay.setMap(this.map)
+      console.log(this.customOverlay)
+      console.log(position)
     },
     panTo () {
       // 지도 중심을 부드럽게 이동시킵니다
