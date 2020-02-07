@@ -1,72 +1,115 @@
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
 #bz-container {
+  position: relative;
   background-color: white;
   width: 100%;
-  height: 800px;
+  height: 1080px;
+
+  /* Tablet */
+  @media screen and (max-width: 992px) {
+    & {
+      height: 650px;
+    }
+  }
+  
+  /* Smart Phone */
+  @media screen and (max-width: 600px) {
+    & {
+      height: 600px;
+    }
+  }
 
   div {
     position: absolute;
   }
 
   #bz-styleBox {
+    position: relative;
     background-image: url('../../../assets/home_main_resized.png');
     width: 100%;
-    height: 750px;
+    height: 1080px;
   }
 
   #bz-styleText {
-    top: 80px;
+    top: 180px;
     left: 60px;
     color: black;
-    font-size: 72px;
-    color: #ebab77;
+    font-size: 5em;
+    color: $color1;
 
-    animation-name: mainTitle;
-    animation-duration: 1.5s;
-    animation-timing-function: ease-in;
-
-    @keyframes mainTitle {
-      from {
-        opacity: 0;
-        left: 0;
+    /* Tablet */
+    @media screen and (max-width: 992px) {
+      & {
+        font-size: 4em;
+        left: 20px;
       }
-      to {
-        opacity: 1;
-        left: 60px;
+    }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        left: 20px;
+        top: 100px;
+        font-size: 3em;
       }
     }
   }
 
-  #bz-styleTestSub {
-    top: 250px;
+  #bz-styleText.before-enter {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s ease-in-out;
+  }
+
+  #bz-styleText.enter {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  #bz-styleTextSub {
+    top: 350px;
     left: 120px;
     color: black;
-    font-size: 48px;
+    font-size: 3em;
     color: rgb(255, 255, 255);
 
-    animation-name: mainSub;
-    animation-duration: 1.5s;
-    animation-delay: 0.2s;
-    animation-timing-function: ease-in;
-
-    @keyframes mainSub {
-      0% {
-        display: none;
-        opacity: 0;
-        left: 0;
-      }
-      100% {
-        display: block;
-        opacity: 1;
-        left: 120px;
+     /* Tablet */
+     @media screen and (max-width: 992px) {
+      & {
+        font-size: 2em;
+        left: 30px;
       }
     }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        font-size: 1.5em;
+        left: 30px;
+        top: 200px;
+      }
+    }
+  }
+
+  #bz-styleTextSub.before-enter {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s ease-in-out;
+    transition-delay: 1s;
+  }
+
+  #bz-styleTextSub.enter {
+    opacity: 1;
+    transform: translateX(0px);
   }
 
   #bz-startBox {
     background-color: rgba(0, 0, 0, 0.6);
     width: 600px;
-    height: 250px;
-    top: 450px;
+    height: 200px;
+    top: 610px;
     left: 50%;
     transform: translateX(-50%);
 
@@ -74,9 +117,25 @@
     box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
     color: rgb(223, 223, 223);
 
+    /* Tablet */
+    @media screen and (max-width: 992px) {
+      & {
+        width: 500px;
+        top: 400px;
+      }
+    }
+    
+    /* Smart Phone */
+    @media screen and (max-width: 600px) {
+      & {
+        width: 400px;
+        top: 350px;
+      }
+    }
+
     #bz-startBox-text {
       position: relative;
-      top: 50px;
+      top: 35px;
       font-size: 28px;
       text-align: center;
       letter-spacing: 5px;
@@ -86,7 +145,7 @@
     #bz-startBox-start {
       position: relative;
       margin: auto;
-      top: 110px;
+      top: 70px;
       width: 300px;
       height: 50px;
       background-color: #2d81b5a6;
@@ -103,5 +162,17 @@
         background-color: #2d81b5e8;
       }
     }
+  }
+
+  #bz-startBox.before-enter {
+    opacity: 0;
+    transform: translateY(100px) translateX(-50%);
+    transition: all 1s ease-in-out;
+    transition-delay: 2s;
+  }
+
+  #bz-startBox.enter {
+    opacity: 1;
+    transform: translateY(0px) translateX(-50%);
   }
 }
