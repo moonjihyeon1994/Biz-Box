@@ -1,45 +1,42 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app color="transparent" flat>
-      <v-toolbar-title style="width: 300px">
-        <span>BizBox</span>
-      </v-toolbar-title>
-      <v-spacer />
-      <v-list dense v-for="nav in navList" :key="nav.routeto">
-        <v-list-item link :to="nav.routeto">
-          <v-list-item-content>
-            <v-list-item-title>{{ nav.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-app-bar>
-    <div class="viewcontainer">
+    <Nav :navColor="navColor"></Nav>
+    <div class="viewcontainer" v-scroll="onScroll">
       <router-view />
     </div>
   </v-app>
 </template>
+
 <script>
-import { mapActions, mapGetters } from 'vuex'
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
+import Nav from './nav/Nav'
 export default {
   name: 'app',
+  components: {
+    Nav
+  },
   data: () => ({
-    drawer: null,
-    routeon: true,
-    navList: [
-      { routeto: '/login', icon: 'mdi-account', title: 'Login' },
-      { routeto: '/', icon: 'mdi-card-search-outline', title: 'Home' },
-      { routeto: '/bizmap', icon: 'mdi-information-outline', title: 'Search' },
-      { routeto: '/modal', icon: 'mdi-information-outline', title: 'Modal' }
-      // 바꾼거
-    ]
+    navColor: 'transparent'
   }),
   methods: {
-    ...mapActions(['logout'])
+    onScroll () {
+      if (document.documentElement.scrollTop === 0) {
+        this.navColor = 'transparent'
+      } else {
+        this.navColor = '#ffffff'
+      }
+    }
   },
-  computed: {
-    ...mapGetters(['isLoggedIn'])
+  created () {
+    this.$store.dispatch('initialLogin')
   }
 }
 </script>
+
+<style>
+@font-face {
+  font-family: 'OG';
+  src: url('../assets/fonts/OmniGothicL.woff');
+}
+</style>

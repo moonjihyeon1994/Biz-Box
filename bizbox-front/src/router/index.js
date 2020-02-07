@@ -3,8 +3,15 @@ import VueRouter from 'vue-router'
 import Signup from '@/components/signup/Signup.vue'
 import Login from '@/components/login/Login.vue'
 import Home from '@/components/home/Home.vue'
+// import About from '@/components/about/About.vue'
+// import Result from '@/components/result/Result.vue'
+// import ResultSearch from '@/components/result/ResultSearch.vue'
+import map from '@/components/map/Newmap.vue'
+import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'
 import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
+import tap from '@/components/countstore/CountStores.vue'
+import result from '@/components/modal/result/Result.vue'
 
 Vue.use(VueRouter)
 
@@ -24,6 +31,21 @@ const routes = [
     name: 'signup',
     component: Signup
   },
+  // {
+  //   path: '/result2',
+  //   name: 'newResult',
+  //   component: ResultSearch
+  // },
+  {
+    path: '/map',
+    name: 'newResult',
+    component: map
+  },
+  {
+    path: '/eummap',
+    name: 'mapcd .',
+    component: Map
+  },
   {
     path: '/bizmap',
     name: 'bizmap',
@@ -33,8 +55,17 @@ const routes = [
     path: '/modal',
     name: 'modal',
     component: Modal
+  },
+  {
+    path: '/tap',
+    name: 'tap',
+    component: tap
+  },
+  {
+    path: '/result',
+    name: 'result',
+    component: result
   }
-  // 바꿈
 ]
 
 const router = new VueRouter({

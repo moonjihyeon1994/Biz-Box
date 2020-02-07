@@ -2,8 +2,9 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        연령별 매출
-        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon></span>
+        연령별 소비
+        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
+        <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
@@ -11,7 +12,7 @@
     <p class="point-content-area">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">매출이 가장 많아요.</span>
+      <span class="point-normal">지출이 가장 많아요.</span>
     </p>
     <div id="chart">
       <div id="back" :style="allowDiv"></div>
