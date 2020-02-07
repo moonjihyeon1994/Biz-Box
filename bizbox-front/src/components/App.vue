@@ -3,6 +3,12 @@
     <Nav :navColor="navColor"></Nav>
     <div class="viewcontainer" v-scroll="onScroll">
       <router-view />
+      <v-dialog
+        v-model="isPopup"
+        max-width="300"
+      >
+        <TotalForm></TotalForm>
+      </v-dialog>
     </div>
   </v-app>
 </template>
@@ -11,15 +17,19 @@
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
 import Nav from './nav/Nav'
+import TotalForm from './totalform/TotalForm'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'app',
   components: {
-    Nav
+    Nav,
+    TotalForm
   },
   data: () => ({
     navColor: 'transparent'
   }),
   methods: {
+    ...mapActions(['initialDialog']),
     onScroll () {
       if (document.documentElement.scrollTop === 0) {
         this.navColor = 'transparent'
@@ -30,6 +40,9 @@ export default {
   },
   created () {
     this.$store.dispatch('initialLogin')
+  },
+  computed: {
+    ...mapGetters(['isPopup'])
   }
 }
 </script>
