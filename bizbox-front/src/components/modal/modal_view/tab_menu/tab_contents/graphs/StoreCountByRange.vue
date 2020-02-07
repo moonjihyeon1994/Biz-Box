@@ -81,7 +81,6 @@ export default {
         output.innerHTML = res.target.value
         console.log(res)
         this.range = res.target.value
-        // console.log('asdf' + this.range)
       }
     },
     popup () {
@@ -93,14 +92,15 @@ export default {
       for (let i = 0; i < listDistanceItems.length; i++) {
         listDistanceItems[i].className = listDistanceItems[i].className.replace(' click', '')
       }
+      console.log(listDistanceItems[e].className)
       listDistanceItems[e].className += ' click'
       if (e === 0) this.range = 500
-      if (e === 1) this.range = 1000
-      if (e === 2) this.range = 2000
-      if (e === 3) this.range = 3000
+      if (e === 1) this.range = 750
+      if (e === 2) this.range = 1000
+      if (e === 3) this.range = 2000
     },
     getData () {
-      console.log(this.range)
+      console.log('데이타' + this.range)
       axios
         .get('/storecount/' + this.key + '/' + this.range)
         .then(res => {
