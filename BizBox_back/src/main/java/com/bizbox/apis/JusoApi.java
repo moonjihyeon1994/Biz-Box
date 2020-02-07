@@ -292,7 +292,7 @@ public class JusoApi {
 		return temp.toString();
 	}
 
-//	반경내 상가업소 조회
+	//	반경내 상가업소 조회
 	public String findStore(String xy, String radius, String pageNo) throws IOException {
 		String[] cxcy = xy.split(",");
 
