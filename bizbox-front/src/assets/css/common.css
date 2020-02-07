@@ -1,6 +1,31 @@
+:root {
+    --nav-text-color: #fdc864;
+    --our-orange: #ecb744;
+}
+
 #app {
     text-align: center;
-    color: #0000;
+    color: #000000;
+}
+
+h1 {
+    font-size: 33px;
+}
+
+h2 {
+    font-size: 27px;
+}
+
+h3 {
+    font-size: 23px;
+}
+
+h4 {
+    font-size: 19px;
+}
+
+span {
+    font-size: 17px
 }
 
 /* Only for routerview container */
@@ -15,7 +40,7 @@
 
 /* Set Background CSS */
 div.v-application--wrap {
-    background-color: wheat;
+    background-color:#ffffff;
     /* background-image: url("../../assets/garocity.jpg"); */
     /* background-size: cover; */
     display: -webkit-flex;
@@ -36,6 +61,12 @@ div.v-input__control {
     flex: 1;
 }
 
+.biz-item-center-1 {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
 p {
     color: #000000;
     font-size: larger;
@@ -50,6 +81,10 @@ p {
         display: -webkit-flex;
         display: flex;
     }
+}
+div.v-toolbar__content {
+    color: #ffffff;
+    background-color: transparent;
 }
 
 
@@ -70,23 +105,18 @@ i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
     color: #ffffff;
 }
 
-div.v-toolbar__content {
-    color: #ffffff;
-    background-color: transparent;
-}
-
 div.v-list-item__title {
-    color: #000000;
+    color: var(--nav-text-color);
 }
 
 div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
     background-color: transparent;
-    color: #000000;
+    color: var(--nav-text-color);
 }
 
 
 div.v-toolbar__title span {
-    color: #000000;
+    color: var(--nav-text-color);
 }
 
 @media (max-width:700px) {

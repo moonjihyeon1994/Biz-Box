@@ -33,13 +33,10 @@
 </template>
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 
 <script>
-import axios from 'axios'
 import router from'../../router'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'login',
@@ -54,12 +51,9 @@ export default {
   methods: {
     ...mapActions(['login', 'loginWithKakao']),
     requestKakao () {
-      Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37')
       Kakao.Auth.loginForm({
         success: (authObj) => {
-          console.log(authObj)
           const refreshToken = authObj.refresh_token
-
           const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
           this.loginWithKakao(getUrl)
         },
