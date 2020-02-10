@@ -3,6 +3,7 @@
     <div class="biz-item-1">
       <start></start>
       <about></about>
+      <biz-us></biz-us>
     </div>
     <div class="flex-item-1">
       <div class="biz-container">
@@ -22,6 +23,7 @@ import News from './news/News'
 import HomeFooter from './homefooter/HomeFooter'
 import About from './about/About'
 import TotalForm from '../totalform/TotalForm'
+import BizUs from './bizus/BizUs'
 
 export default {
   components: {
@@ -29,7 +31,8 @@ export default {
     News,
     HomeFooter,
     About,
-    TotalForm
+    TotalForm,
+    BizUs
   }
 }
 </script>
