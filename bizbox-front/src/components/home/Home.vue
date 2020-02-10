@@ -5,11 +5,6 @@
       <about></about>
     </div>
     <div class="flex-item-1">
-      <div class="biz-container">
-        <TotalForm></TotalForm>
-      </div>
-    </div>
-    <div class="flex-item-1">
       <News></News>
     </div>
     <HomeFooter></HomeFooter>
@@ -21,17 +16,15 @@ import Start from './start/Start'
 import News from './news/News'
 import HomeFooter from './homefooter/HomeFooter'
 import About from './about/About'
-import TotalForm from '../totalform/TotalForm'
 
 export default {
   components: {
     Start,
     News,
     HomeFooter,
-    About,
-    TotalForm
+    About
   }
 }
 </script>
 
-<style scoped src="./Home.css"></style>
+<style scoped src="./home.css"></style>

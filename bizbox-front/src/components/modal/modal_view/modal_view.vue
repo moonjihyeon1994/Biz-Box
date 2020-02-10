@@ -3,7 +3,7 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <button class="close-button" @click="$emit('close')">x</button>
+          <button class="close-button" @click="$emit('close')"><v-icon>mdi-close-circle-outline</v-icon></button>
           <TabMenu />
           <hr />
         </div>
@@ -32,7 +32,11 @@ export default {
       const boderHeight = 120
       let modalcontainer = document.getElementsByClassName('modal-container')
       let newHeight = window.innerHeight - boderHeight - 50 + 'px'
-      modalcontainer[1].style.height = newHeight
+      try {
+        modalcontainer[1].style.height = newHeight
+      } catch (e) {
+        // console.log(e)
+      }
     }
   }
 }
