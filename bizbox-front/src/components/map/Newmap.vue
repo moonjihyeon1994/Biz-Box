@@ -209,8 +209,20 @@ export default {
             }
           })
         }
+        if (vm.$store.state.mode === 2) {
+          vm.makeOverlay2(mouseEvent, name)
+        }
         if (vm.$store.state.mode === 3) {
           vm.makeOverlay3(mouseEvent, name)
+        }
+        if (vm.$store.state.mode === 4) {
+          vm.makeOverlay4(mouseEvent, name)
+        }
+        if (vm.$store.state.mode === 5) {
+          vm.makeOverlay5(mouseEvent, name)
+        }
+        if (vm.$store.state.mode === 6) {
+          vm.makeOverlay6(mouseEvent, name)
         }
       })
     }
@@ -374,13 +386,12 @@ export default {
       }
       this.$store.state.mode = 0
     },
-    async makeOverlay3 (mouseEvent, Name) {
+    async makeOverlay2 (mouseEvent, Name) {
+      this.name = Name
       let pos = mouseEvent.latLng
-      console.log(Name)
       var content =
-              '<div class="overlaybox">' + 
-              '<div class="wrap" style="width=400px;height="260px;">' +
-              '    <div class="info" >' +
+              '<div class="overlaybox">' +
+              '    <div class="first" >' +
               '       <canvas id=horizontalbarChart' +
               '       width="390px"' +
               '       height="220px"' +
@@ -389,7 +400,6 @@ export default {
               '    <div>' +
               '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
               '    </div>' +
-              '</div>' +
               '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
@@ -407,48 +417,464 @@ export default {
       this.ChangeBusinessTable.setContent(content)
       this.ChangeBusinessTable.setPosition(pos)
       this.ChangeBusinessTable.setMap(this.map)
-      var ctx = document.getElementById('horizontalbarChart').getContext('2d')
-      var horizontalbarChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-          datasets: [
-            {
-              label: '전체',
-              backgroundColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-              borderColor: 'black',
-              data: [
-                10,
-                20,
-                30,
-                40,
-                50,
-                60
+      axios
+        .get('/population/getPopulationByTime/' + this.name)
+        .then(res => {
+          this.result = res.data.pbt
+          this.road = this.result.f
+          this.point = res.data.point
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: [
+                '24~06시',
+                '06~11시',
+                '11~14시',
+                '14~17시',
+                '17~21시',
+                '21~24시'
+              ],
+              datasets: [
+                {
+                  label: '정보',
+                  fill: false,
+                  borderColor: 'navy',
+                  data: [
+                    this.result.j,
+                    this.result.k,
+                    this.result.l,
+                    this.result.m,
+                    this.result.n,
+                    this.result.o
+                  ]
+                }
               ]
-            }
-          ]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: false
+                    },
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ]
               }
-            }]
-          }
-        }
+            }
+          })
+        })
+    },
+    async makeOverlay3 (mouseEvent, Name) {
+      this.name = Name
+      let pos = mouseEvent.latLng
+      var content =
+              '<div class="overlaybox">' + 
+              '    <div class="first" >' +
+              '       <canvas id=horizontalbarChart' +
+              '       width="390px"' +
+              '       height="220px"' +
+              '       style="background: white";></canvas>' +
+              '    </div>' +
+              '    <div>' +
+              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
+              '    </div>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
       })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+      axios
+        .get('/change/getHistory/' + this.name)
+        .then(res => {
+          this.result = res.data.cblist
+          this.road = this.result[0].d
+          this.point = res.data.point
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['2014', '2015', '2016', '2017', '2018', '2019'],              datasets: [
+                {
+                  label: '운영 영업 개월 평균',
+                  backgroundColor: '#74ddf7',
+                  data: [this.result[0].g, this.result[1].g, this.result[2].g, this.result[3].g, this.result[4].g, this.result[5].g]
+                },
+                {
+                  label: '폐업 영업 개월 평균', backgroundColor: '#ff6390',
+                  data: [this.result[0].h, this.result[1].h, this.result[2].h, this.result[3].h, this.result[4].h, this.result[5].h]
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true
+                    },
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ]
+              }
+            }
+          })
+        })
+    },
+    async makeOverlay4 (mouseEvent, Name) {
+      this.name = Name
+      let pos = mouseEvent.latLng
+      var content =
+              '<div class="overlaybox">' + 
+              '    <div class="first" >' +
+              '       <canvas id=horizontalbarChart' +
+              '       width="390px"' +
+              '       height="220px"' +
+              '       style="background: white";></canvas>' +
+              '    </div>' +
+              '    <div>' +
+              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
+              '    </div>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
+      })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+
+      let sumOf10 = 0
+      let sumOf20 = 0
+      let sumOf30 = 0
+      let sumOf40 = 0
+      let sumOf50 = 0
+      let sumOf60 = 0
+
+      axios
+        .get('/sales/' + this.name)
+        .then(res => {
+          this.result = res.data
+          this.road = res.data[0].d
+          this.point = res.data.point
+
+          for (let index = 0; index < this.result.length; index++) {
+            sumOf10 += Number(this.result[index].z)
+            sumOf20 += Number(this.result[index].aa)
+            sumOf30 += Number(this.result[index].ab)
+            sumOf40 += Number(this.result[index].ac)
+            sumOf50 += Number(this.result[index].ad)
+            sumOf60 += Number(this.result[index].ae)
+          }
+
+          sumOf10 /= 100000000
+          sumOf20 /= 100000000
+          sumOf30 /= 100000000
+          sumOf40 /= 100000000
+          sumOf50 /= 100000000
+          sumOf60 /= 100000000
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+              labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+              datasets: [
+                {
+                  label: '전체',
+                  backgroundColor: '#365673',
+                  data: [
+                    sumOf10.toFixed(2),
+                    sumOf20.toFixed(2),
+                    sumOf30.toFixed(2),
+                    sumOf40.toFixed(2),
+                    sumOf50.toFixed(2),
+                    sumOf60.toFixed(2)
+                  ]
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true
+                    },
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ]
+              }
+            }
+          })
+        })
+    },
+    async makeOverlay5 (mouseEvent, Name) {
+      this.name = Name
+      let pos = mouseEvent.latLng
+      var content =
+              '<div class="overlaybox">' + 
+              '    <div class="first" >' +
+              '       <canvas id=horizontalbarChart' +
+              '       width="390px"' +
+              '       height="220px"' +
+              '       style="background: white";></canvas>' +
+              '    </div>' +
+              '    <div>' +
+              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
+              '    </div>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
+      })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+      axios
+        .get('/population/getPopulationByLocation/' + this.name)
+        .then(res => {
+          this.result = res.data.pbl
+          this.road = this.result.f
+          this.point = res.data.point
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+              datasets: [
+                {
+                  label: '전체',
+                  backgroundColor: '#365673',
+                  data: [
+                    this.result.j,
+                    this.result.k,
+                    this.result.l,
+                    this.result.m,
+                    this.result.n,
+                    this.result.o
+                  ]
+                },
+                {
+                  label: '남자',
+                  backgroundColor: '#74ddf7',
+                  data: [
+                    this.result.p,
+                    this.result.q,
+                    this.result.r,
+                    this.result.s,
+                    this.result.t,
+                    this.result.u
+                  ]
+                },
+                {
+                  label: '여자',
+                  backgroundColor: '#ff6390',
+                  data: [
+                    this.result.v,
+                    this.result.w,
+                    this.result.x,
+                    this.result.y,
+                    this.result.z,
+                    this.result.aa
+                  ]
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true
+                    },
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ]
+              }
+            }
+          })
+        })
+    },
+    async makeOverlay6 (mouseEvent, Name) {
+      this.name = Name
+      let pos = mouseEvent.latLng
+      var content =
+              '<div class="overlaybox">' + 
+              '    <div class="first" >' +
+              '       <canvas id=horizontalbarChart' +
+              '       width="390px"' +
+              '       height="220px"' +
+              '       style="background: white";></canvas>' +
+              '    </div>' +
+              '    <div>' +
+              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
+              '    </div>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
+      })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+      axios
+        .get('/population/getPopulationByTime/' + this.name)
+        .then(res => {
+          this.result = res.data.pbt
+          this.road = this.result.f
+          this.point = res.data.point
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+              labels: [
+                '월요일',
+                '화요일',
+                '수요일',
+                '목요일',
+                '금요일',
+                '토요일',
+                '일요일'
+              ],
+              datasets: [
+                {
+                  label: '정보',
+                  fill: false,
+                  borderColor: 'orange',
+                  data: [
+                    this.result.p,
+                    this.result.q,
+                    this.result.r,
+                    this.result.s,
+                    this.result.t,
+                    this.result.u,
+                    this.result.v
+                  ]
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: false
+                    },
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ]
+              }
+            }
+          })
+        })
     },
     getBoxHTML () {
-      this.getData()
-      console.log(this.CountInfo)
+      this.getDataCircle()
       let 소매 = this.CountInfo.소매
       if (소매 === undefined) {
         소매 = 0
@@ -539,7 +965,7 @@ export default {
       content += '</div>'
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    getData() {
+    getDataCircle () {
       axios
         .get(
           '/storecountByxy/' +
@@ -548,6 +974,26 @@ export default {
             this.searchY +
             '/' +
             this.range
+        )
+        .then(res => {
+          var jsonlarge = res.data.large
+          this.CountInfo.소매 = jsonlarge.소매
+          this.CountInfo.학문교육 = jsonlarge.학문교육
+          this.CountInfo.숙박 = jsonlarge.숙박
+          this.CountInfo.생활서비스 = jsonlarge.생활서비스
+          this.CountInfo.음식 = jsonlarge.음식
+          this.CountInfo.부동산 = jsonlarge.부동산
+          this.CountInfo.의료 = jsonlarge.의료
+          this.CountInfo.관광여가오락 = jsonlarge.관광여가오락
+        })
+        .catch(err => alert(err, '검색어를 확인해주세요'))
+    },
+    getData3 () {
+      axios
+        .get(
+          '/change/getHistory' +
+            '/' +
+            this.name
         )
         .then(res => {
           var jsonlarge = res.data.large
@@ -606,7 +1052,7 @@ export default {
 }
 input {
   font-size: 18px;
-  width: 300px;
+  width: 360px;
   float: left;
   border: 0px;
   outline: none;
@@ -624,7 +1070,7 @@ button {
   display: inline-block;
   z-index: 2;
   position: fixed;
-  width: 300px;
+  width: 360px;
   height: 180px;
   top: 100px;
   left: 50px;
