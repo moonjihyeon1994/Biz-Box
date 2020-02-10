@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.JusoService;
 import com.bizbox.apis.JusoApi;
+import com.bizbox.vo.Category;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,6 +62,21 @@ public class StoreCountController {
 			String xy = jusoApi.XYtoLatLong(num);
 			JSONObject total = jusoService.findAllStoreByLarge(xy, range);
 			
+			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping("/storeDetailByCategory/{Category}")
+	public ResponseEntity<Object> storeDetailByCategory(@RequestBody Category category){
+		System.out.println(category.toString());
+		try {
+			String num = jusoService.getAddressByName(category.getAddress());
+			String xy = jusoApi.XYtoLatLong(num);
+			JSONObject total = jusoService.findStoreDetailByCategory(xy, category.getRange(), category.getMiddle(), category.getSmall());
+			System.out.println(total);
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
