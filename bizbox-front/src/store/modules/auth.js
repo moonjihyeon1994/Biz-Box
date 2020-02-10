@@ -41,6 +41,9 @@ const actions = {
   popupDialog: ({ commit }) => {
     commit('setPopup', true)
   },
+  closeDialog: ({ commit }) => {
+    commit('setPopup', false)
+  },
   initialLogin: ({ commit }) => {
     const token = sessionStorage.getItem('jwt-auth-token')
     if (token) {
@@ -53,6 +56,7 @@ const actions = {
     sessionStorage.removeItem('jwt-auth-token')
     sessionStorage.removeItem('login_user_name')
     sessionStorage.removeItem('login_user_email')
+    alert('로그아웃 되었습니다')
   },
 
   pushError ({ commit }, error) {
@@ -73,6 +77,7 @@ const actions = {
             commit('setUsername', res.data.data.name)
             commit('setUserEmail', res.data.data.email)
             commit('setPopup', false)
+            alert('로그인 되었습니다')
             // console.log(sessionStorage)
           } else {
             alert('로그인에 실패했습니다.')
@@ -101,6 +106,7 @@ const actions = {
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
           commit('setPopup', false)
+          alert('로그인 되었습니다.')
           // console.log('sessionstorage')
           // console.log(sessionStorage)
         }
