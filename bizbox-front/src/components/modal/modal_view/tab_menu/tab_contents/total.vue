@@ -1,5 +1,6 @@
 <template>
   <div class="main-content" v-if="seen">
+    <scoring></scoring>
     <h1><strong>상권 종합평가</strong></h1>
     <div class="container1">
       <div id="map-box"></div><br>
@@ -52,9 +53,13 @@
 </template>
 
 <script>
+import scoring from './totals/scoring.vue'
 import axios from 'axios'
 
 export default {
+  components: {
+    scoring
+  },
   data: () => {
     return {
       key: '진관동',
