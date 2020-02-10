@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.bizbox.apis.JusoApi;
@@ -27,7 +28,8 @@ public class SalesServiceImpl implements SalesService {
 	public List<SalesInformation> salesInfo(String address) throws Exception {
 		return dao.salesInfo(address);
 	}
-
+	
+	@Cacheable(cacheNames = "salesInfosub")
 	public List<SalesInformation> salesInfosub(String address) throws Exception {
 		List<SalesInformation> list = new LinkedList<SalesInformation>();
 		AddressUtil util = new AddressUtil();
