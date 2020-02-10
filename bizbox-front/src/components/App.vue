@@ -1,14 +1,13 @@
 <template>
   <v-app id="inspire">
-    <Nav :navColor="navColor"></Nav>
-    <div class="viewcontainer" v-scroll="onScroll">
+    <Nav></Nav>
+    <div class="viewcontainer">
       <router-view />
-      <v-dialog
-        v-model="isPopup"
-        max-width="300"
+      <v-overlay
+      v-if="isPopup"
       >
         <TotalForm></TotalForm>
-      </v-dialog>
+      </v-overlay>
     </div>
   </v-app>
 </template>
@@ -25,18 +24,8 @@ export default {
     Nav,
     TotalForm
   },
-  data: () => ({
-    navColor: 'transparent'
-  }),
   methods: {
-    ...mapActions(['initialDialog']),
-    onScroll () {
-      if (document.documentElement.scrollTop === 0) {
-        this.navColor = 'transparent'
-      } else {
-        this.navColor = '#ffffff'
-      }
-    }
+    ...mapActions(['closeDialog'])
   },
   created () {
     this.$store.dispatch('initialLogin')
