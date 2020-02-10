@@ -9,7 +9,7 @@
       <img :src="imgSrc">
       <ul>
         <li><a :href='git' target='_blank'><i class="fab fa-github"></i></a></li>
-        <li><a href='#' target='_blank'><i class="fab fa-instagram"></i></a></li>
+        <li><a :href='insta' target='_blank'><i class="fab fa-instagram"></i></a></li>
       </ul>
     </div>
   </div>
