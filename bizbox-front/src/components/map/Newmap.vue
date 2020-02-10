@@ -29,7 +29,6 @@ import axios from '../../js/http-commons'
 export default {
   data: () => {
     return {
-      overlay: null,
       polygon: null,
       geocoder: null,
       map: null,
@@ -41,12 +40,14 @@ export default {
       ifchanege: null,
       addListener: null,
       mode: null, // 여기 반경 하고 싶으면 asdf 로
+      ChangeBusinessTable: null, // 오버레이 테이블
       drawingFlag: false, // 원이 그려지고 있는 상태를
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
       drawingLine: false, // 그려지고 있는 원의 반지름을 표시할 선 객체
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
       customOverlay: false,
+      wasDrawing: false,
       circles: [],
       countResult: '',
       searchX: '',
@@ -64,7 +65,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     let data = Dong.features // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
     let name = '멀티캠퍼스'
@@ -199,7 +200,6 @@ export default {
           vm.geocoder.addressSearch(Name, function(result, status) {
             // 정상적으로 검색이 완료되면
             if (status === kakao.maps.services.Status.OK) {
-              console.log(Name)
               var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
               Marker.setPosition(coords)
               InfoWindow.close()
@@ -210,42 +210,7 @@ export default {
           })
         }
         if (vm.$store.state.mode === 3) {
-          //  각 폴리곤에 마우스 아웃 이벤트 등록
-          // 각 폴리곤에 마우스 오버 이벤트 등록
-          let pos = mouseEvent.latLng
-          var content =
-            '<div class="wrap">' +
-            '    <div class="info">' +
-            '        <div class="title">' +
-            '            카카오 스페이스닷원' +
-            '            <div class="overlayClose" onclick="closeOverlay()" title="닫기"></div>' +
-            '        </div>' +
-            '        <div class="body">' +
-            '            <div class="img">' +
-            '                <img src="http://cfile181.uf.daum.net/image/250649365602043421936D" width="73" height="70">' +
-            '           </div>' +
-            '            <div class="desc">' +
-            '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
-            '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
-            '                <div><a href="http://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
-            '            </div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>'
-          // eslint-disable-next-line no-undef
-          let ChangeBusinessTable = new kakao.maps.CustomOverlay({
-            content: content,
-            map: Map,
-            position: pos
-          })
-          if (ChangeBusinessTable != null) {
-            // eslint-disable-next-line no-undef
-            console.log(closeOverlay())
-            closeOverlay()
-          }
-          ChangeBusinessTable.setContent(content)
-          ChangeBusinessTable.setPosition(pos)
-          ChangeBusinessTable.setMap(Mmap)
+          vm.makeOverlay3(mouseEvent, name)
         }
       })
     }
@@ -409,12 +374,79 @@ export default {
       }
       this.$store.state.mode = 0
     },
-    // overay 삭제 매서드
-    closeOverlay () {
-      console.log(this.overlay)
-      this.overlay.setMap(null)
+    async makeOverlay3 (mouseEvent, Name) {
+      let pos = mouseEvent.latLng
+      console.log(Name)
+      var content =
+              '<div class="overlaybox">' + 
+              '<div class="wrap" style="width=400px;height="260px;">' +
+              '    <div class="info" >' +
+              '       <canvas id=horizontalbarChart' +
+              '       width="390px"' +
+              '       height="220px"' +
+              '       style="background: white";></canvas>' +
+              '    </div>' +
+              '    <div>' +
+              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
+              '    </div>' +
+              '</div>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
+      })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+      var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+      var horizontalbarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+          datasets: [
+            {
+              label: '전체',
+              backgroundColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+              borderColor: 'black',
+              data: [
+                10,
+                20,
+                30,
+                40,
+                50,
+                60
+              ]
+            }
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      })
     },
-    getBoxHTML() {
+    getBoxHTML () {
       this.getData()
       console.log(this.CountInfo)
       let 소매 = this.CountInfo.소매
@@ -613,96 +645,7 @@ button {
 :-ms-input-placeholder {
   color: tomato;
 }
-.wrap {
-  position: absolute;
-  left: 0;
-  bottom: 40px;
-  width: 288px;
-  height: 132px;
-  margin-left: -144px;
-  text-align: left;
-  overflow: hidden;
-  font-size: 12px;
-  font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
-  line-height: 1.5;
-  .wrap * {
-  padding: 0;
-  margin: 0;
-  .info {
-    width: 286px;
-    height: 120px;
-    border-radius: 5px;
-    border-bottom: 2px solid #ccc;
-    border-right: 1px solid #ccc;
-    overflow: hidden;
-    background: #fff;
-    .info:nth-child(1) {
-      border: 0;
-      box-shadow: 0px 1px 2px #888;
-    }
-    .title {
-      padding: 5px 0 0 10px;
-      height: 30px;
-      background: #eee;
-      border-bottom: 1px solid #ddd;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .overlayClose {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: #888;
-      width: 17px;
-      height: 17px;
-      background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
-    }
-    .overlayClose:hover {
-      cursor: pointer;
-    }
-    .body {
-      position: relative;
-      overflow: hidden;
-    }
-    .desc {
-      position: relative;
-      margin: 13px 0 0 90px;
-      height: 75px;
-      .ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .jibun {
-        font-size: 11px;
-        color: #888;
-        margin-top: -2px;
-      }
-    }
-    .img {
-      position: absolute;
-      top: 6px;
-      left: 5px;
-      width: 73px;
-      height: 71px;
-      border: 1px solid #ddd;
-      color: #888;
-      overflow: hidden;
-    }
-    :after {
-      content: '';
-      position: absolute;
-      margin-left: -12px;
-      left: 50%;
-      bottom: 0;
-      width: 22px;
-      height: 12px;
-      background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
-    }
-    .link {
-      color: #5085bb;
-    }
-  }
-}
+element.style {
+  background: white;
 }
 </style>
