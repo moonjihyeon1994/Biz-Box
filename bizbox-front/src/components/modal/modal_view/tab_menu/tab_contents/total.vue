@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" v-if="seen">
-    <scoring></scoring>
     <h1><strong>상권 종합평가</strong></h1>
+    <scoring></scoring>
     <div class="container1">
       <div id="map-box"></div><br>
       <div id="info-box">
