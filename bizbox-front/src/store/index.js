@@ -11,7 +11,8 @@ const store = new Vuex.Store({
         lat: 37.505691, lng: 127.0298106
       }
     },
-    mode: 0
+    mode: 0,
+    level: false
   },
   actions: {
     'ChangeCenter': (store, payload) => {
