@@ -34,6 +34,7 @@ public class JusoApi {
 	 * @return JsonString(해당하는 동네의 데이터들 Json)
 	 * @throws IOException
 	 */
+	@Cacheable(cacheNames = "DoroNameApi")
 	public String DoroNameApi(String name) throws IOException {
 		String currentPage = "0";
 		String countPerPage = "100";
@@ -64,6 +65,7 @@ public class JusoApi {
 	 * @return String (x,y) 위도,경도
 	 * @throws IOException
 	 */
+	@Cacheable(cacheNames = "XYtoLatLong")
 	public String XYtoLatLong(String num) throws IOException {
 		// 요청변수 설정
 		String[] nums = num.split(",");
@@ -176,6 +178,7 @@ public class JusoApi {
 	 * @return JsonString
 	 * @throws IOException
 	 */
+	@Cacheable(cacheNames = "FindStore")
 	public JSONArray findStore1(String xy, String radius) throws IOException {
 		int idx = 0;
 		JSONArray list = new JSONArray();

@@ -185,7 +185,6 @@ public class JusoServiceImpl implements JusoService{
 	 * @return Json(대분류 개수, 중분류에 해당하는 각각의 소분류 개수)
 	 * @throws IOException
 	 */
-	@Cacheable(cacheNames = "StoreCount")
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
 		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
@@ -356,5 +355,60 @@ public class JusoServiceImpl implements JusoService{
 		}
 		jsonObject.put("large", array);
 		return jsonObject;
+	}
+	
+	
+	/**
+	 * 소분류를 선택하면 범위에 해당하는 상점 이름과 주소 리턴
+	 * @param xy(String 위도,경도)
+	 * @param range(String m)
+	 * @param middle(중분류)
+	 * @param small(소분류)
+	 * @return Json(상점 이름과 주소)
+	 * @throws IOException
+	 */
+	@Override
+	public JSONObject findStoreDetailByCategory(String xy, String range, String middle, String small) throws IOException {
+		JSONArray itemsArray = jusoapi.findStore1(xy, range);
+		JSONObject object = new JSONObject();
+		JSONArray array = new JSONArray();
+		
+		if(small.equals("전체")) { //소분류 전체를 보여줄때
+			for (int i = 0; i < itemsArray.size(); i++) {
+				JSONObject items = (JSONObject) itemsArray.get(i);
+				String indsMclsNm = (String) items.get("indsMclsNm"); // 중분류
+				
+//				rdnmAdr : 주소, bizesNm : 이름
+				if(indsMclsNm.equals(middle)) {	// 중분류 전체
+					JSONObject data = new JSONObject();
+					String key = "name";
+					String value = (String) items.get("bizesNm");
+					data.put(key, value);
+					key = "addr";
+					value = (String) items.get("rdnmAdr");
+					data.put(key, value);
+					array.add(data);
+				}
+			}
+		}else {
+			for (int i = 0; i < itemsArray.size(); i++) {
+				JSONObject items = (JSONObject) itemsArray.get(i);
+				String indsSclsNm = (String) items.get("indsSclsNm"); // 소분류
+				
+//				rdnmAdr : 주소, bizesNm : 이름
+				if(indsSclsNm.equals(small)) {	// 중분류 전체
+					JSONObject data = new JSONObject();
+					String key = "name";
+					String value = (String) items.get("bizesNm");
+					data.put(key, value);
+					key = "addr";
+					value = (String) items.get("rdnmAdr");
+					data.put(key, value);
+					array.add(data);
+				}
+			}
+		}
+		object.put("detail", array);
+		return object;
 	}
 }
