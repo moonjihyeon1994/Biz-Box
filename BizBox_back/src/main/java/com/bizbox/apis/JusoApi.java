@@ -23,17 +23,14 @@ import org.springframework.stereotype.Service;
 
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
-
-import lombok.extern.slf4j.Slf4j;
-
 import com.bizbox.utils.*;
 
 @Service
-@Slf4j
 public class JusoApi {
 
-	// 도로명주소로 입력 하여 주소받기
+//	도로명주소로 입력
 	public String getAddressByName(String name) throws IOException {
+		// 요청변수 설정
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -92,6 +89,7 @@ public class JusoApi {
 				if (personObject.get("roadAddrPart1").toString().contains(name)
 						|| name.contains(personObject.get("roadAddrPart1").toString().substring(0,
 								personObject.get("roadAddrPart1").toString().length() - 1))) {
+					System.out.println("그만!!!!" + personObject.get("roadAddrPart1"));
 					isfind = true;
 					break;
 				}
@@ -123,21 +121,24 @@ public class JusoApi {
 					temp.append(personObject.get("jibunAddr"));
 					temp.append(",");
 					temp.append(personObject.get("roadAddrPart1"));
+				
 					if (personObject.get("emdNm").toString().contains(name) || name.contains(personObject.get("emdNm")
 							.toString().substring(0, personObject.get("emdNm").toString().length() - 1))) {
+						System.out.println("그만!!!!" + personObject.get("emdNm"));
 						break;
 					}
 				}
 			}
 		} catch (Exception e) {
+			System.out.println("해당주소가 존재하지않습니다.");
 			e.printStackTrace();
-			log.error("도로명 주소api 에러 : {}", e);
 		}
+		System.out.println(size);
 		return temp.toString();
 	}
 
-	// 이름으로 주소얻기
 	public List<String> getAddressSetByName(String name) throws IOException {
+		// 요청변수 설정
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -174,10 +175,9 @@ public class JusoApi {
 				addresslist.add(ad);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("도로명 주소api 에러 : {}", e);
+			System.out.println("해당주소가 존재하지않습니다.");
 		}
-		Set<String> Address = new HashSet<String>();
+		Set Address = new HashSet<String>();
 		AddressUtil util = new AddressUtil();
 		for (int i = 0; i < addresslist.size(); i++) {
 			String ad = util.RemoveNumber(addresslist.get(i));
@@ -187,8 +187,8 @@ public class JusoApi {
 		return setlist;
 	}
 
-	// 이름으로 동얻기
 	public List<String> getDongSetByName(String name) throws IOException {
+		// 요청변수 설정
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -224,9 +224,9 @@ public class JusoApi {
 				donglist.add(sp);
 			}
 		} catch (Exception e) {
-			log.error("도로명 주소api 에러 : {}", e);
+			System.out.println("해당주소가 존재하지않습니다.");
 		}
-		Set<String> Dong = new HashSet<String>();
+		Set Dong = new HashSet<String>();
 		AddressUtil util = new AddressUtil();
 		for (int i = 0; i < donglist.size(); i++) {
 			String ad = util.RemoveDong(donglist.get(i));
@@ -236,10 +236,10 @@ public class JusoApi {
 		return setlist;
 	}
 
-	// 주소를 입력받아 xy좌표를 얻기
+//	xy좌표로 입력
 	public String getAddressByXY(String num) throws IOException {
-		String[] nums = num.split(","); // 필요한 정보들
-
+		String[] nums = num.split(",");
+		// 요청변수 설정
 		String admCd = nums[0];
 		String rnMgtSn = nums[1];
 		String udrtYn = nums[2];
@@ -274,10 +274,9 @@ public class JusoApi {
 			entX = (String) xyObject.get("entX");
 			entY = (String) xyObject.get("entY");
 		} catch (Exception e) {
-			log.error("상권분석api 에러, 해당하는 XY좌표가 없습니다 : {}", e);
+			System.out.println("xy좌표 찾기 오류");
+			e.printStackTrace();
 		}
-
-		// xy좌표를 위도경도로 바꿔주는 라이브러리, proj라이브러리
 		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5", "+ellps=GRS80", "+units=m",
 				"+x_0=1000000", "+y_0=2000000", "+k=0.9996" };
 
@@ -286,7 +285,6 @@ public class JusoApi {
 		Projection proj = ProjectionFactory.fromPROJ4Specification(proj4_w);
 		srcProjec = new Point2D.Double(Double.valueOf(entX), Double.valueOf(entY));
 		dstProjec = proj.inverseTransform(srcProjec, new Point2D.Double());
-
 		StringBuilder temp = new StringBuilder();
 		temp.append(dstProjec.x);
 		temp.append(",");
@@ -294,19 +292,29 @@ public class JusoApi {
 		return temp.toString();
 	}
 
-	// 반경내 상가업소 조회
+//	반경내 상가업소 조회
 	public String findStore(String xy, String radius, String pageNo) throws IOException {
 		String[] cxcy = xy.split(",");
 
-		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius");
+		StringBuilder urlBuilder = new StringBuilder(
+				"http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius"); /* URL */
 		urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8")
-				+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D");
-		urlBuilder.append("&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8"));
-		urlBuilder.append("&" + URLEncoder.encode("cx", "UTF-8") + "=" + URLEncoder.encode(cxcy[0], "UTF-8"));
-		urlBuilder.append("&" + URLEncoder.encode("cy", "UTF-8") + "=" + URLEncoder.encode(cxcy[1], "UTF-8"));
-		urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8"));
-		urlBuilder.append("&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-		urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("300", "UTF-8"));
+				+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); /*
+																														 * Service
+																														 * Key
+																														 */
+		urlBuilder.append(
+				"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8")); /* 파라미터설명 */
+		urlBuilder.append(
+				"&" + URLEncoder.encode("cx", "UTF-8") + "=" + URLEncoder.encode(cxcy[0], "UTF-8")); /* 파라미터설명 */
+		urlBuilder.append(
+				"&" + URLEncoder.encode("cy", "UTF-8") + "=" + URLEncoder.encode(cxcy[1], "UTF-8")); /* 파라미터설명 */
+		urlBuilder.append(
+				"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8")); /* 파라미터설명 */
+		urlBuilder.append(
+				"&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /* 파라미터설명 */
+		urlBuilder.append(
+				"&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("300", "UTF-8")); /* 파라미터설명 */
 
 		URL url = new URL(urlBuilder.toString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -328,7 +336,7 @@ public class JusoApi {
 		return sb.toString();
 	}
 
-	// json을 parsing하여 상권 정보얻기
+	// json을 parsing하여 상권 정보얻어오기!
 	@Cacheable(cacheNames = "StoreCount")
 	public JSONObject findAllStore(String xy, String radius) throws IOException {
 		int idx = 1;
@@ -378,8 +386,8 @@ public class JusoApi {
 				}
 
 			} catch (Exception e) {
+				// TODO: handle exception
 				e.printStackTrace();
-				log.error("상권분석api 에러 : {}", e);
 			}
 		}
 		JSONObject jsonObject = new JSONObject();
@@ -407,13 +415,17 @@ public class JusoApi {
 		}
 
 		jsonObject.put("large", jsonObject2);
+
 		return jsonObject;
 	}
 
-	// json을 parsing하여 상권 개수 정보얻기
 	public HashMap<String, Integer> findStoreToSpring(String xy, String radius) throws IOException {
+		
+		System.out.println("상점개수 찾는중........");
 		int idx = 1;
+		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		java.util.List<String> names = new ArrayList<String>();
 		while (true) {
 			String str = findStore(xy, radius, String.valueOf(idx));
 			idx++;
@@ -438,12 +450,22 @@ public class JusoApi {
 					indsLclsNm = indsLclsNm.replace("/", " ");
 					indsMclsNm = indsMclsNm.replace("/", " ");
 					indsMclsNm = indsMclsNm.replace("/", " ");
-					if (!indsMclsNm.contains("기타") && indsLclsNm.contains("음식") || indsLclsNm.contains("중식")
-							|| indsLclsNm.contains("일식") || indsLclsNm.contains("커피") || indsLclsNm.contains("치킨")
-							|| indsLclsNm.contains("양식") || indsLclsNm.contains("오락") || indsLclsNm.contains("스포츠")
-							|| indsLclsNm.contains("패션") || indsLclsNm.contains("의류") || indsLclsNm.contains("편의점")
-							|| indsLclsNm.contains("운동")) {
-
+					if (
+						!indsMclsNm.contains("기타")  &&
+						indsLclsNm.contains("음식")   ||
+						indsLclsNm.contains("중식")   ||
+						indsLclsNm.contains("일식")   ||
+						indsLclsNm.contains("커피")   ||
+						indsLclsNm.contains("치킨")   ||
+						indsLclsNm.contains("양식")   || 
+						indsLclsNm.contains("오락")  	 ||
+						indsLclsNm.contains("스포츠")  || 
+						indsLclsNm.contains("패션") 	 ||
+						indsLclsNm.contains("의류") 	 ||
+						indsLclsNm.contains("편의점")	 ||
+						indsLclsNm.contains("운동")    
+							) {
+						
 						if (LNm.containsKey(indsMclsNm)) { // 대분류 당 갯수
 							LNm.put(indsMclsNm, LNm.get(indsMclsNm) + 1);
 						} else {
@@ -453,37 +475,8 @@ public class JusoApi {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				log.error("상권분석api 에러 해당하는 상권이 없습니다 : {}", e);
 			}
 		}
 		return LNm;
-	}
-	
-	public JSONArray findEveryStore(String xy, String radius) throws IOException {
-		int idx = 1;
-		HashMap<String, HashMap<String, Integer>> storecount = new HashMap<String, HashMap<String, Integer>>();
-		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
-		java.util.List<String> names = new ArrayList<String>();
-		JSONArray itemsArray = null;
-		while (true) {
-			String str = findStore(xy, radius, String.valueOf(idx));
-			idx++;
-			try {
-				JSONParser jsonParse = new JSONParser();
-				JSONObject jsonObj = (JSONObject) jsonParse.parse(str);
-
-				JSONObject header = (JSONObject) jsonObj.get("header");
-				String resultCode = (String) header.get("resultCode");
-				if (resultCode.equals("03"))
-					break;
-				JSONObject body = (JSONObject) jsonObj.get("body");
-				itemsArray = (JSONArray) body.get("items");
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("find every store 에러 : {}", e);
-			}
-		}
-		return itemsArray;
 	}
 }
