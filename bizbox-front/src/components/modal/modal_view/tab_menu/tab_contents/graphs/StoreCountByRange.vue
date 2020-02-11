@@ -33,6 +33,12 @@
           <span><v-icon size="15">{{item.keyset}}</v-icon>{{item.nameset}}:{{item.valueset}}</span>
         </li>
       </ul>
+      <div class="select-container">
+        <span @click="largeclick" class="select-option"><v-select :items="largeOptions"></v-select></span>
+        <span @click="middleclick" class="select-option"><v-select :items="middleOptions"></v-select></span>
+        <span class="select-option"><v-select :items="smallOptions"></v-select></span>
+        <span class="select-bt"><button>눌러줘</button></span>
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +48,7 @@ import axios from '@/js/http-commons'
 // import Spinner from '../../../../result/Spinner'
 import './graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
+import category from '@/assets/json/StoreByCategory.json'
 export default {
   components: {
     // Spinner
@@ -60,7 +67,10 @@ export default {
       key: '경인로 248-14',
       searchOption: 1,
       title: '연도별 상권 변화 지표',
-      point: 0
+      point: 0,
+      largeOptions: ['음식', '소매', '관광/여가/오락', '생활서비스', '학문/교육'],
+      middleOptions: [],
+      smallOptions: []
     }
   },
   computed: {
@@ -70,8 +80,15 @@ export default {
   },
   mounted () {
     this.slider()
+    this.large()
   },
   methods: {
+    largeclick (e) {
+      console.log(e)
+      // this.largeOptions = category.large
+      // console.log(category.large)
+      // console.log(category.large[0])
+    },
     slider () {
       let slider = document.getElementById('myRange')
       let output = document.getElementById('demo')
@@ -143,6 +160,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.content-inside {
+  position: relative;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+.select-option {
+  display: block;
+  float: left;
+  width: 25%;
+}
+.select-container{
+  display: block;
+  clear: both;
+  text-align: center;
+}
+.select-bt {
+  float: left;
+}
 
 .slidecontainer {
   width: 100%; /* Width of the outside container */
