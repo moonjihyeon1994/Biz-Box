@@ -1,11 +1,11 @@
 <template>
   <div class="biz-container">
-    <div class="biz-item-1">
+    <div>
       <start></start>
       <about></about>
       <biz-us></biz-us>
     </div>
-    <div class="flex-item-1">
+    <div>
       <News></News>
     </div>
     <HomeFooter></HomeFooter>

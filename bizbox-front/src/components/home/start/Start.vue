@@ -6,7 +6,7 @@
     <div id='bz-startBox' v-scrollanimation>
       <div id='bz-startBox-text'>간단하게 시작하기</div>
       <router-link to="/bizmap">
-      <div id='bz-startBox-start' >시작 밑줄 뭐냐고!</div>
+      <div id='bz-startBox-start'>시 작</div>
       </router-link>
     </div>
   </div>

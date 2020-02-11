@@ -15,6 +15,8 @@
 <script>
 import '@/assets/css/reset.css'
 import '@/assets/css/common.css'
+import '@/assets/css/responsive.css'
+
 import Nav from './nav/Nav'
 import TotalForm from './totalform/TotalForm'
 import { mapActions, mapGetters } from 'vuex'

@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <v-app-bar app color="transparent" flat>
+    <v-app-bar app color="rgb(255, 250, 246)" flat>
       <v-icon @click="goHome">mdi-alpha-b-box</v-icon>
       <v-spacer />
       <!-- Logout -->

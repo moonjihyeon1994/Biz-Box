@@ -1,12 +1,12 @@
 <template>
   <div id="bz-container">
-    <div id='bizus-title'>Bizbox Member</div>
+    <div id='bizus-title'>Bizbox Developers</div>
 
     <div id="row-container">
       <div class='bz-row'>
-        <person-card name="오승완" role="Backend Developer" img="osw.jpg"></person-card>
-        <person-card name="음영현" role="Backend Developer" img="eyh.jpg" git='https://github.com/EumYoungHyun' insta='https://www.instagram.com/eum_mericano/'></person-card>
-        <person-card name="문지현" role="Backend Developer" img="mjh.jpg"></person-card>
+        <person-card name="오승완" role="Backend Developer" img="osw.jpg" git=''></person-card>
+        <person-card name="음영현" role="Fullstack Developer" img="eyh.jpg" git='https://github.com/EumYoungHyun' insta='https://www.instagram.com/eum_mericano/'></person-card>
+        <person-card name="문지현" role="Backend Developer" img="mjh.jpg" git='https://github.com/moonjihyeon1994'></person-card>
       </div>
 
       <div class='bz-row'>
