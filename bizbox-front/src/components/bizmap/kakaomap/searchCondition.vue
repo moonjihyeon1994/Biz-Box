@@ -18,7 +18,7 @@
           </div>
           <div class='mapBtn' @click="choice4()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>매출 (연령)</span>
+            <span class='mapBtnText'>매출정보 (연령)</span>
           </div>
         </div>
 
@@ -35,12 +35,12 @@
 
           <div class='mapBtn' @click="choice7()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>매출정보 (시간)</span>
           </div>
 
           <div class='mapBtn' @click="choice8()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>매출정보 (요일)</span>
           </div>
         </div>
       </v-sheet>
@@ -87,10 +87,12 @@ export default {
     choice7: function (event) {
       this.selected = 7
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 7 })
     },
     choice8: function (event) {
       this.selected = 8
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 8 })
     }
   }
 }
