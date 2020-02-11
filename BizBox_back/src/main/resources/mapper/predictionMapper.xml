@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bizbox.mapper.predictionMapper">
+
+	<select id="find2018Prediction" parameterType="String" resultType="prediction">
+		select * from expect2018 where trdar_cd_nm = #{address}
+	</select>
+	<select id="find2017Prediction" parameterType="String" resultType="prediction">
+		select * from expect2017 where trdar_cd_nm = #{address}
+	</select>
+	<select id="find2016Prediction" parameterType="String" resultType="prediction">
+		select * from expect2016 where trdar_cd_nm = #{address}
+	</select>
+
+</mapper>
