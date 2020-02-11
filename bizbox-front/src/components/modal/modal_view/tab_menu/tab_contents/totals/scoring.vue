@@ -1,13 +1,8 @@
 <template>
   <div>
-    <h1>2017년 분기별 매출</h1>
-    <p>q1: {{ sales_2017.q1 }} n1: {{ sales_2017.n1 }}</p>
-    <p>q2: {{ sales_2017.q2 }} n2: {{ sales_2017.n2 }}</p>
-    <p>q3: {{ sales_2017.q3 }} n3: {{ sales_2017.n3 }}</p>
-    <p>q4: {{ sales_2017.q4 }} n4: {{ sales_2017.n4 }}</p><hr>
-    <!-- <h1>연 평균 성장률</h1>
-    <h1>{{ growth_rate.average_rate }}</h1> -->
-
+    <h1>{{ sanggwon }}</h1>
+    <h2>성장성(매출증감률, 예상성장률) : {{ score.성장성.매출증감률 }} + {{ score.성장성.예상성장률 }}</h2>
+    <h2>안정성(점포변동률, 매출변동률, 운영연수) : {{ score.안정성.점포변동률 }} + {{ score.안정성.매출변동률 }} + {{ score.안정성.운영연수 }}</h2>
   </div>
 </template>
 
@@ -17,7 +12,8 @@ import axios from 'axios'
 export default {
   data: () => {
     return {
-      key: '진관동',
+      key: '',
+      sanggwon: '',
       sales_2018: {
         'q1': 0,
         'q2': 0,
@@ -238,128 +234,165 @@ export default {
   created () {
     // 업종 및 분기별 매출 + 점포 수
     let vm = this
-    let requestSalesUrl = 'http://70.12.247.78:8080/sales/' + vm.key
+    let requestSalesUrl = 'http://70.12.246.137:8080//predict/findBusiness/127.050826/37.507118/'
     axios.get(requestSalesUrl)
       .then(res => {
-        for (let index = 0; index < res.data.length; index++) {
-          let temp = res.data[index]
-          let serviceCode = temp.e // 업종 코드
+        let data2018 = res.data['2018']
+        let data2017 = res.data['2017']
+        let data2016 = res.data['2016']
 
-          if (temp.a === '2018') { // 연도, 분기
-            if (temp.b === '1') {
-              this.sales_2018.q1 += Number(temp.g)
-              this.sales_2018.n1 += Number(temp.af)
-              this.sales_2018.classification[serviceCode].q1 += Number(temp.g)
-              this.sales_2018.classification[serviceCode].n1 += Number(temp.af)
-            } else if (temp.b === '2') {
-              this.sales_2018.q2 += Number(temp.g)
-              this.sales_2018.n2 += Number(temp.af)
-              this.sales_2018.classification[serviceCode].q2 += Number(temp.g)
-              this.sales_2018.classification[serviceCode].n2 += Number(temp.af)
-            } else if (temp.b === '3') {
-              this.sales_2018.q3 += Number(temp.g)
-              this.sales_2018.n3 += Number(temp.af)
-              this.sales_2018.classification[serviceCode].q3 += Number(temp.g)
-              this.sales_2018.classification[serviceCode].n3 += Number(temp.af)
-            } else {
-              this.sales_2018.q4 += Number(temp.g)
-              this.sales_2018.n4 += Number(temp.af)
-              this.sales_2018.classification[serviceCode].q4 += Number(temp.g)
-              this.sales_2018.classification[serviceCode].n4 += Number(temp.af)
-            }
-          } else if (temp.a === '2017') {
-            if (temp.b === '1') {
-              this.sales_2017.q1 += Number(temp.g)
-              this.sales_2017.n1 += Number(temp.af)
-              this.sales_2017.classification[serviceCode].q1 += Number(temp.g)
-              this.sales_2017.classification[serviceCode].n1 += Number(temp.af)
-            } else if (temp.b === '2') {
-              this.sales_2017.q2 += Number(temp.g)
-              this.sales_2017.n2 += Number(temp.af)
-              this.sales_2017.classification[serviceCode].q2 += Number(temp.g)
-              this.sales_2017.classification[serviceCode].n2 += Number(temp.af)
-            } else if (temp.b === '3') {
-              this.sales_2017.q3 += Number(temp.g)
-              this.sales_2017.n3 += Number(temp.af)
-              this.sales_2017.classification[serviceCode].q3 += Number(temp.g)
-              this.sales_2017.classification[serviceCode].n3 += Number(temp.af)
-            } else {
-              this.sales_2017.q4 += Number(temp.g)
-              this.sales_2017.n4 += Number(temp.af)
-              this.sales_2017.classification[serviceCode].q4 += Number(temp.g)
-              this.sales_2017.classification[serviceCode].n4 += Number(temp.af)
-            }
+        console.log(data2018)
+        console.log(data2017)
+
+        for (let index = 0; index < data2018.length; index++) {
+          let temp2018 = data2018[index]
+          let serviceCode2018 = temp2018.svc_induty_cd // 업종 코드
+
+          if (temp2018.stdr_qu_cd === '1') {
+            vm.sales_2018.q1 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.n1 += Number(temp2018.stor_co)
+            vm.sales_2018.classification[serviceCode2018].q1 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.classification[serviceCode2018].n1 += Number(temp2018.stor_co)
+          } else if (temp2018.stdr_qu_cd === '2') {
+            vm.sales_2018.q2 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.n2 += Number(temp2018.stor_co)
+            vm.sales_2018.classification[serviceCode2018].q2 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.classification[serviceCode2018].n2 += Number(temp2018.stor_co)
+          } else if (temp2018.stdr_qu_cd === '3') {
+            vm.sales_2018.q3 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.n3 += Number(temp2018.stor_co)
+            vm.sales_2018.classification[serviceCode2018].q3 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.classification[serviceCode2018].n3 += Number(temp2018.stor_co)
           } else {
-            if (temp.b === '1') {
-              this.sales_2016.q1 += Number(temp.g)
-              this.sales_2016.n1 += Number(temp.af)
-              this.sales_2016.classification[serviceCode].q1 += Number(temp.g)
-              this.sales_2016.classification[serviceCode].n1 += Number(temp.af)
-            } else if (temp.b === '2') {
-              this.sales_2016.q2 += Number(temp.g)
-              this.sales_2016.n2 += Number(temp.af)
-              this.sales_2016.classification[serviceCode].q2 += Number(temp.g)
-              this.sales_2016.classification[serviceCode].n2 += Number(temp.af)
-            } else if (temp.b === '3') {
-              this.sales_2016.q3 += Number(temp.g)
-              this.sales_2016.n3 += Number(temp.af)
-              this.sales_2016.classification[serviceCode].q3 += Number(temp.g)
-              this.sales_2016.classification[serviceCode].n3 += Number(temp.af)
-            } else {
-              this.sales_2016.q4 += Number(temp.g)
-              this.sales_2016.n4 += Number(temp.af)
-              this.sales_2016.classification[serviceCode].q4 += Number(temp.g)
-              this.sales_2016.classification[serviceCode].n4 += Number(temp.af)
-            }
+            vm.sales_2018.q4 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.n4 += Number(temp2018.stor_co)
+            vm.sales_2018.classification[serviceCode2018].q4 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.classification[serviceCode2018].n4 += Number(temp2018.stor_co)
           }
         }
-        let resquestHistoryUrl = 'http://70.12.247.78:8080/change/getHistory/' + vm.key
-        axios.get(resquestHistoryUrl).then(res => {
-          this.years.continuousYears = res.data.cblist[5].g
-          this.years.avgSeoul = res.data.cblist[5].i
-        })
-      }).then(() => {
-        let dn1 = (Math.abs(this.sales_2018.n4 - this.sales_2018.n3) / this.sales_2018.n3).toFixed(4)
-        let dn2 = (Math.abs(this.sales_2018.n3 - this.sales_2018.n2) / this.sales_2018.n2).toFixed(4)
-        let dn3 = (Math.abs(this.sales_2018.n2 - this.sales_2018.n1) / this.sales_2018.n1).toFixed(4)
-        let dn4 = (Math.abs(this.sales_2018.n1 - this.sales_2017.n4) / this.sales_2017.n4).toFixed(4)
-        let dn5 = (Math.abs(this.sales_2017.n4 - this.sales_2017.n3) / this.sales_2017.n3).toFixed(4)
-        let dn6 = (Math.abs(this.sales_2017.n3 - this.sales_2017.n2) / this.sales_2017.n2).toFixed(4)
-        let dn7 = (Math.abs(this.sales_2017.n2 - this.sales_2017.n1) / this.sales_2017.n1).toFixed(4)
-        let dn8 = (Math.abs(this.sales_2017.n1 - this.sales_2016.n4) / this.sales_2016.n4).toFixed(4)
-        this.score.안정성.점포변동률 = ((dn1 + dn2 + dn3 + dn4 + dn5 + dn6 + dn7 + dn8) / 8).toFixed(4) * 100
-        console.log('점포변동률 : ', this.score.안정성.점포변동률)
 
-        let ds1 = (Math.abs(this.sales_2018.q4 - this.sales_2018.q3) / this.sales_2018.q3).toFixed(4)
-        let ds2 = (Math.abs(this.sales_2018.q3 - this.sales_2018.q2) / this.sales_2018.q2).toFixed(4)
-        let ds3 = (Math.abs(this.sales_2018.q2 - this.sales_2018.q1) / this.sales_2018.q1).toFixed(4)
-        let ds4 = (Math.abs(this.sales_2018.q1 - this.sales_2017.q4) / this.sales_2017.q4).toFixed(4)
-        let ds5 = (Math.abs(this.sales_2017.q4 - this.sales_2017.q3) / this.sales_2017.q3).toFixed(4)
-        let ds6 = (Math.abs(this.sales_2017.q3 - this.sales_2017.q2) / this.sales_2017.q2).toFixed(4)
-        let ds7 = (Math.abs(this.sales_2017.q2 - this.sales_2017.q1) / this.sales_2017.q1).toFixed(4)
-        let ds8 = (Math.abs(this.sales_2017.q1 - this.sales_2016.q4) / this.sales_2016.q4).toFixed(4)
-        this.score.안정성.매출변동률 = ((ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8) / 8).toFixed(4) * 100
-        console.log('매출변동률 : ', this.score.안정성.매출변동률)
+        for (let index = 0; index < data2017.length; index++) {
+          let temp2017 = data2017[index]
+          let serviceCode2017 = temp2017.svc_induty_cd
 
-        let total2018 = this.sales_2018.q1 + this.sales_2018.q2 + this.sales_2018.q3 + this.sales_2018.q4
-        let total2017 = this.sales_2017.q1 + this.sales_2017.q2 + this.sales_2017.q3 + this.sales_2017.q4
-        let total2016 = this.sales_2016.q1 + this.sales_2016.q2 + this.sales_2016.q3 + this.sales_2016.q4
-        this.score.성장성.매출증감률 = (((total2018 - total2017) / total2017) * 10 + 5).toFixed(1)
-        console.log('매출증감률 : ', this.score.성장성.매출증감률)
+          if (temp2017.stdr_qu_cd === '1') {
+            vm.sales_2017.q1 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.n1 += Number(temp2017.stor_co)
+            vm.sales_2017.classification[serviceCode2017].q1 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.classification[serviceCode2017].n1 += Number(temp2017.stor_co)
+          } else if (temp2017.stdr_qu_cd === '2') {
+            vm.sales_2017.q2 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.n2 += Number(temp2017.stor_co)
+            vm.sales_2017.classification[serviceCode2017].q2 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.classification[serviceCode2017].n2 += Number(temp2017.stor_co)
+          } else if (temp2017.stdr_qu_cd === '3') {
+            vm.sales_2017.q3 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.n3 += Number(temp2017.stor_co)
+            vm.sales_2017.classification[serviceCode2017].q3 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.classification[serviceCode2017].n3 += Number(temp2017.stor_co)
+          } else {
+            vm.sales_2017.q4 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.n4 += Number(temp2017.stor_co)
+            vm.sales_2017.classification[serviceCode2017].q4 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.classification[serviceCode2017].n4 += Number(temp2017.stor_co)
+          }
+        }
 
-        this.growth_rate.average_rate = ((total2018 / total2016) ** (1 / 3) - 1).toFixed(2)
-        this.score.성장성.예상성장률 = this.growth_rate.average_rate * 10 + 3
-        console.log('예상성장률 : ', this.score.성장성.예상성장률)
+        for (let index = 0; index < data2016.length; index++) {
+          let temp2016 = data2016[index]
+          let serviceCode2016 = temp2016.svc_induty_cd
+
+          if (temp2016.stdr_qu_cd === '1') {
+            vm.sales_2016.q1 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.n1 += Number(temp2016.stor_co)
+            vm.sales_2016.classification[serviceCode2016].q1 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.classification[serviceCode2016].n1 += Number(temp2016.stor_co)
+          } else if (temp2016.stdr_qu_cd === '2') {
+            vm.sales_2016.q2 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.n2 += Number(temp2016.stor_co)
+            vm.sales_2016.classification[serviceCode2016].q2 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.classification[serviceCode2016].n2 += Number(temp2016.stor_co)
+          } else if (temp2016.stdr_qu_cd === '3') {
+            vm.sales_2016.q3 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.n3 += Number(temp2016.stor_co)
+            vm.sales_2016.classification[serviceCode2016].q3 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.classification[serviceCode2016].n3 += Number(temp2016.stor_co)
+          } else {
+            vm.sales_2016.q4 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.n4 += Number(temp2016.stor_co)
+            vm.sales_2016.classification[serviceCode2016].q4 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.classification[serviceCode2016].n4 += Number(temp2016.stor_co)
+          }
+        }
+        // let resquestHistoryUrl = 'http://70.12.247.78:8080/change/getHistory/' + vm.key
+        // axios.get(resquestHistoryUrl).then(res => {
+        //   this.years.continuousYears = Number(res.data.cblist[5].g)
+        //   this.years.avgSeoul = Number(res.data.cblist[5].i)
+        // })
+      })
+      .then(() => {
+        console.log(typeof vm.sales_2018.q1)
+        // 안정성 > 점포 변동률
+        let dn1 = Number((Math.abs(vm.sales_2018.n4 - vm.sales_2018.n3) / vm.sales_2018.n3).toFixed(2))
+        let dn2 = Number((Math.abs(vm.sales_2018.n3 - vm.sales_2018.n2) / vm.sales_2018.n2).toFixed(2))
+        let dn3 = Number((Math.abs(vm.sales_2018.n2 - vm.sales_2018.n1) / vm.sales_2018.n1).toFixed(2))
+        let dn4 = Number((Math.abs(vm.sales_2018.n1 - vm.sales_2017.n4) / vm.sales_2017.n4).toFixed(2))
+        let dn5 = Number((Math.abs(vm.sales_2017.n4 - vm.sales_2017.n3) / vm.sales_2017.n3).toFixed(2))
+        let dn6 = Number((Math.abs(vm.sales_2017.n3 - vm.sales_2017.n2) / vm.sales_2017.n2).toFixed(2))
+        let dn7 = Number((Math.abs(vm.sales_2017.n2 - vm.sales_2017.n1) / vm.sales_2017.n1).toFixed(2))
+        let dn8 = Number((Math.abs(vm.sales_2017.n1 - vm.sales_2016.n4) / vm.sales_2016.n4).toFixed(2))
+        vm.score.안정성.점포변동률 = Number(((dn1 + dn2 + dn3 + dn4 + dn5 + dn6 + dn7 + dn8) / 8).toFixed(3)) * 100
+        console.log('점포변동률 : ', vm.score.안정성.점포변동률)
+
+        // 안정성 > 매출 변동률
+        let ds1 = Number((Math.abs(vm.sales_2018.q4 - vm.sales_2018.q3) / vm.sales_2018.q3).toFixed(2))
+        let ds2 = Number((Math.abs(vm.sales_2018.q3 - vm.sales_2018.q2) / vm.sales_2018.q2).toFixed(2))
+        let ds3 = Number((Math.abs(vm.sales_2018.q2 - vm.sales_2018.q1) / vm.sales_2018.q1).toFixed(2))
+        let ds4 = Number((Math.abs(vm.sales_2018.q1 - vm.sales_2017.q4) / vm.sales_2017.q4).toFixed(2))
+        let ds5 = Number((Math.abs(vm.sales_2017.q4 - vm.sales_2017.q3) / vm.sales_2017.q3).toFixed(2))
+        let ds6 = Number((Math.abs(vm.sales_2017.q3 - vm.sales_2017.q2) / vm.sales_2017.q2).toFixed(2))
+        let ds7 = Number((Math.abs(vm.sales_2017.q2 - vm.sales_2017.q1) / vm.sales_2017.q1).toFixed(2))
+        let ds8 = Number((Math.abs(vm.sales_2017.q1 - vm.sales_2016.q4) / vm.sales_2016.q4).toFixed(2))
+        vm.score.안정성.매출변동률 = Number(((ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8) / 8).toFixed(3)) * 100
+        console.log('매출변동률 : ', vm.score.안정성.매출변동률)
+
+        // 영업력 > 분기별 매출 편차
+        let qmax = Math.max(vm.sales_2018.q1, vm.sales_2018.q2, vm.sales_2018.q3, vm.sales_2018.q4)
+        let qmin = Math.min(vm.sales_2018.q1, vm.sales_2018.q2, vm.sales_2018.q3, vm.sales_2018.q4)
+        vm.score.영업력.분기별매출편차 = 5 - Number(((qmax - qmin) * 10 / qmin).toFixed(1))
+        console.log('분기별매출편차 : ', vm.score.영업력.분기별매출편차)
+
+        // 성장성 > 매출 증감률
+        let total2018 = vm.sales_2018.q1 + vm.sales_2018.q2 + vm.sales_2018.q3 + vm.sales_2018.q4
+        let total2017 = vm.sales_2017.q1 + vm.sales_2017.q2 + vm.sales_2017.q3 + vm.sales_2017.q4
+        let total2016 = vm.sales_2016.q1 + vm.sales_2016.q2 + vm.sales_2016.q3 + vm.sales_2016.q4
+        vm.score.성장성.매출증감률 = 5 + Number(((total2018 - total2017) * 1000 / total2017).toFixed(1))
+        console.log('매출증감률 : ', vm.score.성장성.매출증감률)
+
+        // 성장성 > 예상 성장률
+        vm.growth_rate.average_rate = ((total2018 / total2016) ** (1 / 3) - 1).toFixed(2)
+        vm.score.성장성.예상성장률 = vm.growth_rate.average_rate * 10 + 3
+        console.log('예상성장률 : ', vm.score.성장성.예상성장률)
+
+        // 안정성 > 운영연수
+        vm.score.안정성.운영연수 = ((vm.years.continuousYears / vm.years.avgSeoul) * 5 - 2).toFixed(2)
+        console.log('운영연수 : ', vm.score.안정성.운영연수)
+
+        // 안정성 > 폐업률
+      })
+      .then(() => {
+        if (vm.score.성장성.매출증감률 > 10) {
+          vm.score.성장성.매출증감률 = 10
+        } else if (vm.score.성장성.매출증감률 < 0) {
+          vm.score.성장성.매출증감률 = 0
+        }
+        if (vm.score.성장성.예상성장률 > 10) {
+          vm.score.성장성.예상성장률 = 10
+        } else if (vm.score.성장성.예상성장률 < 0) {
+          vm.score.성장성.예상성장률 = 0
+        }
       })
       .catch(err => console.log(err))
-      .finally(() => {
-        // 연 평균 성장률, ( + 연도끼리 비교해야함 )
-
-        // this.growth_rate.average_rate = (total2018 / total2016) ** (1 / 3) - 1
-        console.log(this.sales_2017.classification)
-        // 매출 증감률 ( 작년 대비 )
-      })
-      // last year
   }
 }
 
