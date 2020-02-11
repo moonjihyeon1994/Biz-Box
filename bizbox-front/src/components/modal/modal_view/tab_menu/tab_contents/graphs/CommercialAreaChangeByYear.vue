@@ -95,7 +95,6 @@ export default {
   },
   mounted () {
     this.draw()
-    alert(this.key)
   },
   methods: {
     popup () {
@@ -103,7 +102,6 @@ export default {
       this.popflag = !this.popflag
     },
     draw () {
-      alert(this.key)
       this.chartdata = null
       this.chartoptions = null
 
@@ -115,7 +113,6 @@ export default {
       this.btnStyle4.backgroundColor = '#d9d9d9'
 
       if (this.key !== '') {
-        alert("dd")
         this.getData()
       }
     },
@@ -126,7 +123,6 @@ export default {
       this.btnStyle2.cursor = 'not-allowed'
       this.btnStyle3.cursor = 'not-allowed'
       this.btnStyle4.cursor = 'not-allowed'
-      alert(this.key)
       axios
         .get('/change/getHistory/' + this.key)
         .then(res => {
