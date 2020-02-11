@@ -77,19 +77,17 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let woman = this.totalWoman
-      let man = this.totalMan
-      if (woman > man) {
+      let woman = this.sumWoman * 100000000
+      let man = this.sumMan * 100000000
+      if (woman >= man) {
         return '(' + woman + '원)'
       } else {
-        return man
+        return '(' + man + '원)'
       }
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let woman = this.totalWoman
-      let man = this.totalMan
-      if (woman > man) {
+      if (this.sumWoman >= this.sumMan) {
         return '여성'
       } else {
         return '남성'
@@ -101,7 +99,6 @@ export default {
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
