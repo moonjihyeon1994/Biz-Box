@@ -18,14 +18,13 @@
     </v-card>
     <condition></condition>
     <div class="map" id="map"></div>
-     <!-- <button id="show-modal" @click="showModal = true">Show Modal</button> -->
     <!-- use the modal component, pass in the prop -->
-    <!-- <Detail class="asdf" v-if="showModal" @close="showModal = false"> -->
+    <Detail v-if="showModal" @close="showModal = false">
       <!--
       you can use custom content here to overwrite
       default content
-    -->
-    <!-- </Detail> -->
+      -->
+    </Detail>
   </div>
 </template>
 
@@ -78,7 +77,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -109,9 +108,12 @@ export default {
     this.customOverlay = new kakao.maps.CustomOverlay({})
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
-      // 마커생성
       map: this.map,
       position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
+    })
+    kakao.maps.event.addListener(this.marker, 'click', function() {
+      // 마커에 마우스클릭 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+      vm.changeModal()
     })
 
     // --인포윈도우 생성---------------------------------------------------------------
@@ -244,12 +246,13 @@ export default {
       })
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         if (vm.$store.state.mode === 0) {
-          //  각 폴리곤에 마우스 아웃 이벤트 등록
-          vm.points = vm.centroid(points)
+          //  각 폴리곤에 마우스 클릭 이벤트 등록
           let Name = name
+          vm.setSerchkey(name)
+          alert(vm.$store.state.modalsearch)
           let Marker = vm.marker
           let InfoWindow = vm.infowindow
-          vm.geocoder.addressSearch(Name, function(result, status) {
+          vm.geocoder.addressSearch(Name, function (result, status) {
             // 정상적으로 검색이 완료되면
             if (status === kakao.maps.services.Status.OK) {
               var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
@@ -262,20 +265,54 @@ export default {
           })
         }
         if (vm.$store.state.mode === 3) {
-          vm.makeOverlay3(mouseEvent, name)
+          vm.points = vm.centroid(points)
+          let Name = name
+          let Marker = vm.marker
+          let InfoWindow = vm.infowindow
+          vm.setSerchkey(name)
+          vm.geocoder.addressSearch(Name, function(result, status) {
+            // 정상적으로 검색이 완료되면
+            if (status === kakao.maps.services.Status.OK) {
+              var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
+              var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png' // 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png' 마커이미지 http://13.125.20.125/media/search.png
+              var imageSize = new kakao.maps.Size(64, 69) // 마커이미지의 크기입니다
+              var imageOption = {offset: new kakao.maps.Point(27, 69)} // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+              var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
+              Marker.setImage(markerImage)
+              Marker.setPosition(coords)
+              // Marker.setImage('../../assets/icons/자세히보기아이콘.png')
+              InfoWindow.close()
+              InfoWindow.setContent(Name)
+              InfoWindow.open(Map, Marker)
+              vm.makeOverlay3(mouseEvent, name)
+              Map.setCenter(coords)
+            }
+          })
+          //vm.makeOverlay3(mouseEvent, name)
         }
       })
     }
     this.ifchanege = this.map.getCenter()
   },
   watch: {
-    ifchanege: function(newVal, oldVal) {}
+    ifchanege: function (newVal, oldVal) {}
   },
   components: {
     condition,
     Detail
   },
   methods: {
+    setSerchkey (name) {
+      this.$store.state.modalsearch = name
+    },
+    changeModal () {
+      if (this.showModal === true) {
+        this.showModal = false
+      }
+      if (this.showModal === false) {
+        this.showModal = true
+      }
+    },
     ClickMove() {
       if (this.$store.state.mode === 0) {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
@@ -380,7 +417,7 @@ export default {
         }
       }
     },
-    CircleMoveClick (mouseEvent) {
+    CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
         // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
         var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
@@ -463,42 +500,42 @@ export default {
       }
       this.$store.state.mode = 0
     },
-    async makeOverlay3 (mouseEvent, Name) {
+    async makeOverlay3(mouseEvent, Name) {
       let pos = mouseEvent.latLng
       console.log(Name)
       var content =
-              '<div class="overlaybox">' +
-              '<div class="wrap" style="width=400px;height="260px;">' +
-              '    <div class="info" >' +
-              '       <canvas id=horizontalbarChart' +
-              '       width="390px"' +
-              '       height="220px"' +
-              '       style="background: white";></canvas>' +
-              '    </div>' +
-              '    <div>' +
-              '        <span style="width:100%;">' + '자세히보기' + '</span>' +
-              '    </div>' +
-              '</div>' +
-              '</div>' +
-              ' <button id="showmodal" onclick="changeModal()">' + 'Show Modal' + '</button>' +
-              ' <Detail>' +
-              ' </Detail>'
+        '<div class="overlaybox" >' +
+        '<div class="wrap" style="width=400px;height=260px; position: absolute; left:30px; padding:2px;">' +
+        '    <div class="info" >' +
+        '       <canvas id=horizontalbarChart' +
+        '       width="390px"' +
+        '       height="220px"' +
+        '       style="background: white";></canvas>' +
+        '    </div>' +
+        '    <div>' +
+        '        <span onclick="changeModal()"  style="width:100%;">' +
+        '자세히보기' +
+        '</span>' +
+        '    </div>' +
+        '</div>' +
+        '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
         // overay 삭제 매서드
         this.ChangeBusinessTable.setMap(null)
       }
       // eslint-disable-next-line no-undef
+      var posi = this.marker.getPosition()
       this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
         clickable: true,
         content: this.content,
         map: this.Map,
-        position: this.pos,
+        position: posi,
         xAnchor: 0.3,
         yAnchor: 0.91
       })
       this.ChangeBusinessTable.setContent(content)
-      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setPosition(posi)
       this.ChangeBusinessTable.setMap(this.map)
       var ctx = document.getElementById('horizontalbarChart').getContext('2d')
       var horizontalbarChart = new Chart(ctx, {
@@ -517,34 +554,24 @@ export default {
                 'rgba(255, 159, 64, 1)'
               ],
               borderColor: 'black',
-              data: [
-                10,
-                20,
-                30,
-                40,
-                50,
-                60
-              ]
+              data: [10, 20, 30, 40, 50, 60]
             }
           ]
         },
         options: {
           scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
               }
-            }]
+            ]
           }
         }
       })
     },
-    changeModal () {
-      alert(this.showModal)
-      if (this.showModal === true) { this.showModal = false }
-      if (this.showModal === false) { this.showModal = true }
-    },
-    getBoxHTML () {
+    getBoxHTML() {
       this.getData()
       console.log(this.CountInfo)
       let 소매 = this.CountInfo.소매
@@ -726,6 +753,16 @@ button {
   height: 180px;
   top: 100px;
   left: 50px;
+  border-radius: 3px;
+}
+.bt {
+  display: inline-block;
+  z-index: 2;
+  position: fixed;
+  width: 380px;
+  height: 20px;
+  top: 396px;
+  left: 360px;
   border-radius: 3px;
 }
 .area {

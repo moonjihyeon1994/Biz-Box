@@ -44,7 +44,7 @@ export default {
       chartoptions: null,
       result: null,
       road: '',
-      key: '오류동',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연령별 유동인구',
       point: 0,

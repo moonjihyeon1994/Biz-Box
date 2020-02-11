@@ -12,7 +12,8 @@ const store = new Vuex.Store({
       }
     },
     mode: 0,
-    level: false
+    level: false,
+    modalsearch: ''
   },
   actions: {
     'ChangeCenter': (store, payload) => {

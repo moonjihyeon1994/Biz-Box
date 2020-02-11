@@ -57,7 +57,7 @@ export default {
       range: 0,
       result: null,
       road: '',
-      key: '경인로 248-14',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연도별 상권 변화 지표',
       point: 0
