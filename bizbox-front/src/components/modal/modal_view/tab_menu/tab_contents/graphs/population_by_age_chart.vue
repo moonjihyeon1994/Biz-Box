@@ -84,13 +84,15 @@ export default {
       if (this.result == null) return
       let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
       let maxAge = -1
+      let idx = 0
       for (let index = 0; index < total.length; index++) {
         if (maxAge < total[index]) {
-          maxAge = index
+          maxAge = total[index]
+          idx = index
         }
       }
-      if (maxAge === 5) return (maxAge + 1) * 10 + '대 이상'
-      return (maxAge + 1) * 10 + '대'
+      if (idx === 5) return (idx + 1) * 10 + '대 이상'
+      return (idx + 1) * 10 + '대'
     }
   },
   mounted () {
