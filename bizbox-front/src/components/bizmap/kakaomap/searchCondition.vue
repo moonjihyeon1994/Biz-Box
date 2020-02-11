@@ -9,7 +9,7 @@
 
           <div class='mapBtn' @click="choice2()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>유동인구(시간)</span>
           </div>
 
           <div class='mapBtn' @click="choice3()">
@@ -18,29 +18,29 @@
           </div>
           <div class='mapBtn' @click="choice4()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>매출정보 (연령)</span>
           </div>
         </div>
 
         <div class="btnRow">
           <div class='mapBtn' @click="choice5()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>유동인구(연령)</span>
           </div>
 
           <div class='mapBtn' @click="choice6()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>유동인구(요일)</span>
           </div>
 
           <div class='mapBtn' @click="choice7()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>매출정보 (시간)</span>
           </div>
 
           <div class='mapBtn' @click="choice8()">
             <img src="@/assets/logo.png">
-            <span class='mapBtnText'>사업자수</span>
+            <span class='mapBtnText'>매출정보 (요일)</span>
           </div>
         </div>
       </v-sheet>
@@ -61,6 +61,7 @@ export default {
     choice2: function (event) {
       this.selected = 2
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 2 })
     },
     choice3: function (event) {
       this.selected = 3
@@ -71,22 +72,27 @@ export default {
     choice4: function (event) {
       this.selected = 4
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 4 })
     },
     choice5: function (event) {
       this.selected = 5
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 5 })
     },
     choice6: function (event) {
       this.selected = 6
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 6 })
     },
     choice7: function (event) {
       this.selected = 7
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 7 })
     },
     choice8: function (event) {
       this.selected = 8
       // alert('clicked : ' + this.selected)
+      this.$store.dispatch('ChangeMode', { mode: 8 })
     }
   }
 }
@@ -100,7 +106,7 @@ export default {
   left: 64px;
 }
 #sheet {
-  width: 305px;
+  width: 360px;
   height: 180px;
   background-color: white;
   border-radius: 3px;
@@ -122,7 +128,7 @@ export default {
     top: 10px;
     // border: 1px solid black;
     position: relative;
-    width: 75px;
+    width: 90px;
     height: 75px;
     display: inline-block;
     img {
