@@ -48,6 +48,7 @@ export default {
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
       customOverlay: false,
       wasDrawing: false,
+      radiusOverlay: null,
       circles: [],
       countResult: '',
       searchX: '',
@@ -224,6 +225,12 @@ export default {
         if (vm.$store.state.mode === 6) {
           vm.makeOverlay6(mouseEvent, name)
         }
+        if (vm.$store.state.mode === 7) {
+          vm.makeOverlay7(mouseEvent, name)
+        }
+        if (vm.$store.state.mode === 8) {
+          vm.makeOverlay8(mouseEvent, name)
+        }
       })
     }
     this.ifchanege = this.map.getCenter()
@@ -264,6 +271,10 @@ export default {
 
       this.removeCircles()
       if (this.$store.state.mode === 1) {
+        if (this.ChangeBusinessTable !== null) {
+          // overay 삭제 매서드
+          this.ChangeBusinessTable.setMap(null)
+        }
         if (!this.drawingFlag) {
           // 클릭 이벤트가 발생했을 때 원을 그리고 있는 상태가 아니면 중심좌표를 클릭한 지점으로 설정
           this.drawingFlag = true
@@ -334,7 +345,7 @@ export default {
         }
       }
     },
-    RightMouseClick(mouseEvent) {
+    async RightMouseClick(mouseEvent) {
       if (this.drawingFlag) {
         var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
         var polyline = new kakao.maps.Polyline({
@@ -358,24 +369,19 @@ export default {
         })
         var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
         this.range = radius
-        var html = this.getBoxHTML() // 커스텀 오버레이에 표시할 반경 정보입니다
-        var radiusOverlay = new kakao.maps.CustomOverlay({
-          // 반경정보를 표시할 커스텀 오버레이를 생성합니다
-          content: html, // 표시할 내용입니다
-          position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
-          xAnchor: 0.5,
-          yAnchor: 1,
-          zIndex: 1
-        })
-
+        await this.getDataCircle()
+        var html = await this.getBoxHTML() // 커스텀 오버레이에 표시할 반경 정보입니다
+        this.radiusOverlay = this.getOverlay(html, rClickPosition)
+        console.log(this.radiusOverlay)
         circle.setMap(this.map) // 원을 지도에 표시합니다
         polyline.setMap(this.map) // 선을 지도에 표시합니다
-        radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+        this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+
         let radiusObj = {
           // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
           polyline: polyline,
           circle: circle,
-          overlay: radiusOverlay
+          overlay: this.radiusOverlay
         }
         this.circles.push(radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
         this.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
@@ -384,22 +390,32 @@ export default {
         this.drawingLine.setMap(null)
         this.drawingOverlay.setMap(null)
       }
-      this.$store.state.mode = 0
     },
+    // 원 html 만들기
+    getOverlay (html, rClickPosition) {
+      this.radiusOverlay = new kakao.maps.CustomOverlay({
+        // 반경정보를 표시할 커스텀 오버레이를 생성합니다
+        content: html, // 표시할 내용입니다
+        position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
+        xAnchor: 0.5,
+        yAnchor: 1,
+        zIndex: 1
+      })
+    },
+    // ------------------------------------------------
+    // 표 만들기 시간별 유동인구
+    // ------------------------------------------------
     async makeOverlay2 (mouseEvent, Name) {
       this.name = Name
       let pos = mouseEvent.latLng
       var content =
-              '<div class="overlaybox">' +
-              '    <div class="first" >' +
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:360px; height:220px;border-radius:10px;">' + 
               '       <canvas id=horizontalbarChart' +
-              '       width="390px"' +
-              '       height="220px"' +
-              '       style="background: white";></canvas>' +
-              '    </div>' +
-              '    <div>' +
-              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
-              '    </div>' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
               '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
@@ -417,7 +433,7 @@ export default {
       this.ChangeBusinessTable.setContent(content)
       this.ChangeBusinessTable.setPosition(pos)
       this.ChangeBusinessTable.setMap(this.map)
-      axios
+      await axios
         .get('/population/getPopulationByTime/' + this.name)
         .then(res => {
           this.result = res.data.pbt
@@ -454,8 +470,8 @@ export default {
               ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: true,
+              responsive: false,
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [
                   {
@@ -479,20 +495,20 @@ export default {
           })
         })
     },
+    // ------------------------------------------------
+    // 표 만들기 상권 변화 지수
+    // ------------------------------------------------
     async makeOverlay3 (mouseEvent, Name) {
       this.name = Name
       let pos = mouseEvent.latLng
       var content =
-              '<div class="overlaybox">' + 
-              '    <div class="first" >' +
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:360px; height:220px;border-radius:10px;">' + 
               '       <canvas id=horizontalbarChart' +
-              '       width="390px"' +
-              '       height="220px"' +
-              '       style="background: white";></canvas>' +
-              '    </div>' +
-              '    <div>' +
-              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
-              '    </div>' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
               '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
@@ -535,8 +551,8 @@ export default {
               ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: true,
+              responsive: false,
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [
                   {
@@ -560,20 +576,20 @@ export default {
           })
         })
     },
+    // -----------------------------------------------
+    // 연령별 매출 정보
+    // ------------------------------------------------
     async makeOverlay4 (mouseEvent, Name) {
       this.name = Name
       let pos = mouseEvent.latLng
       var content =
-              '<div class="overlaybox">' + 
-              '    <div class="first" >' +
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:360px; height:220px;border-radius:10px;">' + 
               '       <canvas id=horizontalbarChart' +
-              '       width="390px"' +
-              '       height="220px"' +
-              '       style="background: white";></canvas>' +
-              '    </div>' +
-              '    <div>' +
-              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
-              '    </div>' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
               '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
@@ -644,8 +660,8 @@ export default {
               ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: true,
+              responsive: false,
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [
                   {
@@ -669,20 +685,20 @@ export default {
           })
         })
     },
+    // ------------------------------------------------
+    // 표 만들기 연령별 유동인구
+    // ------------------------------------------------
     async makeOverlay5 (mouseEvent, Name) {
       this.name = Name
       let pos = mouseEvent.latLng
       var content =
-              '<div class="overlaybox">' + 
-              '    <div class="first" >' +
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:360px; height:220px;border-radius:10px;">' + 
               '       <canvas id=horizontalbarChart' +
-              '       width="390px"' +
-              '       height="220px"' +
-              '       style="background: white";></canvas>' +
-              '    </div>' +
-              '    <div>' +
-              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
-              '    </div>' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
               '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
@@ -753,8 +769,8 @@ export default {
               ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: true,
+              responsive: false,
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [
                   {
@@ -778,20 +794,20 @@ export default {
           })
         })
     },
+    // ------------------------------------------------
+    // 표 만들기 요일별 유동인구
+    // ------------------------------------------------
     async makeOverlay6 (mouseEvent, Name) {
       this.name = Name
       let pos = mouseEvent.latLng
       var content =
-              '<div class="overlaybox">' + 
-              '    <div class="first" >' +
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:360px; height:220px;border-radius:10px;">' + 
               '       <canvas id=horizontalbarChart' +
-              '       width="390px"' +
-              '       height="220px"' +
-              '       style="background: white";></canvas>' +
-              '    </div>' +
-              '    <div>' +
-              '        <span style="width:100%;">' + "자세히보기" + '</span>' + 
-              '    </div>' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
               '</div>'
       // 이미 그려져 있다면 삭제하고 다시 그리기
       if (this.ChangeBusinessTable !== null) {
@@ -848,8 +864,8 @@ export default {
               ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: true,
+              responsive: false,
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [
                   {
@@ -873,8 +889,223 @@ export default {
           })
         })
     },
+    // ------------------------------------------------
+    // 표 만들기 시간별 매출정보
+    // ------------------------------------------------
+    async makeOverlay7 (mouseEvent, Name) {
+      this.name = Name
+      let pos = mouseEvent.latLng
+      var content =
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:360px; height:220px;border-radius:10px;">' + 
+              '       <canvas id=horizontalbarChart' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
+      })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+      let sum1 = 0
+      let sum2 = 0
+      let sum3 = 0
+      let sum4 = 0
+      let sum5 = 0
+      let sum6 = 0
+      axios
+        .get('/sales/' + this.name)
+        .then(res => {
+          this.result = res.data
+          this.road = res.data[0].d
+          this.point = res.data.point
+
+          for (let index = 0; index < this.result.length; index++) {
+            sum1 += Number(this.result[index].r)
+            sum2 += Number(this.result[index].s)
+            sum3 += Number(this.result[index].t)
+            sum4 += Number(this.result[index].u)
+            sum5 += Number(this.result[index].v)
+            sum6 += Number(this.result[index].w)
+          }
+
+          sum1 /= 100000000
+          sum2 /= 100000000
+          sum3 /= 100000000
+          sum4 /= 100000000
+          sum5 /= 100000000
+          sum6 /= 100000000
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: [
+                '24~06시',
+                '06~11시',
+                '11~14시',
+                '14~17시',
+                '17~21시',
+                '21~24시'
+              ],
+              datasets: [
+                {
+                  label: '정보',
+                  fill: false,
+                  borderColor: 'orange',
+                  data: [
+                    sum1.toFixed(2),
+                    sum2.toFixed(2),
+                    sum3.toFixed(2),
+                    sum4.toFixed(2),
+                    sum5.toFixed(2),
+                    sum6.toFixed(2)
+                  ]
+                }
+              ]
+            },
+            options: {
+              responsive: false,
+              maintainAspectRatio: false,
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true
+                    },
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: {
+                      display: true
+                    }
+                  }
+                ]
+              }
+            }
+          })
+        })
+    },
+    // ------------------------------------------------
+    // 표 만들기 요일별 매출 정보
+    // ------------------------------------------------
+    async makeOverlay8 (mouseEvent, Name) {
+      this.name = Name
+      let pos = mouseEvent.latLng
+      var content =
+              '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:390px; height:220px;border-radius:10px;">' + 
+              '       <canvas id=horizontalbarChart' +
+              '          width="340" height="200"' +
+              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
+              '       </canvas>' +
+              '</div>'
+      // 이미 그려져 있다면 삭제하고 다시 그리기
+      if (this.ChangeBusinessTable !== null) {
+        // overay 삭제 매서드
+        this.ChangeBusinessTable.setMap(null)
+      }
+      // eslint-disable-next-line no-undef
+      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
+        content: this.content,
+        map: this.Map,
+        position: this.pos,
+        xAnchor: 0.3,
+        yAnchor: 0.91
+      })
+      this.ChangeBusinessTable.setContent(content)
+      this.ChangeBusinessTable.setPosition(pos)
+      this.ChangeBusinessTable.setMap(this.map)
+
+      let sum1 = 0
+      let sum2 = 0
+      let sum3 = 0
+      let sum4 = 0
+      let sum5 = 0
+      let sum6 = 0
+      let sum7 = 0
+     
+      axios
+        .get('/sales/' + this.name)
+        .then(res => {
+          this.result = res.data
+          this.road = res.data[0].d
+          this.point = res.data.point
+          for (let index = 0; index < this.result.length; index++) {
+            sum1 += Number(this.result[index].k)
+            sum2 += Number(this.result[index].l)
+            sum3 += Number(this.result[index].m)
+            sum4 += Number(this.result[index].n)
+            sum5 += Number(this.result[index].o)
+            sum6 += Number(this.result[index].p)
+            sum7 += Number(this.result[index].q)
+          }
+
+          sum1 /= 100000000
+          sum2 /= 100000000
+          sum3 /= 100000000
+          sum4 /= 100000000
+          sum5 /= 100000000
+          sum6 /= 100000000
+          sum7 /= 100000000
+        })
+        .finally(() => {
+          var ctx = document.getElementById('horizontalbarChart').getContext('2d')
+          var horizontalbarChart = new Chart(ctx, {
+            type: 'polarArea',
+            data: {
+              labels: [
+                '월요일',
+                '화요일',
+                '수요일',
+                '목요일',
+                '금요일',
+                '토요일',
+                '일요일'
+              ],
+              datasets: [
+                {
+                  fill: true,
+                  data: [
+                    sum1.toFixed(2),
+                    sum2.toFixed(2),
+                    sum3.toFixed(2),
+                    sum4.toFixed(2),
+                    sum5.toFixed(2),
+                    sum6.toFixed(2),
+                    sum7.toFixed(2)
+                  ],
+                  backgroundColor: ['#eb4034', '#ffe373', '#89ff45', '#73ffde', '#5ca0ff', '#d152ff', '#ff63d0']
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true
+            }
+          })
+        })
+    },
     getBoxHTML () {
-      this.getDataCircle()
       let 소매 = this.CountInfo.소매
       if (소매 === undefined) {
         소매 = 0
