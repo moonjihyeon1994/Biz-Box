@@ -15,9 +15,9 @@
 import axios from 'axios'
 
 export default {
-  data: () => {
+  data () {
     return {
-      key: '진관동',
+      key: this.$store.state.modalsearch,
       sales_2018: {
         'q1': 0,
         'q2': 0,

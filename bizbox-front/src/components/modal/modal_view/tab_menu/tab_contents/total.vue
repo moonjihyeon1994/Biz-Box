@@ -60,9 +60,9 @@ export default {
   components: {
     scoring
   },
-  data: () => {
+  data () {
     return {
-      key: '진관동',
+      key: this.$store.state.modalsearch,
       seen: true,
       lightcolor: {
         backgroundColor: '#14bdfb'
@@ -100,7 +100,7 @@ export default {
       }
     }
   },
-  created () {
+  mouonted () {
     const suggestionUrl = 'http://70.12.247.78:8080/suggestion/Industry/' + this.key
     axios.get(suggestionUrl)
       .then(res => {
