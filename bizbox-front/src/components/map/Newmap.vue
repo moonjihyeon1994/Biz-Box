@@ -31,6 +31,7 @@ export default {
     return {
       polygon: null,
       geocoder: null,
+      html: null,
       map: null,
       name: null,
       clusterer: null,
@@ -41,6 +42,11 @@ export default {
       addListener: null,
       mode: null, // 여기 반경 하고 싶으면 asdf 로
       ChangeBusinessTable: null, // 오버레이 테이블
+      rClickPosition: null,
+      radiusOverlay: null,
+      circle: null,
+      polyline: null,
+      radiusObj: null,
       drawingFlag: false, // 원이 그려지고 있는 상태를
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
@@ -48,7 +54,6 @@ export default {
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
       customOverlay: false,
       wasDrawing: false,
-      radiusOverlay: null,
       circles: [],
       countResult: '',
       searchX: '',
@@ -347,19 +352,19 @@ export default {
     },
     async RightMouseClick(mouseEvent) {
       if (this.drawingFlag) {
-        var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-        var polyline = new kakao.maps.Polyline({
+        this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+        this.polyline = new kakao.maps.Polyline({
           // 원의 반경을 표시할 선 객체를 생성합니다
-          path: [this.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+          path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
           strokeWeight: 1, // 선의 두께 입니다
           strokeColor: '#00a0e9', // 선의 색깔입니다
           strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
           strokeStyle: 'solid' // 선의 스타일입니다
         })
-        var circle = new kakao.maps.Circle({
+        this.circle = new kakao.maps.Circle({
           // 원 객체를 생성합니다
           center: this.centerPosition, // 원의 중심좌표입니다
-          radius: polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+          radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
           strokeWeight: 0, // 선의 두께입니다
           strokeColor: '#00a0e9', // 선의 색깔입니다
           strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
@@ -367,24 +372,11 @@ export default {
           fillColor: '#00a0e9', // 채우기 색깔입니다
           fillOpacity: 0.2 // 채우기 불투명도입니다
         })
-        var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+        var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
         this.range = radius
         await this.getDataCircle()
-        var html = await this.getBoxHTML() // 커스텀 오버레이에 표시할 반경 정보입니다
-        this.radiusOverlay = this.getOverlay(html, rClickPosition)
-        console.log(this.radiusOverlay)
-        circle.setMap(this.map) // 원을 지도에 표시합니다
-        polyline.setMap(this.map) // 선을 지도에 표시합니다
-        this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
 
-        let radiusObj = {
-          // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
-          polyline: polyline,
-          circle: circle,
-          overlay: this.radiusOverlay
-        }
-        this.circles.push(radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
-        this.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+        
         this.centerPosition = null // 중심 좌표를 초기화 합니다
         this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
         this.drawingLine.setMap(null)
@@ -393,7 +385,7 @@ export default {
     },
     // 원 html 만들기
     getOverlay (html, rClickPosition) {
-      this.radiusOverlay = new kakao.maps.CustomOverlay({
+      let radiusOverlay = new kakao.maps.CustomOverlay({
         // 반경정보를 표시할 커스텀 오버레이를 생성합니다
         content: html, // 표시할 내용입니다
         position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
@@ -401,6 +393,7 @@ export default {
         yAnchor: 1,
         zIndex: 1
       })
+      return radiusOverlay
     },
     // ------------------------------------------------
     // 표 만들기 시간별 유동인구
@@ -1105,10 +1098,10 @@ export default {
           })
         })
     },
-    getBoxHTML () {
-      let 소매 = this.CountInfo.소매
-      if (소매 === undefined) {
-        소매 = 0
+    async getBoxHTML () {
+      let a = this.CountInfo.소매
+      if (a === undefined) {
+        a = 0
       }
       let 학문교육 = this.CountInfo.학문교육
       if (학문교육 === undefined) {
@@ -1139,64 +1132,69 @@ export default {
         관광여가오락 = 0
       }
       var content =
-        '<div class="v-sheet theme--light elevation-14" style="width:300px;height:150px;margin:auto;display:block;text-align:center;" id="mapSheet">'
+      '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:470px; height:250px;border-radius:10px;">' + 
+        '<div class="v-sheet theme--light elevation-14" style="position:relative;top:50%;transform:translateY(-50%);width:450px;height:230px;margin:auto;display:block;text-align:center;" id="mapSheet">'
       content +=
         '    <div style="padding-top:10px;display:flex;justify-content:space-around;">'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/store.5c0694f4.png">' +
         '<span style="width:100%;">' +
-        소매
+        a
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/school.10da6a9d.png">' +
         '<span style="width:100%;">' +
         학문교육
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/hotel.531ff90a.png">' +
         '<span style="width:100%;">' +
         숙박
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/service.b9012c84.png">' +
         '<span style="width:100%;">' +
         생활서비스
       content += '</span></div>'
       content += '</div>'
-      content += '    <div style="display:flex;justify-content:space-around;">'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="display:flex;justify-content:space-around;padding-top:10px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/food.40e9a510.png">' +
         '<span style="width:100%;">' +
         음식
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/estate.19bdddbd.png">' +
         '<span style="width:100%;">' +
         부동산
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/hospital.85ccdf18.png">' +
         '<span style="width:100%;">' +
         의료
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/game.b8da8874.png">' +
         '<span style="width:100%;">' +
         관광여가오락
       content += '</span></div>'
       content += '</div>'
       content += '</div>'
+      content += '</div>'
+      
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    getDataCircle () {
+    async getDataCircle () {
       axios
         .get(
           '/storecountByxy/' +
@@ -1218,6 +1216,25 @@ export default {
           this.CountInfo.관광여가오락 = jsonlarge.관광여가오락
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
+        .finally(() => {
+          this.getBoxHTML().then(res => {
+            this.html = res
+            this.radiusOverlay = this.getOverlay(this.html, this.rClickPosition)
+            this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+            this.circle.setMap(this.map) // 원을 지도에 표시합니다
+            this.polyline.setMap(this.map) // 선을 지도에 표시합니다
+          }).finally(() => {
+            let vm = this
+            vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+            this.radiusObj = {
+              // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
+              polyline: vm.polyline,
+              circle: vm.circle,
+              overlay: vm.radiusOverlay
+            }
+            this.circles.push(vm.radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
+          })
+        })
     },
     getData3 () {
       axios
@@ -1239,7 +1256,7 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
-    removeCircles() {
+    removeCircles () {
       for (var i = 0; i < this.circles.length; i++) {
         this.circles[i].circle.setMap(null)
         this.circles[i].polyline.setMap(null)
