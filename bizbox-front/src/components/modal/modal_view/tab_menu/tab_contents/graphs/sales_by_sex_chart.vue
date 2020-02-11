@@ -175,17 +175,10 @@ export default {
 }
 
 #chart {
-  width: 500px;
-  height: 300px;
-  overflow: hidden;
-}
-
-#chart1 {
   position: relative;
   width: 500px;
   height: 300px;
   overflow: hidden;
-  margin-bottom: 100px;
 }
 
 #back {
