@@ -83,16 +83,18 @@ export default {
       return '(' + totalNum + '명' + ')'
     },
     maxAgeMaker: function () {
-      let labels = ['24~06시', '06~11시', '11~14시', '14~17시', '17~21시', '21~24시']
       if (this.result == null) return
-      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
+      let labels = ['24~06시', '06~11시', '11~14시', '14~17시', '17~21시', '21~24시']
+      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
       let maxAge = -1
+      let idx = 0
       for (let index = 0; index < total.length; index++) {
         if (maxAge < total[index]) {
-          maxAge = index
+          maxAge = total[index]
+          idx = index
         }
       }
-      return labels[maxAge]
+      return labels[idx]
     }
   },
   mounted () {
@@ -100,7 +102,6 @@ export default {
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {

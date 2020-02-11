@@ -98,7 +98,6 @@ export default {
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
@@ -127,7 +126,6 @@ export default {
       axios
         .get('/population/getPopulationByLocation/' + this.key)
         .then(res => {
-          console.log(res)
           this.result = res.data.pbl
           this.road = this.result.f
           this.point = res.data.point

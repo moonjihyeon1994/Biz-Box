@@ -12,7 +12,7 @@
     <p class="point-content-area">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">지출이 가장 많아요.</span>
+      <span class="point-normal">소비가 가장 많아요.</span>
     </p>
     <div id="chart">
       <div id="back" :style="allowDiv"></div>
@@ -81,12 +81,14 @@ export default {
       if (this.result == null) return
       let labels = ['10대', '20대', '30대', '40대', '50대', '60대 이상']
       let maxAge = -1
+      let idx = 0
       for (let index = 0; index < this.data.length; index++) {
         if (maxAge < this.data[index]) {
-          maxAge = index
+          maxAge = this.data[index]
+          idx = index
         }
       }
-      return labels[maxAge]
+      return labels[idx]
     }
   },
   mounted () {
