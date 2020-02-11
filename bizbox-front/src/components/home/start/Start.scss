@@ -6,24 +6,11 @@ $color2: rgb(15, 66, 95);
   background-color: white;
   width: 100%;
   height: 800px;
+  overflow: hidden;
 
   a {
     color: white;
     font-weight: bold;
-  }
-
-  /* Tablet */
-  @media screen and (max-width: 992px) {
-    & {
-      height: 650px;
-    }
-  }
-  
-  /* Smart Phone */
-  @media screen and (max-width: 600px) {
-    & {
-      height: 600px;
-    }
   }
 
   div {
@@ -47,23 +34,6 @@ $color2: rgb(15, 66, 95);
     color: black;
     font-size: 5em;
     color: $color1;
-
-    /* Tablet */
-    @media screen and (max-width: 992px) {
-      & {
-        font-size: 4em;
-        left: 20px;
-      }
-    }
-    
-    /* Smart Phone */
-    @media screen and (max-width: 600px) {
-      & {
-        left: 20px;
-        top: 100px;
-        font-size: 3em;
-      }
-    }
   }
 
   #bz-styleText.before-enter {
@@ -84,22 +54,6 @@ $color2: rgb(15, 66, 95);
     font-weight: bold;
     color: rgb(46, 46, 46);
 
-     /* Tablet */
-     @media screen and (max-width: 992px) {
-      & {
-        font-size: 2em;
-        left: 30px;
-      }
-    }
-    
-    /* Smart Phone */
-    @media screen and (max-width: 600px) {
-      & {
-        font-size: 1.5em;
-        left: 30px;
-        top: 200px;
-      }
-    }
   }
 
   #bz-styleTextSub.before-enter {
@@ -125,22 +79,6 @@ $color2: rgb(15, 66, 95);
     border-radius: 5px;
     box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
     color: rgb(223, 223, 223);
-
-    /* Tablet */
-    @media screen and (max-width: 992px) {
-      & {
-        width: 500px;
-        top: 400px;
-      }
-    }
-    
-    /* Smart Phone */
-    @media screen and (max-width: 600px) {
-      & {
-        width: 400px;
-        top: 350px;
-      }
-    }
 
     #bz-startBox-text {
       position: relative;
@@ -185,5 +123,43 @@ $color2: rgb(15, 66, 95);
   #bz-startBox.enter {
     opacity: 1;
     transform: translateY(0px) translateX(-50%);
+  }
+
+  /* 태블릿 */
+  @media only screen and (max-width: 991px) {
+    #bz-styleText {
+      font-size: 4em;
+      left: 30px;
+    }
+
+    #bz-styleTextSub {
+      font-size: 2em;
+      left: 20px;
+    }
+
+    #bz-startBox {
+      width: 400px;
+    }
+  }
+
+  /* 스마트폰 */
+  @media only screen  and (max-width: 767px) {
+    #bz-styleText {
+      font-size: 3em;
+      left: 30px;
+    }
+
+    #bz-styleTextSub {
+      font-size: 1.5em;
+      left: 20px;
+    }
+
+    #bz-startBox {
+      width: 75%;
+
+      #bz-startBox-start {
+        width: 50%;
+      }
+    }
   }
 }

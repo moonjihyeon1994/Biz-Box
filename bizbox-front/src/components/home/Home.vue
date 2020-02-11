@@ -2,10 +2,8 @@
   <div class="biz-container">
     <div>
       <start></start>
-      <about></about>
+      <!-- <about></about> -->
       <biz-us></biz-us>
-    </div>
-    <div>
       <News></News>
     </div>
     <HomeFooter></HomeFooter>
