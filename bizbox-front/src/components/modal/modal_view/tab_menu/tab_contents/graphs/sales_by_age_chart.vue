@@ -45,7 +45,7 @@ export default {
       chartoptions: null,
       result: null,
       road: '',
-      key: '오류동',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연령별 매출',
       point: 0,
