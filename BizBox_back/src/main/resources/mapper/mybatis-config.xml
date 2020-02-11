@@ -4,8 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
  
-  <typeAliases> <!-- mapper에서 참조할 bean의 예명 등록 -->
-  	<!-- <typeAlias type="com.ssafy.vo.Food" alias="food"/> -->
+  <typeAliases>
   	<typeAlias type="com.bizbox.vo.PopulationByTime"  alias="pobt"/>
   	<typeAlias type="com.bizbox.vo.PopulationByLocation"  alias="pobl"/>
   	<typeAlias type="com.bizbox.vo.Changebusiness"  alias="change"/>
@@ -16,14 +15,15 @@
   	<typeAlias type="com.bizbox.vo.Password"  alias="password"/>
   	<typeAlias type="com.bizbox.vo.User"  alias="user"/>
   	<typeAlias type="com.bizbox.vo.color"  alias="color"/>
+  	<typeAlias type="com.bizbox.vo.Prediction"  alias="prediction"/>
   </typeAliases>
   
   <mappers>
-   <!-- <mapper resource="mapper/foodmapper.xml"/> -->
    <mapper resource="mapper/populationByMapper.xml" />
    <mapper resource="mapper/changebusinessMapper.xml" />
    <mapper resource="mapper/salesMapper.xml" />
    <mapper resource="mapper/userServiceMapper.xml"/>
    <mapper resource="mapper/passMapper.xml"/>
+   <mapper resource="mapper/predictionMapper.xml"/>
   </mappers>
 </configuration>

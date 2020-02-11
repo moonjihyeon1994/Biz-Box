@@ -21,6 +21,12 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 	@Autowired
 	ChangeBusinessDAO dao;
 	
+	@Autowired
+	AddressUtil util;
+	
+	@Autowired
+	JusoService jusoService;
+	
 	@Override
 	public List<Changebusiness> getChangeHistory(String dongcode) {
 		
@@ -42,18 +48,16 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 		for (int i = 0; i < 6; i++) {
 			cblist.add(new Changebusiness((2014 + i) + ""));
 		}
-		JusoApi api = new JusoApi();
-		AddressUtil util = new AddressUtil();
 		List<String> donglist = new LinkedList<String>();
-		donglist = api.getDongSetByName(dong);
-		precblist = getChangeHistory(dong);
-//		for (String string : donglist) {
-//			precblist = getChangeHistory(string);
-//			predongcode = string;
-//			
-//			if (!precblist.isEmpty())
-//				break;
-//		}
+		donglist = jusoService.getDongSetByName(dong);
+
+		for (String string : donglist) {
+			precblist = getChangeHistory(string);
+			predongcode = string;
+			
+			if (!precblist.isEmpty())
+				break;
+		}
 		if (precblist.isEmpty()) {
 			predongcode = "죄송합니다." + " \" " + predongcode + " \" " + "에 대한 데이터가 존재 하지않습니다.";
 		}
@@ -141,7 +145,7 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 		JusoApi api = new JusoApi();
 		AddressUtil util = new AddressUtil();
 		List<String> donglist = new LinkedList<String>();
-		donglist = api.getDongSetByName(dong);
+		donglist = jusoService.getDongSetByName(dong);
 
 		for (String string : donglist) {
 			precblist = getChangeHistory(string);
