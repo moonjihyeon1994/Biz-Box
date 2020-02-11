@@ -11,5 +11,18 @@ form {
 }
 
 div.v-tab.v-tab--active {
-  background-color: yellow;
+  background-color: #ffffff;
 }
+
+div.v-tab {
+  background-color: grey;
+}
+
+.closeButton {
+  background-color: #34256b;
+}
+
+div.v-tab.v-tab--active span {
+  color: #34256b;
+}
+
