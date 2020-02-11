@@ -186,7 +186,6 @@ public class PopulationByController {
 		try {
 			JSONObject jsonObject = new JSONObject();
 			pbd = service.populationByDong(address);
-			System.out.println(pbd);
 			jsonObject.put("pbd", pbd);
 			jsonObject.put("point", Point);
 			return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);

@@ -243,4 +243,58 @@ public class JusoApi {
 		}
 		return list;
 	}
+	
+	/**
+	 * 위도 경도 입력시 제일 가까운 상권정보 주기 
+	 * @param cx(위도)
+	 * @param cy(경도)
+	 * @return 상권정보
+	 * @throws IOException
+	 */
+	public JSONObject findBusiness(String cx,String cy) throws IOException {
+		String resultType = "json";
+		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
+		int radius = 0;
+		
+		JSONObject data = new JSONObject();
+		while(true) {
+			radius += 50;
+			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
+					+ "radius=" + radius 
+					+ "&ServiceKey=" + ServiceKey 
+					+ "&cx=" + cx 
+					+ "&cy=" + cy
+					+ "&type=" + resultType;
+			
+			URL url = new URL(apiUrl);
+			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+			StringBuffer sb = new StringBuffer();
+			String tempStr = null;
+			while (true) {
+				tempStr = br.readLine();
+				if (tempStr == null)
+					break;
+				sb.append(tempStr);
+			}
+			br.close();
+			
+			try {
+				JSONParser jsonParse = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
+				JSONObject header = (JSONObject) jsonObj.get("header");
+				String resultCode = (String) header.get("resultCode");
+				if (resultCode.equals("03"))
+					continue;
+				JSONObject body = (JSONObject) jsonObj.get("body");
+				JSONArray itemsArray = (JSONArray) body.get("items");
+				System.out.println(itemsArray.toString());
+				data = (JSONObject) itemsArray.get(0);
+				if (resultCode.equals("00"))
+					break;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return data;
+	}
 }
