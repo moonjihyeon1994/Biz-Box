@@ -3,43 +3,43 @@
       <v-sheet id="sheet"  class="mapbtns" elevation="14">
         <div class="btnRow">
           <div class='mapBtn' @click="choice1()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/circle.png">
             <span class='mapBtnText'>원으로 검색</span>
           </div>
 
           <div class='mapBtn' @click="choice2()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/greenpeople.png">
             <span class='mapBtnText'>유동인구(시간)</span>
           </div>
 
           <div class='mapBtn' @click="choice3()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/report.png">
             <span class='mapBtnText'>상권변화지수</span>
           </div>
           <div class='mapBtn' @click="choice4()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/greygraph.png">
             <span class='mapBtnText'>매출정보 (연령)</span>
           </div>
         </div>
 
         <div class="btnRow">
           <div class='mapBtn' @click="choice5()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/redpeople.png">
             <span class='mapBtnText'>유동인구(연령)</span>
           </div>
 
           <div class='mapBtn' @click="choice6()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/bluepeople.png">
             <span class='mapBtnText'>유동인구(요일)</span>
           </div>
 
           <div class='mapBtn' @click="choice7()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/yellowgraph.png">
             <span class='mapBtnText'>매출정보 (시간)</span>
           </div>
 
           <div class='mapBtn' @click="choice8()">
-            <img src="@/assets/logo.png">
+            <img src="@/assets/icons/mapIcon2/bluegraph.png">
             <span class='mapBtnText'>매출정보 (요일)</span>
           </div>
         </div>

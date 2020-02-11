@@ -43,6 +43,7 @@ export default {
       points: [],
       polygon: null,
       geocoder: null,
+      html: null,
       map: null,
       name: null,
       clusterer: null,
@@ -53,6 +54,11 @@ export default {
       addListener: null,
       mode: null, // 여기 반경 하고 싶으면 asdf 로
       ChangeBusinessTable: null, // 오버레이 테이블
+      rClickPosition: null,
+      radiusOverlay: null,
+      circle: null,
+      polyline: null,
+      radiusObj: null,
       drawingFlag: false, // 원이 그려지고 있는 상태를
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
@@ -60,7 +66,6 @@ export default {
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
       customOverlay: false,
       wasDrawing: false,
-      radiusOverlay: null,
       circles: [],
       countResult: '',
       searchX: '',
@@ -270,7 +275,7 @@ export default {
             Marker.setPosition(coords)
             InfoWindow.close()
             var imageSrc =
-              'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png' // 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png' 마커이미지 http://13.125.20.125/media/search.png
+              'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxETEBUSDxEREBAVExUWFhUQEA8YEBYVFRUXFxYVFhUZHSggGBolGxUVITEiJSkrLi4uGSAzODMtNygtMi0BCgoKDg0OGhAQFy0lICIyNTYtMi8tKys1Ny0rLS0wLSstKzctKy0rKysrLS8tLS01LS81KysrNystNSsrLS0rLf/AABEIANsA5gMBIgACEQEDEQH/xAAcAAEAAQUBAQAAAAAAAAAAAAAABQECAwQGBwj/xABAEAACAQMBBQILBQcDBQAAAAAAAQIDBBEhBRIxQVEGYQcTIjJCUnGBobHBM3KR0fAUI0NigpLhFSTxFlOissL/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAwECBP/EACARAQADAAEEAwEAAAAAAAAAAAABAhEhEhMiMQMyYXH/2gAMAwEAAhEDEQA/APcQAAAAAAAAAAAAAAAAAABRvqYJ1umi+IGWVRIxyrPloYRkC9zfUtKZGQKlVLvLcjIGRVX/AMmSNZc9DXyMgbqYNOM2uBsU6qftAyAAAAAAAAAAAAAAAAAAAAABSTxqypq1amX3AJzyWAsq1FFOUmlFatvgBdk0LnatOL3Y71Wp6tNZa9r4I1nOpccHKlQ7tKlRf/MTetbWMFu04qK7vq+Z1FdczbGm6t1PgqdBd+Z1PyLXYVX51zV/o3Yr4ImI0TIqJ1lYc7MoJ7NqLhcV/fNP6FNy6h5tWNRdKkF846k/4kslQHieSFhtpx0uKbh/NDyoe/mviSdGvGa3oSUovmnlFte1T4oha9hOlLfoPdfNei/ah0b6OvPafyVyR+zdoqqsNbtRcYv5rqiQSJqNqjVzo+PzMpocDcpVMrv5gXgAAAAAAAAAAAAAAAAADDczwsc2ayZS4qZk+7QsUgMmSIb/AGieX9hB+SuU5L0n3GXatVtKnF4lPRvpH0vyNm2pJJJLCSO6xvLi05wzU6ZtU6YpQM6QtYiFFErgA5dBTBUAWSga1aibhbKJsTjJjXO3djiSnDSS6ExaPeinz5latMtt5qLwdW55c144ZZwLKU8Pu5maozWkTUb4MdCWYoAZAAAAAAAAAAAAAAtnLCb6Jv8AAuNe/lilJ93z0AilULlUNPxhVVALKc96u3yS3V7uPxyTVvEgtm6yl7ToLVaFpjKwjE7aWzFFxRFSSoVAMaFCoAoADWMVVEVtGe6srkS8yF208U5Y44KU54Tvxy2ra43oJl7ZDdnauaKz3fLH0JVMnMZOKROxrcs5cV7wYrSXle76oqY1ugAAAAAAAAAAAABqbV+xn7PqjbMF5DepzXNxl8gOV3yqma28XKQGzs1+XNd6+SOjtuBy9Ce7WT5TgvxWj+h0lrIvbmsIV4tLdRUoipFZUFCpjQAAUABrFlQgttvyJewm6rOY7T3GKbxxeiK/FHKXyzwt7O6UI9+v4tv6kqpEdax3IRh6sUvwWDOqpK07MyrWMiISdlLyvc/mgW7IeXJ9El+P/BQxqUAAAAAAAAAAAAAC3OpcWSWq9oHF31LcqSh0k8ezivg0YUyb7UWusaq+7L6P5r8CBQGerl095edTe97Y+kvr7ic2ZcqUU0QlvUcWmv13F1GfiKiS+xm8wfR84PvXyLfHOx0o/JGT1OxpyMhH2tfKN2Mji0Y7rOrwAcugAACjYbMFWobEayZYrmphHKXM/G3CXoU/Ll7vNXvfyZvbb2lurdj5U5PCS4tvgkaEaXiobmc1G96o163KK7kVnwqjHnb+M0qwVY05SL7Sm6lSMI8ZPHsXN+5ZZB6HW7DhilvP0m37uC+XxBvU4KKUVokkl7EALgAAAAAAAAAAAAAA06+06UXhtvvSbQET2nuW/wB3H0Wm+98kQNN5JSpNVas5QUvFuWjksZa46ceOeJF7RkqUsvzXx/MDNBG1BRcXCot6nLiuafKSfJo16LTSaaaeqa4M2YIDHTrzt2lN79Fvyai4eyXqyJ60vYyWUyMpzwmsJxejjJZi13o1ZbPSebep4l+pUy6Xulxj8S0Xi32Rmk1+rqoVTIpnKK/uKf2tGbXrU1vw9uY8PeX0+0tLnLD6PiO3vpndz26jfLXUOcl2kpesvxMP+vuelGE6j/khJ/FDtS3uw6KrcJcyD2ltfXcppzm9FGOrZoXU6r1uKkLaPq5U6z9kI8Pa2af+oxinG3i4Z86pN5rS9r9FdyG1r+sy1vxtwh4puU2p3L001jST5LrLv/TxNmrTqGR1SVrTM7K1axEZClVnTdltn7sfHTXlSWIp8o9ff8vaRmwdlOtLfmv3Sf8Ae1yXd1/D2dkkY0AAAAAAAAAAAAAAUbxq9Eedw8KVpWvnZ0s+JeIxut791KaflLGPs2tFPOG+7DYdrd3WfJhw5vr3LuMEaS5oKODR2jtBQXHUDJe3dKlFttL9fM872/ttTqeS8w/XxNrbN+55Tehx20aL4rgB0ux9rypPHn0nxXNd8fyO1tK8ZxUoNSi/1hrkzzXYdOq8uNOdSMcbzhCTUc8N7Hm8Gd32c2NVnJSjvUqem9JprK6JPi/kBMGOoySuNlzWsPKXThL/ACRNzlaNNPo1hga07qUfMlKPsbRgq7aq83Gf36cH9DHcyIytIDflt2qvNVKL6qjTz8jVudt3E9JVp46Re6vwjg0JyMTYYy+MMkKhqZJfZfZ+5rYcabhD16mYx93N+5BrHGudHsPYE6uJ1k4UuKXCcvyXx+ZK7G7L0qOJT/fVFzkvJT/lj9XkngLacFFJRSSSwklokXAAAAAAAAAAAAAKSeFl6Lv4CTSWXolzfA8M8JXhAleSlY7Pl/tdVVqxf22OMYvlR6v0/u+cFvhO8IM7yUrHZ0n+zaqrVi/tusYvlR6v0/u+dzGzbCNKOFq3xfX/AAX7PsY046avm+b/AMEftra27mFN68G1y7l3gegdmPCJCElZ3U9PNp1m9IvlTm+nSXLg+6V2vcy3mpafL3HgNaeTuuxXa5SUbO+n5PCjWk9Y9Kc36vR8uHsDp6mZM2KNmmsNZRtxsnGWJLVE5sPYsq0vVprzpfRd4ak/BxaSp06y/hucXH727iXw3DsDFbW8acFCC3YpaJGUMCyrSjJYlFSXSSTReAIq47P28/RcX/LJr4PQj63Y2k+FWqvbuP6I6UAcn/0PT51qnujA2KPYq1XnOrP700l/4pHSADRstj29LWlRhF9cZl/c8s3gAAAAAAAAAAAAAAAUk0ll6Jc3wEpJLLeEuLfA8M8JXhAneTdls+T/AGXhUqxbXjscUnyo9/p/d84K+Evt/K8lKy2fL/a8KlWL+26xT5Ue/wBL7vnczs+xjTjhavm+b/wV2fZRpx6vm+b/AMEftra2MwpvXm1y7kBTbW1sZhTevNrl3LvOYqTyVqTyYJyApNmGTKykdH2C7FXG07jxdLyKMcOtWa8mEXyXrTfJfTIHfeBe9r3rlbV41Z0aMMxuI7vkarFKcpccrOMa6dEe7W1vGnFQgt2K4JfriaPZ3YVvZW8be1goU4/3Sk+M5v0pPr9EiTAAAAAAAAAAAAAAAAAAAAAAAAAFJSSWW0ktW3wSEpJLLaSWrb4JHj3hd7R3NZU7a1x+w1oKTr0pqUK6fGnvR0jBLVrjL2cQjfCT2/leydls+T/Zc4qVV/HxxSfKj/7/AHfO5zZ9jGnHTV83zb/IrYWMacdNXzfNv8iO21tbGYU3rza+SAptra2MwpvXm18kczUnkrUnkwTkBScjDOQnI6TsF2KuNp3Hi6WYUINOtWa8mEei9ab5L6AU7Bdirjadx4ulmFCDTrVmvJhF8l1m+S+h9TdndhW9lbwt7WChSj/dKXOc36Un1+g7PbDt7K3hb2sFClBf1SlznN+lJ9foSQAAAAAAAAAAAAAAAAAAAAAAAAAMEb2ktqlWyuaVB4rVLetCm84xOVOSjry1a1A8v7UeE9Vrr9mtaVO4sMSp13NZ8fGXkzdN8IxSzhvzn3YzlsrOjZ0d2O9dbFuJZ8rLq0KjfH+WS+OOvHgOzuz3TpYnBwqZanGSalGUW04tPVNYxgkLftk7Scqe4q9vPya9KT8mceD3ek1193egs7eW87RxVOXjLesm6VeONycfVyuE0uPw544GpPJ6LOVO1pelfdnrqXe61rUb/GE4v8cet53Idquz8rWUZRmq9pVW9Qrw8ycXrh44TS4r9IIOcjBORWcjpOwPYqvtO43KeadCDTrVmvJgui9ab5L38AKdgexVxtO48XTzChBp1qzXkwXRetN8l7+B9Sdnth0LK3hb2sFClBf1SlznN+lJ9R2f2HQs7eFvawVOlBf1SlznJ+lJ82SQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAByPbfskriEqtulG6UeGiVTC0T6S6P3Pu+Z75SU5RmnGcZOMoyTUoyTw00+DTPsY838Kvg4jfRdzaKML6K1WijcRS0jJ8ppaKXuemGg8Q7N9pJWk5RlFVrWqt2vQn5k48MrPCaXB+72dJKVO1paZvdgXT4aurbVH8YzT/HHXj57cwlCUoTjKE4txlGaalGSeHGSeqaZ3ngZ2ZdXF1KnCnGps96Xca2fEOLWiWP4nTHTXQBsrwUXNxdwjSlvbPqLxkbtYcXSzjCX/AHOWNOvA+iOz+xKFnbwt7WCp0oL+qT5zk/Sk+bLth7HoWlCFva01TowWiWW8t5bberbfNm+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHM9ouwGzL2r467tYzq8HOM6tOUktMTcJLe0SWXroTWydl0LalGjbUoUaUeEYLC72+rfV6m4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/2Q==' // 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png' 마커이미지 http://13.125.20.125/media/search.png
             var imageSize = new kakao.maps.Size(64, 69) // 마커이미지의 크기입니다
             var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
             var markerImage = new kakao.maps.MarkerImage(
@@ -492,19 +497,19 @@ export default {
     },
     async RightMouseClick(mouseEvent) {
       if (this.drawingFlag) {
-        var rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-        var polyline = new kakao.maps.Polyline({
+        this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+        this.polyline = new kakao.maps.Polyline({
           // 원의 반경을 표시할 선 객체를 생성합니다
-          path: [this.centerPosition, rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+          path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
           strokeWeight: 1, // 선의 두께 입니다
           strokeColor: '#00a0e9', // 선의 색깔입니다
           strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
           strokeStyle: 'solid' // 선의 스타일입니다
         })
-        var circle = new kakao.maps.Circle({
+        this.circle = new kakao.maps.Circle({
           // 원 객체를 생성합니다
           center: this.centerPosition, // 원의 중심좌표입니다
-          radius: polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+          radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
           strokeWeight: 0, // 선의 두께입니다
           strokeColor: '#00a0e9', // 선의 색깔입니다
           strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
@@ -512,24 +517,11 @@ export default {
           fillColor: '#00a0e9', // 채우기 색깔입니다
           fillOpacity: 0.2 // 채우기 불투명도입니다
         })
-        var radius = Math.round(circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+        var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
         this.range = radius
         await this.getDataCircle()
-        var html = await this.getBoxHTML() // 커스텀 오버레이에 표시할 반경 정보입니다
-        this.radiusOverlay = this.getOverlay(html, rClickPosition)
-        console.log(this.radiusOverlay)
-        circle.setMap(this.map) // 원을 지도에 표시합니다
-        polyline.setMap(this.map) // 선을 지도에 표시합니다
-        this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
 
-        let radiusObj = {
-          // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
-          polyline: polyline,
-          circle: circle,
-          overlay: this.radiusOverlay
-        }
-        this.circles.push(radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
-        this.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+        
         this.centerPosition = null // 중심 좌표를 초기화 합니다
         this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
         this.drawingLine.setMap(null)
@@ -537,8 +529,8 @@ export default {
       }
     },
     // 원 html 만들기
-    getOverlay(html, rClickPosition) {
-      this.radiusOverlay = new kakao.maps.CustomOverlay({
+    getOverlay (html, rClickPosition) {
+      let radiusOverlay = new kakao.maps.CustomOverlay({
         // 반경정보를 표시할 커스텀 오버레이를 생성합니다
         content: html, // 표시할 내용입니다
         position: rClickPosition, // 표시할 위치입니다. 클릭한 위치로 설정합니다
@@ -546,6 +538,7 @@ export default {
         yAnchor: 1,
         zIndex: 1
       })
+      return radiusOverlay
     },
     // ------------------------------------------------
     // 표 만들기 시간별 유동인구
@@ -1283,10 +1276,10 @@ export default {
           })
         })
     },
-    getBoxHTML() {
-      let 소매 = this.CountInfo.소매
-      if (소매 === undefined) {
-        소매 = 0
+    async getBoxHTML () {
+      let a = this.CountInfo.소매
+      if (a === undefined) {
+        a = 0
       }
       let 학문교육 = this.CountInfo.학문교육
       if (학문교육 === undefined) {
@@ -1317,64 +1310,69 @@ export default {
         관광여가오락 = 0
       }
       var content =
-        '<div class="v-sheet theme--light elevation-14" style="width:300px;height:150px;margin:auto;display:block;text-align:center;" id="mapSheet">'
+      '<div class="overlaybox"' +
+              '    style="position:relative;background:#023359;' +
+              '      width:470px; height:250px;border-radius:10px;">' + 
+        '<div class="v-sheet theme--light elevation-14" style="position:relative;top:50%;transform:translateY(-50%);width:450px;height:230px;margin:auto;display:block;text-align:center;" id="mapSheet">'
       content +=
         '    <div style="padding-top:10px;display:flex;justify-content:space-around;">'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/store.5c0694f4.png">' +
         '<span style="width:100%;">' +
-        소매
+        a
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/school.10da6a9d.png">' +
         '<span style="width:100%;">' +
         학문교육
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/hotel.531ff90a.png">' +
         '<span style="width:100%;">' +
         숙박
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/service.b9012c84.png">' +
         '<span style="width:100%;">' +
         생활서비스
       content += '</span></div>'
       content += '</div>'
-      content += '    <div style="display:flex;justify-content:space-around;">'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="display:flex;justify-content:space-around;padding-top:10px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/food.40e9a510.png">' +
         '<span style="width:100%;">' +
         음식
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/estate.19bdddbd.png">' +
         '<span style="width:100%;">' +
         부동산
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/hospital.85ccdf18.png">' +
         '<span style="width:100%;">' +
         의료
       content += '</span></div>'
-      content += '    <div style="width:70px;height:70px;">'
+      content += '    <div style="width:80px;height:93px;">'
       content +=
-        '        <img style="margin:auto;width:40px;height:40px;display:block;" src="/img/logo.82b9c7a5.png">' +
+        '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/game.b8da8874.png">' +
         '<span style="width:100%;">' +
         관광여가오락
       content += '</span></div>'
       content += '</div>'
       content += '</div>'
+      content += '</div>'
+      
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    getDataCircle() {
+    async getDataCircle () {
       axios
         .get(
           '/storecountByxy/' +
@@ -1396,6 +1394,25 @@ export default {
           this.CountInfo.관광여가오락 = jsonlarge.관광여가오락
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
+        .finally(() => {
+          this.getBoxHTML().then(res => {
+            this.html = res
+            this.radiusOverlay = this.getOverlay(this.html, this.rClickPosition)
+            this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+            this.circle.setMap(this.map) // 원을 지도에 표시합니다
+            this.polyline.setMap(this.map) // 선을 지도에 표시합니다
+          }).finally(() => {
+            let vm = this
+            vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+            this.radiusObj = {
+              // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
+              polyline: vm.polyline,
+              circle: vm.circle,
+              overlay: vm.radiusOverlay
+            }
+            this.circles.push(vm.radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
+          })
+        })
     },
     getData3() {
       axios
@@ -1413,7 +1430,7 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
-    removeCircles() {
+    removeCircles () {
       for (var i = 0; i < this.circles.length; i++) {
         this.circles[i].circle.setMap(null)
         this.circles[i].polyline.setMap(null)
