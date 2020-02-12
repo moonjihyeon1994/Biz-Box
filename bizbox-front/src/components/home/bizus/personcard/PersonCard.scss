@@ -8,6 +8,10 @@ $color2: rgb(15, 66, 95);
   width: 250px;
   height: 330px;
   margin: 10px auto;
+
+  left: 50%;
+  transform: translateX(-50%);
+
   border-radius: 5px;
   transition: all 0.8s ease;
   perspective: 500px;
@@ -93,7 +97,7 @@ $color2: rgb(15, 66, 95);
   }
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) translateX(-46%);
     z-index: 3;
   }
 
@@ -105,5 +109,45 @@ $color2: rgb(15, 66, 95);
   &:hover .back {
     z-index: 2;
     transform: rotateY(0deg);
+    box-shadow: 2px 8px 8px rgba(0, 0, 0, 0.65);
+  }
+}
+
+/* 스마트폰 */
+@media only screen  and (max-width: 767px) {
+  .card {
+    width: 200px;
+    height: 250px;
+
+    .front {
+      .fName {
+        font-size: 1.5em;
+        left: 10px;
+        bottom: 30px;
+      }
+
+      .fRole {
+        font-size: 0.7em;
+        left: 15px;
+      }
+    }
+
+    .back {
+      img {
+        width: 120px;
+      }
+
+      ul {
+        bottom: 0;
+      }
+    }
+  }
+}
+
+/* 작은 스마트폰 */
+@media only screen  and (max-width: 409px) {
+  .card {
+    width: 180px;
+    height: 250px;
   }
 }

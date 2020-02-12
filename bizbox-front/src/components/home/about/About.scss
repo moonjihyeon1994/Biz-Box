@@ -5,11 +5,10 @@ $color2: rgb(15, 66, 95);
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: white;
+  background-color: #fafafa;
 
   > div {
     position: relative;
-    // border: 1px solid black;
     width: 1200px;
     height: 600px;
     margin: auto;
@@ -112,7 +111,7 @@ $color2: rgb(15, 66, 95);
   
   #bz-about2 {
     position: relative;
-    background-color: rgb(248, 248, 248);
+    background-color: rgb(230, 230, 230);
 
     .bz-imgBox.before-enter {
       opacity: 0;
@@ -128,6 +127,10 @@ $color2: rgb(15, 66, 95);
     .bz-aboutTitle {
       right: 100px;
       text-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+
+      span {
+        color: rgb(165, 165, 165);
+      }
     }
 
     .bz-aboutTitle.before-enter {
@@ -181,7 +184,7 @@ $color2: rgb(15, 66, 95);
       right: -1200px;
       width: 100%;
       height: 600px;
-      background-color: rgb(248, 248, 248);
+      background-color: rgb(230, 230, 230);
     }
   }
 
@@ -237,6 +240,106 @@ $color2: rgb(15, 66, 95);
     .colorBox.enter {
       opacity: 1;
       transform: translateX(0px);
+    }
+  }
+
+  /* 이미지 리사이즈 */
+  @media only screen and (max-width: 1199px) {
+    > div {
+      width: 800px;
+    }
+
+    .bz-imgBox {
+      display: none;
+    }
+
+    #bz-about2 {
+      .bz-aboutTitle {
+        span {
+          color: $color2;
+        }
+      }
+
+      .colorBox2 {
+        right: -800px;
+      }
+    }
+  }
+
+  /* 태블릿 */
+  @media only screen and (max-width: 991px) {
+    > div {
+      width: 80%;
+      height: 400px;
+      top: 50px;
+      margin-bottom: 50px;
+    }
+
+    .bz-aboutTitle {
+      top: 50px;
+      left: 10px;
+      font-size: 3.5em;
+    }
+    
+    .bz-aboutText {
+      top: 220px;
+      width: 100%;
+      font-size: 1.5em;
+    }
+
+    #bz-about1 {
+      .bz-aboutTitle {
+        left: 0;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    #bz-about2 {
+      background-color: rgb(0,0,0,0);
+
+      .bz-aboutTitle {
+        left: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .colorBox2 {
+        display: none;
+      }
+    }
+
+    #bz-about3 {
+      .bz-aboutTitle {
+        left: 0;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    .colorBox {
+      display: none;
+    }
+
+    .colorBox2 {
+      display: none;
+    }
+  }
+
+  /* 스마트폰 */
+  @media only screen  and (max-width: 767px) {
+    > div {
+      width: 95%;
+    }
+
+    .bz-aboutTitle {
+      font-size: 2.5em;
+    }
+
+    .bz-aboutText {
+      top: 180px;
+      font-size: 1.5em;
+      padding: 0 30px;
     }
   }
 

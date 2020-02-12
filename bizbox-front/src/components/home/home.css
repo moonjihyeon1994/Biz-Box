@@ -1,4 +1,5 @@
 .biz-container {
   font-family: OG;
   width: 100%;
+  overflow: hidden;
 }
