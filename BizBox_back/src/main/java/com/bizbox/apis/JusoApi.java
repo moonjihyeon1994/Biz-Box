@@ -36,6 +36,7 @@ public class JusoApi {
 	 */
 	@Cacheable(cacheNames = "DoroNameApi")
 	public String DoroNameApi(String name) throws IOException {
+		System.out.println("=============start : DoroNameApi=============== ");
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -67,6 +68,7 @@ public class JusoApi {
 	 */
 	@Cacheable(cacheNames = "XYtoLatLong")
 	public String XYtoLatLong(String num) throws IOException {
+		System.out.println("======================start : XYtoLatLong===============");
 		// 요청변수 설정
 		String[] nums = num.split(",");
 		String admCd = nums[0];
@@ -130,6 +132,7 @@ public class JusoApi {
 	 * @throws IOException
 	 */
 	public String findStore(String xy, String radius, String pageNo) throws IOException {
+		System.out.println("------start---findStore---------");
 		String[] cxcy = xy.split(",");
 
 		StringBuilder urlBuilder = new StringBuilder(

@@ -85,7 +85,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
