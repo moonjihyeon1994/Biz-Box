@@ -63,6 +63,8 @@ export default {
   data () {
     return {
       key: this.$store.state.modalsearch,
+      x: this.$store.state.Coords.lat,
+      y: this.$store.state.Coords.lng,
       seen: true,
       lightcolor: {
         backgroundColor: '#14bdfb'

@@ -55,8 +55,8 @@ export default {
   methods: {
     choice1: function (event) {
       this.selected = this.$store.state.mode
-      if (this.selected === 1) { this.selected = 0; alert (this.selected) }
-      else { this.selected = 1;  alert (this.selected)}
+      if (this.selected === 1) { this.selected = 0; alert(this.selected) }
+      else { this.selected = 1;  alert(this.selected)}
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: this.selected })
     },
@@ -64,44 +64,44 @@ export default {
       this.selected = 2
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 2 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     },
     choice3: function (event) {
       this.selected = 3
       // alert('clicked : ' + this.selected)
       // alert("mode : "+ this.$store.state.mode)
       this.$store.dispatch('ChangeMode', { mode: 3 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     },
     choice4: function (event) {
       this.selected = 4
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 4 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     },
     choice5: function (event) {
       this.selected = 5
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 5 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     },
     choice6: function (event) {
       this.selected = 6
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 6 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     },
     choice7: function (event) {
       this.selected = 7
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 7 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     },
     choice8: function (event) {
       this.selected = 8
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 8 })
-      this.$emit('myEvent')
+      this.$emit('myevent')
     }
   }
 }

@@ -3,8 +3,10 @@
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
         연도별 상권 변화 지표
-        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
-        <span v-show="popflag" class="icon-popup-tri"/></span>
+        <span class="icon-question" @click="popup">
+          <v-icon size="15">mdi-help-circle-outline</v-icon>
+          <span v-show="popflag" class="icon-popup-tri" />
+        </span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2019-2분기 업데이트</div>
@@ -18,12 +20,7 @@
     <div id="chart">
       <div id="back" :style="allowDiv"></div>
       <spinner :loading="loadingStatus"></spinner>
-      <bar-chart
-        :chart-data="chartdata"
-        :options="chartoptions"
-        width="500px"
-        height="300px"
-      ></bar-chart>
+      <bar-chart :chart-data="chartdata" :options="chartoptions" width="500px" height="300px"></bar-chart>
     </div>
   </div>
 </template>
@@ -33,12 +30,13 @@ import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
 import Spinner from '../../../../result/Spinner'
 import './graphs.css'
+import { eventBus } from '@/js/bus'
 export default {
   components: {
     BarChart,
     Spinner
   },
-  data () {
+  data() {
     return {
       popflag: false,
       chartdata: null,
@@ -75,14 +73,14 @@ export default {
     }
   },
   computed: {
-    percentMaker: function () {
+    percentMaker: function() {
       if (this.result == null) return
       let preYear = this.result[4].g
       let thisYear = this.result[5].g * 2
-      let percent = (thisYear - preYear) / preYear * 100
+      let percent = ((thisYear - preYear) / preYear) * 100
       return '(' + Math.round(percent * 100) / 100 + '%' + ')'
     },
-    maxAgeMaker: function () {
+    maxAgeMaker: function() {
       if (this.result == null) return
       let preYear = this.result[4].g
       let thisYear = this.result[5].g * 2
@@ -93,15 +91,24 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.draw()
+    eventBus.$on('clickmap', name => {
+      this.key = name
+      this.draw()
+    })
+  },
+  created () {
+    // eventBus.$on('clickmap', name => {
+    //   this.draw()
+    // })
   },
   methods: {
-    popup () {
+    popup() {
       console.log('popup')
       this.popflag = !this.popflag
     },
-    draw () {
+    draw() {
       this.chartdata = null
       this.chartoptions = null
 
@@ -116,7 +123,7 @@ export default {
         this.getData()
       }
     },
-    getData () {
+    getData() {
       this.loadingStatus = true
       this.allowDiv.display = 'block'
       this.btnStyle1.cursor = 'not-allowed'

@@ -247,7 +247,7 @@ export default {
   created () {
     // 업종 및 분기별 매출 + 점포 수
     let vm = this
-    let requestSalesUrl = 'http://70.12.246.137:8080//predict/findBusiness/127.050826/37.507118/'
+    let requestSalesUrl = 'http://70.12.246.137:8080//predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat + '/'
     axios.get(requestSalesUrl)
       .then(res => {
         let data2018 = res.data['2018']
