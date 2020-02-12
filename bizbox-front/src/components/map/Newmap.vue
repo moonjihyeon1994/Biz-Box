@@ -18,17 +18,21 @@
     </v-card>
     <condition></condition>
     <div class="map" id="map"></div>
+    <ImgLoad class="ImgLoader"></ImgLoad>
   </div>
 </template>
 
 <script>
-import Dong from '../../assets/json/New.json'
+import Dong from '../../assets/json/newcolor.json'
+import color from '../../assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
 import axios from '../../js/http-commons'
+import ImgLoad from '@/components/bizmap/kakaomap/ImgLoad.vue'
 
 export default {
   data: () => {
     return {
+      points: [],
       polygon: null,
       geocoder: null,
       html: null,
@@ -71,18 +75,19 @@ export default {
       }
     }
   },
-  mounted () {
-    let data = Dong.features // 좌표 저장할 배열
+  mounted() {
+    console.log(Dong)
+    let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
     let name = '멀티캠퍼스'
+    let color = ''
     let Message = ''
-    let pp = null
     this.message = Message
     var container = document.getElementById('map')
 
     var options = {
       center: new kakao.maps.LatLng(37.505691, 127.0298106),
-      level: 3
+      level: 6
     }
     // --코더 생성------------------------------------------------------------------------------------
     this.geocoder = new kakao.maps.services.Geocoder() // 코더생성
@@ -115,6 +120,7 @@ export default {
     // 반경 그리는 이벤트 시작-------------------------------------------------------------------
     kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
       vm.CircleMouseClick(mouseEvent)
+      // vm.Controlllevel(vm.points)
     }) // 지도에 클릭 이벤트를 등록
     kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
@@ -125,17 +131,53 @@ export default {
     // -------------------------------------------------------------------------------------
 
     // --폴리곤 생성---------------------------------------------------------------------------------------
+    // console.log(data)
+    // console.log(data[1].properties)
+    // data[1].properties.color='red'
+    // console.log(data[1].properties)
+    // console.log(color)
+
+    // for (var i = 0, len = data.length; i < len; i++) {
+    //   var nname = data[i].properties.ADM_DR_NM
+    //   console.log(nname)
+    //   for (var j = 0, Len = color.colorlist.length; j < Len; j++) {
+    //     if (nname === color.colorlist[j].name) {
+    //       data[i].properties.color = color.colorlist[j].color
+    //       console.log(color.colorlist[j].color)
+    //     }
+    //   }
+    // }
+    // var jsonData = JSON.stringify(data)
+    // var a = document.createElement("a")
+    // var file = new Blob([jsonData], { type: 'text/plain' })
+    // a.href = URL.createObjectURL(file)
+    // a.download = 'cc.txt'
+    // a.click()
+    console.log(data)
     for (var i = 0, len = data.length; i < len; i++) {
       // 동의 경계면 좌표를 받아서 다각형 생성 함수에 전달
       this.coordinates = data[i].geometry.coordinates
       name = data[i].properties.ADM_DR_NM
+      if (data[i].properties.color === '정체') {
+        color = '#fca103'
+      }
+      if (data[i].properties.color === '상권확장') {
+        color = '#039dfc'
+      }
+      if (data[i].properties.color === '상권축소') {
+        color = '#fc1803'
+      }
+      if (data[i].properties.color === '다이나믹') {
+        color = '#03fc24'
+      }
       displayArea(
         vm.pp,
         this.map,
         this.coordinates[0][0],
         name,
         this.coordinates[0][0].length,
-        this.customOverlay
+        this.customOverlay,
+        color
       )
     }
 
@@ -145,9 +187,9 @@ export default {
       coordinates,
       name,
       length,
-      customOverlay
+      customOverlay,
+      color
     ) {
-      // 다각형을 생성 ,이벤트를 등록
       let mode = vm.$store.state.mode
       let path = []
       let points = []
@@ -166,7 +208,7 @@ export default {
         strokeWeight: 2, // 선두깨
         strokeColor: '#004c80', // 선색
         strokeOpacity: 0.4, // 선 투명도
-        fillColor: '#fff',
+        fillColor: color,
         fillOpacity: 0.2
       })
 
@@ -175,7 +217,7 @@ export default {
         let Name = name
         let position = mouseEvent.latLng
         polygon.setOptions({
-          fillColor: '#09f'
+          fillColor: '#0a008f'
         })
         customOverlay.setContent(
           '<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' +
@@ -193,13 +235,14 @@ export default {
       kakao.maps.event.addListener(polygon, 'mouseout', () => {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         polygon.setOptions({
-          fillColor: '#fff'
+          fillColor: color
         })
         customOverlay.setMap(null)
       })
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         if (vm.$store.state.mode === 0) {
           //  각 폴리곤에 마우스 아웃 이벤트 등록
+          vm.points = vm.centroid(points)
           let Name = name
           let Marker = vm.marker
           let InfoWindow = vm.infowindow
@@ -244,9 +287,46 @@ export default {
     ifchanege: function(newVal, oldVal) {}
   },
   components: {
-    condition
+    condition,
+    ImgLoad
   },
   methods: {
+    ClickMove() {
+      if (this.$store.state.mode === 0) {
+        //  각 폴리곤에 마우스 아웃 이벤트 등록
+        // vm.points = vm.centroid(points)
+        let Name = name
+        let Marker = this.marker
+        let InfoWindow = this.infowindow
+        this.geocoder.addressSearch(Name, function(result, status) {
+          // 정상적으로 검색이 완료되면
+          if (status === kakao.maps.services.Status.OK) {
+            console.log(Name)
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
+            Marker.setPosition(coords)
+            InfoWindow.close()
+            InfoWindow.setContent(Name)
+            InfoWindow.open(Map, Marker)
+            Map.setCenter(coords)
+          }
+        })
+      }
+    },
+    centroid(points) {
+      var i, j, len, p1, p2, f, area, x, y
+      area = x = y = 0
+      for (i = 0, len = points.length, j = len - 1; i < len; j = i++) {
+        p1 = points[i]
+        p2 = points[j]
+
+        f = p1.y * p2.x - p2.y * p1.x
+        x += (p1.x + p2.x) * f
+        y += (p1.y + p2.y) * f
+        area += f * 3
+      }
+
+      return new kakao.maps.LatLng(x / area, y / area)
+    },
     panTo() {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
@@ -1092,8 +1172,8 @@ export default {
               ]
             },
             options: {
-              responsive: true,
-              maintainAspectRatio: true
+              responsive: false,
+              maintainAspectRatio: false
             }
           })
         })
@@ -1225,7 +1305,9 @@ export default {
             this.polyline.setMap(this.map) // 선을 지도에 표시합니다
           }).finally(() => {
             let vm = this
+            console.log(vm)
             vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+            this.$store.state = 0
             this.radiusObj = {
               // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
               polyline: vm.polyline,
@@ -1256,7 +1338,7 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
-    removeCircles () {
+    removeCircles() {
       for (var i = 0; i < this.circles.length; i++) {
         this.circles[i].circle.setMap(null)
         this.circles[i].polyline.setMap(null)
@@ -1300,7 +1382,7 @@ export default {
 }
 input {
   font-size: 18px;
-  width: 360px;
+  width: 370px;
   float: left;
   border: 0px;
   outline: none;
@@ -1318,7 +1400,7 @@ button {
   display: inline-block;
   z-index: 2;
   position: fixed;
-  width: 360px;
+  width: 370px;
   height: 180px;
   top: 100px;
   left: 50px;
@@ -1341,5 +1423,8 @@ button {
 }
 element.style {
   background: white;
+}
+.ImgLoader {
+  z-index: -1;
 }
 </style>
