@@ -2,7 +2,7 @@
   <div class="biz-container">
     <div>
       <start></start>
-      <!-- <about></about> -->
+      <about></about>
       <biz-us></biz-us>
       <News></News>
     </div>
