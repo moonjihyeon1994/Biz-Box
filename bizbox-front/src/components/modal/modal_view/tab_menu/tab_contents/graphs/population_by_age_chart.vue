@@ -82,7 +82,7 @@ export default {
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
+      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
       let maxAge = -1
       let idx = 0
       for (let index = 0; index < total.length; index++) {
