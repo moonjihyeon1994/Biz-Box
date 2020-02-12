@@ -19,7 +19,7 @@
       </div>
       <div class="colorBox" v-scrollanimation></div>
       <div class="bz-aboutTitle" v-scrollanimation>
-      <span style="color:#ddd; font-size: 1em">방대</span>한 양의 상권 정보
+        <span>방대</span>한 양의 상권 정보
       </div>
       <div class="bz-aboutText" v-scrollanimation>
         약 200만건에 해당하는 탄탄한 데이터를 바탕으로 만들어졌습니다. 더욱 자세하고 정확한 정보를 얻을 수 있습니다.

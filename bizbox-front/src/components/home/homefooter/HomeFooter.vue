@@ -56,4 +56,4 @@ export default {
   }
 }
 </script>
-<style scoped src="./HomeFooter.css"></style>
+<style scoped src="./HomeFooter.scss" lang='scss'></style>
