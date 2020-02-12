@@ -10,6 +10,7 @@ import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
 import tap from '@/components/countstore/CountStores.vue'
 import result from '@/components/modal/result/Result.vue'
+import loading from '@/components/bizmap/loading/Loading.vue'
 
 Vue.use(VueRouter)
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/result',
     name: 'result',
     component: result
+  },
+  {
+    path: '/loading',
+    name: 'loading',
+    component: loading
   }
 ]
 
