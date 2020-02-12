@@ -1,8 +1,11 @@
 <template>
   <div>
-    <h1>{{ sanggwon }}</h1>
-    <h2>성장성(매출증감률, 예상성장률) : {{ score.성장성.매출증감률 }} + {{ score.성장성.예상성장률 }}</h2>
-    <h2>안정성(점포변동률, 매출변동률, 운영연수) : {{ score.안정성.점포변동률 }} + {{ score.안정성.매출변동률 }} + {{ score.안정성.운영연수 }}</h2>
+    <h1>{{ sgName }}</h1>
+    <h2>성장성: {{ score.성장성.점수 }}</h2>
+    <h2>안정성: {{ score.안정성.점수 }}</h2>
+    <h2>영업력: {{ score.영업력.점수 }}</h2>
+    <h2>구매력: {{ score.구매력.점수 }}</h2>
+    <h2>집객력: {{ score.집객력.점수 }}</h2>
   </div>
 </template>
 
@@ -13,7 +16,9 @@ export default {
   data: () => {
     return {
       key: '',
-      sanggwon: '',
+      sgCode: '',
+      sgName: '',
+      dong: '진관동',
       sales_2018: {
         'q1': 0,
         'q2': 0,
@@ -23,6 +28,7 @@ export default {
         'n2': 0,
         'n3': 0,
         'n4': 0,
+        'selng_co': 0,
         'classification': {
           'CS100001': { 'name': '한국음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100002': { 'name': '중식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
@@ -80,6 +86,7 @@ export default {
         'n2': 0,
         'n3': 0,
         'n4': 0,
+        'selng_co': 0,
         'classification': {
           'CS100001': { 'name': '한국음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100002': { 'name': '중식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
@@ -137,6 +144,7 @@ export default {
         'n2': 0,
         'n3': 0,
         'n4': 0,
+        'selng_co': 0,
         'classification': {
           'CS100001': { 'name': '한국음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100002': { 'name': '중식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
@@ -194,6 +202,11 @@ export default {
         continuousYears: 0,
         avgSeoul: 0
       },
+      populations: {
+        floating: 0,
+        living: 0,
+        working: 0
+      },
       closure_rate: {
         average: 0
       },
@@ -241,12 +254,14 @@ export default {
         let data2017 = res.data['2017']
         let data2016 = res.data['2016']
 
-        console.log(data2018)
-        console.log(data2017)
+        vm.sgCode = data2018[0].trdar_cd
+        vm.sgName = data2018[0].trdar_cd_nm
 
         for (let index = 0; index < data2018.length; index++) {
           let temp2018 = data2018[index]
           let serviceCode2018 = temp2018.svc_induty_cd // 업종 코드
+
+          vm.selng_co += Number(temp2018.thsmon_selng_co)
 
           if (temp2018.stdr_qu_cd === '1') {
             vm.sales_2018.q1 += Number(temp2018.thsmon_selng_amt)
@@ -275,6 +290,8 @@ export default {
           let temp2017 = data2017[index]
           let serviceCode2017 = temp2017.svc_induty_cd
 
+          vm.selng_co += Number(temp2017.thsmon_selng_co)
+
           if (temp2017.stdr_qu_cd === '1') {
             vm.sales_2017.q1 += Number(temp2017.thsmon_selng_amt)
             vm.sales_2017.n1 += Number(temp2017.stor_co)
@@ -302,6 +319,8 @@ export default {
           let temp2016 = data2016[index]
           let serviceCode2016 = temp2016.svc_induty_cd
 
+          vm.selng_co += Number(temp2018.thsmon_selng_co)
+
           if (temp2016.stdr_qu_cd === '1') {
             vm.sales_2016.q1 += Number(temp2016.thsmon_selng_amt)
             vm.sales_2016.n1 += Number(temp2016.stor_co)
@@ -324,10 +343,20 @@ export default {
             vm.sales_2016.classification[serviceCode2016].n4 += Number(temp2016.stor_co)
           }
         }
-        // let resquestHistoryUrl = 'http://70.12.247.78:8080/change/getHistory/' + vm.key
-        // axios.get(resquestHistoryUrl).then(res => {
-        //   this.years.continuousYears = Number(res.data.cblist[5].g)
-        //   this.years.avgSeoul = Number(res.data.cblist[5].i)
+        let resquestHistoryUrl = 'http://70.12.247.78:8080/change/getHistory/' + vm.dong
+        axios.get(resquestHistoryUrl).then(res => {
+          vm.years.continuousYears = Number(res.data.cblist[5].g)
+          vm.years.avgSeoul = Number(res.data.cblist[5].i)
+        })
+        let requestFloatingPopulationUrl = 'http://70.12.247.78:8080/population/getPopulationByDong/' + vm.dong
+        axios.get(requestFloatingPopulationUrl).then(res => {
+          console.log(res.data)
+          // vm.populations.floating =
+        })
+
+        // let requestPopulationUrl = 'http://70.12.247.78:8080/' + vm.sgCode
+        // axios.get(requestPopulationUrl).then(res => {
+        //   console.log(res.data)
         // })
       })
       .then(() => {
