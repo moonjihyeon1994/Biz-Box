@@ -34,7 +34,25 @@
            memoryStoreEvictionPolicy="LRU">
     </cache>
 
-   <cache name="StoreCount"
+   <cache name="FindStore"
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1200"
+           overflowToDisk="false"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="DoroNameApi"
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1200"
+           overflowToDisk="false"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="XYtoLatLong"
            eternal="false"
            timeToIdleSeconds="0"
            timeToLiveSeconds="1200"

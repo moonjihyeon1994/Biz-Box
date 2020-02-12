@@ -2,6 +2,8 @@ package com.bizbox.utils;
 
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Service;
+@Service
 public class AddressUtil {
 
 	public String RemoveNumber(String address) {

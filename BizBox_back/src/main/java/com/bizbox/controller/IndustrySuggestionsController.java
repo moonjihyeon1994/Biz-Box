@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.ChangeBusinessService;
 import com.bizbox.Service.IndustrySuggestionsService;
+import com.bizbox.Service.JusoService;
 import com.bizbox.Service.PopulationByService;
 import com.bizbox.Service.SalesService;
 import com.bizbox.vo.BusinessLank;
@@ -38,6 +39,9 @@ public class IndustrySuggestionsController {
 	
 	@Autowired
 	JusoApi api;
+	
+	@Autowired
+	JusoService jusoService;
 	
 	@Autowired
 	IndustrySuggestionsService suggestionservice;
@@ -62,9 +66,9 @@ public class IndustrySuggestionsController {
 			cblist = changeservice.getChangeHistorySubtolist(address);
 			Changebusiness cb = cblist.get(5);
 
-			String num = api.getAddressByName(address);
-			String xy = api.getAddressByXY(num);
-			HashMap<String, Integer> NumberOfBusinesses = api.findStoreToSpring(xy, "350");
+			String num = jusoService.getAddressByName(address);
+			String xy = api.XYtoLatLong(num);
+			HashMap<String, Integer> NumberOfBusinesses = jusoService.findStoreToSpring(xy, "350");
 			
 			int[] BusinessesLank = new int[NumberOfBusinesses.size()];
 			int max = 0;

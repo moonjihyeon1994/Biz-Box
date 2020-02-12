@@ -45,7 +45,7 @@ export default {
       chartoptions: null,
       result: null,
       road: '',
-      key: '오류동',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연도별 상권 변화 지표',
       point: 0,
@@ -123,7 +123,6 @@ export default {
       this.btnStyle2.cursor = 'not-allowed'
       this.btnStyle3.cursor = 'not-allowed'
       this.btnStyle4.cursor = 'not-allowed'
-
       axios
         .get('/change/getHistory/' + this.key)
         .then(res => {
