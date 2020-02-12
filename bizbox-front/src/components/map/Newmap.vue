@@ -16,19 +16,15 @@
         </v-btn>
       </v-toolbar>
     </v-card>
-    <condition v-on:myEvent="myevent"></condition>
-    <div class="ssss">
+    <condition v-on:myevent="myevent"></condition>
+    <div class="ssss"  v-show="isonececlick">
       <div class="info" id="graph-info">
         <canvas class="chart" id="horizontalbarChart"></canvas>
       </div>
     </div>
     <div class="map" id="map"></div>
-    <!-- use the modal component, pass in the prop -->
     <Detail v-if="showModal" @close="showModal = false">
-      <!--
-      you can use custom content here to overwrite
-      default content
-      -->
+      <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
   </div>
 </template>
@@ -40,6 +36,7 @@ import Dong from '../../assets/json/newcolor.json'
 import color from '../../assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
 import axios from '../../js/http-commons'
+import { eventBus } from '../../js/bus'
 
 export default {
   data: () => {
@@ -76,6 +73,7 @@ export default {
       searchX: '',
       searchY: '',
       range: '',
+      coords: '',
       ME: '',
       isonececlick: false,
       CountInfo: {
@@ -90,7 +88,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -124,8 +122,7 @@ export default {
       map: this.map,
       position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
-    kakao.maps.event.addListener(this.marker, 'click', function() {
-      // 마커에 마우스클릭 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+    kakao.maps.event.addListener(this.marker, 'click', function() {// 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
       vm.changeModal()
     })
 
@@ -146,22 +143,12 @@ export default {
     kakao.maps.event.addListener(this.map, 'rightclick', function(mouseEvent) {
       vm.RightMouseClick(mouseEvent)
     })
-    // -------------------------------------------------------------------------------------
-
-    // --폴리곤 생성---------------------------------------------------------------------------------------
-    // console.log(data)
-    // console.log(data[1].properties)
-    // data[1].properties.color='red'
-    // console.log(data[1].properties)
-    // console.log(color)
-
     axios
       .get('/population/getPopulationByTime/' + this.name)
       .then(res => {
         console.log(res)
       })
       .finally(() => {})
-
     // for (var i = 0, len = data.length; i < len; i++) {
     //   var nname = data[i].properties.ADM_DR_NM
     //   console.log(nname)
@@ -266,12 +253,13 @@ export default {
       })
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         //if (vm.$store.state.mode === 0) {
-        if (vm.$store.state.mode != 1) {
+        if (vm.$store.state.mode !== 1) {
           //  각 폴리곤에 마우스 클릭 이벤트 등록
-          vm.saveMouseEvent(mouseEvent)
+          vm.eventbus(name)
+          vm.saveMouseEvent(mouseEvent, 0)
           let Name = name
           let coords = ''
-          vm.setSerchkey(name)
+          vm.setSerchkey(name)// 클릭된 영영ㄱ의 동이름을 기억하는 메서드
           let Marker = vm.marker
           let InfoWindow = vm.infowindow
           vm.geocoder.addressSearch(Name, function(result, status) {
@@ -349,7 +337,12 @@ export default {
     Detail
   },
   methods: {
+    eventbus (name) {
+      // var eventBus = new Vue()
+      eventBus.$emit("clickmap", name)
+    },
     myevent () {
+      this.saveMouseEvent(this.ME, 1)
       let name = this.$store.state.modalsearch
       if (this.$store.state.mode === 2) {
         this.makeOverlay2(this.ME, name)
@@ -373,16 +366,21 @@ export default {
         this.makeOverlay8(this.ME, name)
       }
     },
-    saveMouseEvent(mouseEvent) {
-      if (this.isonececlick === false) {
+    saveMouseEvent(mouseEvent, flag) { // 마우스 커서의 위치를 저장하는 메서드
+      if (this.isonececlick === false && flag === 1) { // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
         this.isonececlick = true
       }
       this.ME = mouseEvent
+      this.$store.state.Coords.lat = this.ME.latLng.getLat()// 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.latLng.getLng()//
+      console.log(null)
+      console.log(this.$store.state.Coords.lat)
+      console.log(this.$store.state.Coords.lng)
     },
-    setSerchkey(name) {
+    setSerchkey(name) { // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    changeModal() {
+    changeModal() { // 
       if (this.showModal === true) {
         this.showModal = false
       }
@@ -1377,7 +1375,7 @@ export default {
   top: -25%;
   left: -50%;
   width: 200%;
-  height: 150%;
+  height: 125%;
 }
 .ssearchbox {
   position: fixed;
@@ -1447,7 +1445,7 @@ button {
   height: 260px;
   z-index: 2;
   position: fixed;
-  top: 380px;
+  top: 365px;
   left: 50px;
   border-radius: 3px;
 }
@@ -1458,5 +1456,6 @@ button {
   width: 360px !important;
   height: 190px !important;
   background: white !important;
+  border-radius: 3px;
 }
 </style>
