@@ -1,6 +1,6 @@
 <template>
   <v-row class="mapcondition" justify="space-around">
-      <v-sheet id="sheet"  class="mapbtns" elevation="14">
+      <v-sheet id="sheet"  class="mapbtns" elevation="14">>
         <div class="btnRow">
           <div class='mapBtn' @click="choice1()">
             <img src="@/assets/icons/mapIcon2/circle.png">
@@ -8,7 +8,7 @@
           </div>
 
           <div class='mapBtn' @click="choice2()">
-            <img src="@/assets/icons/mapIcon2/greenpeople.png">
+            <img src="@/assets/icons/mapIcon2/yellowpeople.png">
             <span class='mapBtnText'>유동인구(시간)</span>
           </div>
 
@@ -17,7 +17,7 @@
             <span class='mapBtnText'>상권변화지수</span>
           </div>
           <div class='mapBtn' @click="choice4()">
-            <img src="@/assets/icons/mapIcon2/greygraph.png">
+            <img src="@/assets/icons/mapIcon2/greengraph.png">
             <span class='mapBtnText'>매출정보 (연령)</span>
           </div>
         </div>
@@ -34,7 +34,7 @@
           </div>
 
           <div class='mapBtn' @click="choice7()">
-            <img src="@/assets/icons/mapIcon2/yellowgraph.png">
+            <img src="@/assets/icons/mapIcon2/redgraph.png">
             <span class='mapBtnText'>매출정보 (시간)</span>
           </div>
 
@@ -106,7 +106,7 @@ export default {
   left: 64px;
 }
 #sheet {
-  width: 360px;
+  width: 370px;
   height: 180px;
   background-color: white;
   border-radius: 3px;
