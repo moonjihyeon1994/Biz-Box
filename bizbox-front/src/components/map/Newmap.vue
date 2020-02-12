@@ -85,7 +85,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -201,7 +201,7 @@ export default {
       )
     }
 
-    function displayArea (
+    function displayArea(
       polygon,
       Mmap,
       coordinates,
@@ -261,78 +261,80 @@ export default {
       })
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         //if (vm.$store.state.mode === 0) {
-        //  각 폴리곤에 마우스 클릭 이벤트 등록
-        vm.saveMouseEvent(mouseEvent)
-        let Name = name
-        let coords = ''
-        vm.setSerchkey(name)
-        let Marker = vm.marker
-        let InfoWindow = vm.infowindow
-        vm.geocoder.addressSearch(Name, function(result, status) {
-          // 정상적으로 검색이 완료되면
-          if (status === kakao.maps.services.Status.OK) {
-            coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
-            Marker.setPosition(coords)
-            InfoWindow.close()
-            var imageSrc =
-          'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-            // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-            var imageSize = new kakao.maps.Size(80, 80) // 마커이미지의 크기입니다
-            var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-            var markerImage = new kakao.maps.MarkerImage(
-              imageSrc,
-              imageSize,
-              imageOption
-            )
-            vm.marker.setImage(markerImage)
-            vm.marker.setPosition(coords)
-            if (vm.$store.state.mode === 2) {
-              vm.makeOverlay2(mouseEvent, name, coords)
+        if (vm.$store.state.mode != 1) {
+          //  각 폴리곤에 마우스 클릭 이벤트 등록
+          vm.saveMouseEvent(mouseEvent)
+          let Name = name
+          let coords = ''
+          vm.setSerchkey(name)
+          let Marker = vm.marker
+          let InfoWindow = vm.infowindow
+          vm.geocoder.addressSearch(Name, function(result, status) {
+            // 정상적으로 검색이 완료되면
+            if (status === kakao.maps.services.Status.OK) {
+              coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
+              Marker.setPosition(coords)
+              InfoWindow.close()
+              var imageSrc =
+                'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+              // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+              var imageSize = new kakao.maps.Size(80, 80) // 마커이미지의 크기입니다
+              var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+              var markerImage = new kakao.maps.MarkerImage(
+                imageSrc,
+                imageSize,
+                imageOption
+              )
+              vm.marker.setImage(markerImage)
+              vm.marker.setPosition(coords)
+              if (vm.$store.state.mode === 2) {
+                vm.makeOverlay2(mouseEvent, name, coords)
+              }
+              if (vm.$store.state.mode === 3) {
+                vm.makeOverlay3(mouseEvent, name, coords)
+              }
+              if (vm.$store.state.mode === 4) {
+                vm.makeOverlay4(mouseEvent, name, coords)
+              }
+              if (vm.$store.state.mode === 5) {
+                vm.makeOverlay5(mouseEvent, name, coords)
+              }
+              if (vm.$store.state.mode === 6) {
+                vm.makeOverlay6(mouseEvent, name, coords)
+              }
+              if (vm.$store.state.mode === 7) {
+                vm.makeOverlay7(mouseEvent, name, coords)
+              }
+              if (vm.$store.state.mode === 8) {
+                vm.makeOverlay8(mouseEvent, name, coords)
+              }
+              InfoWindow.setContent(Name)
+              InfoWindow.open(Map, Marker)
+              Map.setCenter(coords)
             }
-            if (vm.$store.state.mode === 3) {
-              vm.makeOverlay3(mouseEvent, name, coords)
-            }
-            if (vm.$store.state.mode === 4) {
-              vm.makeOverlay4(mouseEvent, name, coords)
-            }
-            if (vm.$store.state.mode === 5) {
-              vm.makeOverlay5(mouseEvent, name, coords)
-            }
-            if (vm.$store.state.mode === 6) {
-              vm.makeOverlay6(mouseEvent, name, coords)
-            }
-            if (vm.$store.state.mode === 7) {
-              vm.makeOverlay7(mouseEvent, name, coords)
-            }
-            if (vm.$store.state.mode === 8) {
-              vm.makeOverlay8(mouseEvent, name, coords)
-            }
-            InfoWindow.setContent(Name)
-            InfoWindow.open(Map, Marker)
-            Map.setCenter(coords)
+          })
+          // }
+          if (vm.$store.state.mode === 2) {
+            vm.makeOverlay2(mouseEvent, name, coords)
           }
-        })
-        // }
-        if (vm.$store.state.mode === 2) {
-          vm.makeOverlay2(mouseEvent, name, coords)
-        }
-        if (vm.$store.state.mode === 3) {
-          vm.makeOverlay3(mouseEvent, name, coords)
-        }
-        if (vm.$store.state.mode === 4) {
-          vm.makeOverlay4(mouseEvent, name, coords)
-        }
-        if (vm.$store.state.mode === 5) {
-          vm.makeOverlay5(mouseEvent, name, coords)
-        }
-        if (vm.$store.state.mode === 6) {
-          vm.makeOverlay6(mouseEvent, name, coords)
-        }
-        if (vm.$store.state.mode === 7) {
-          vm.makeOverlay7(mouseEvent, name, coords)
-        }
-        if (vm.$store.state.mode === 8) {
-          vm.makeOverlay8(mouseEvent, name, coords)
+          if (vm.$store.state.mode === 3) {
+            vm.makeOverlay3(mouseEvent, name, coords)
+          }
+          if (vm.$store.state.mode === 4) {
+            vm.makeOverlay4(mouseEvent, name, coords)
+          }
+          if (vm.$store.state.mode === 5) {
+            vm.makeOverlay5(mouseEvent, name, coords)
+          }
+          if (vm.$store.state.mode === 6) {
+            vm.makeOverlay6(mouseEvent, name, coords)
+          }
+          if (vm.$store.state.mode === 7) {
+            vm.makeOverlay7(mouseEvent, name, coords)
+          }
+          if (vm.$store.state.mode === 8) {
+            vm.makeOverlay8(mouseEvent, name, coords)
+          }
         }
       })
     }
@@ -342,8 +344,10 @@ export default {
     Detail
   },
   methods: {
-    saveMouseEvent (mouseEvent) {
-      if (this.isonececlick === false) { this.isonececlick = true }
+    saveMouseEvent(mouseEvent) {
+      if (this.isonececlick === false) {
+        this.isonececlick = true
+      }
       this.ME = mouseEvent
     },
     setSerchkey(name) {
@@ -522,7 +526,6 @@ export default {
         this.range = radius
         await this.getDataCircle()
 
-        
         this.centerPosition = null // 중심 좌표를 초기화 합니다
         this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
         this.drawingLine.setMap(null)
@@ -530,7 +533,7 @@ export default {
       }
     },
     // 원 html 만들기
-    getOverlay (html, rClickPosition) {
+    getOverlay(html, rClickPosition) {
       let radiusOverlay = new kakao.maps.CustomOverlay({
         // 반경정보를 표시할 커스텀 오버레이를 생성합니다
         content: html, // 표시할 내용입니다
@@ -1277,7 +1280,7 @@ export default {
           })
         })
     },
-    async getBoxHTML () {
+    async getBoxHTML() {
       let a = this.CountInfo.소매
       if (a === undefined) {
         a = 0
@@ -1311,9 +1314,9 @@ export default {
         관광여가오락 = 0
       }
       var content =
-      '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:470px; height:250px;border-radius:10px;">' + 
+        '<div class="overlaybox"' +
+        '    style="position:relative;background:#023359;' +
+        '      width:470px; height:250px;border-radius:10px;">' +
         '<div class="v-sheet theme--light elevation-14" style="position:relative;top:50%;transform:translateY(-50%);width:450px;height:230px;margin:auto;display:block;text-align:center;" id="mapSheet">'
       content +=
         '    <div style="padding-top:10px;display:flex;justify-content:space-around;">'
@@ -1342,7 +1345,8 @@ export default {
         생활서비스
       content += '</span></div>'
       content += '</div>'
-      content += '    <div style="display:flex;justify-content:space-around;padding-top:10px;">'
+      content +=
+        '    <div style="display:flex;justify-content:space-around;padding-top:10px;">'
       content += '    <div style="width:80px;height:93px;">'
       content +=
         '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/food.40e9a510.png">' +
@@ -1370,10 +1374,10 @@ export default {
       content += '</div>'
       content += '</div>'
       content += '</div>'
-      
+
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    async getDataCircle () {
+    async getDataCircle() {
       axios
         .get(
           '/storecountByxy/' +
@@ -1396,23 +1400,28 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
         .finally(() => {
-          this.getBoxHTML().then(res => {
-            this.html = res
-            this.radiusOverlay = this.getOverlay(this.html, this.rClickPosition)
-            this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
-            this.circle.setMap(this.map) // 원을 지도에 표시합니다
-            this.polyline.setMap(this.map) // 선을 지도에 표시합니다
-          }).finally(() => {
-            let vm = this
-            vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
-            this.radiusObj = {
-              // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
-              polyline: vm.polyline,
-              circle: vm.circle,
-              overlay: vm.radiusOverlay
-            }
-            this.circles.push(vm.radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
-          })
+          this.getBoxHTML()
+            .then(res => {
+              this.html = res
+              this.radiusOverlay = this.getOverlay(
+                this.html,
+                this.rClickPosition
+              )
+              this.radiusOverlay.setMap(this.map) // 반경 정보 커스텀 오버레이를 지도에 표시합니다
+              this.circle.setMap(this.map) // 원을 지도에 표시합니다
+              this.polyline.setMap(this.map) // 선을 지도에 표시합니다
+            })
+            .finally(() => {
+              let vm = this
+              vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+              this.radiusObj = {
+                // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
+                polyline: vm.polyline,
+                circle: vm.circle,
+                overlay: vm.radiusOverlay
+              }
+              this.circles.push(vm.radiusObj) // 이 배열을 이용해서 "모두 지우기" 버튼을 클릭했을 때 지도에 그려진 원, 선, 커스텀오버레이들을 지웁니다
+            })
         })
     },
     getData3() {
@@ -1431,7 +1440,7 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
-    removeCircles () {
+    removeCircles() {
       for (var i = 0; i < this.circles.length; i++) {
         this.circles[i].circle.setMap(null)
         this.circles[i].polyline.setMap(null)
