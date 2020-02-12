@@ -337,13 +337,14 @@ public class JusoServiceImpl implements JusoService{
 		for (int i = 0; i < itemsArray.size(); i++) {
 			JSONObject items = (JSONObject) itemsArray.get(i);
 			String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
-
+			
 			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
 				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
 			} else {
 				LNm.put(indsLclsNm, 1);
 			}
 		}
+		
 		JSONObject jsonObject = new JSONObject();
 		JSONArray array = new JSONArray();
 		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
@@ -354,6 +355,37 @@ public class JusoServiceImpl implements JusoService{
 			array.add(jsonObject1);
 		}
 		jsonObject.put("large", array);
+		return jsonObject;
+	}
+	
+	/**
+	 * 위도,경도, 반경 입력하여 대분류 갯수 받기
+	 * @param xy (String 위도,경도)
+	 * @param radius (m, 미터)
+	 * @return Json(대분류당 객체로 리턴 개수)
+	 * @throws IOException
+	 */
+	public JSONObject findAllStoreByLargeJson(String xy, String radius) throws IOException {
+		JSONArray itemsArray = jusoapi.findStore1(xy, radius);
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		for (int i = 0; i < itemsArray.size(); i++) {
+			JSONObject items = (JSONObject) itemsArray.get(i);
+			String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
+			indsLclsNm = indsLclsNm.replace("/", "");
+			
+			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
+				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
+			} else {
+				LNm.put(indsLclsNm, 1);
+			}
+		}
+		
+		JSONObject jsonObject = new JSONObject();
+		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
+			String key = entry.getKey();
+			int value = entry.getValue();
+			jsonObject.put(key, value);
+		}
 		return jsonObject;
 	}
 	
