@@ -1,15 +1,14 @@
 #bz-loading-container {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 100%;
   
   #bz-blur-background {
     position: relative;
     width: 100%;
     height: 100%;
     z-index: 1;
-    background-color: rgba(0, 0, 0, 0.100);
-    filter: blur(2px);
+    background-color: rgba(255, 255, 255, 0.542);
   }
 
   .lds {
@@ -27,7 +26,7 @@
     position: absolute;
     left: 6px;
     width: 13px;
-    background: #42b883;
+    background: rgb(232,113,91);
     animation: lds 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
   }
 
