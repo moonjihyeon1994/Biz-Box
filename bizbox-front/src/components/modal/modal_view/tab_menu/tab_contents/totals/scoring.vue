@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div id='bz-container'>
     <table>
       <caption>{{ sgName }}</caption>
@@ -29,6 +30,16 @@
         </tr>
       </tbody>
     </table>
+=======
+  <div>
+    <h1>{{ sgName }}</h1>
+    <h1>{{ score.합계 }}</h1>
+    <h2>성장성: {{ score.성장성.점수 }}</h2>
+    <h2>안정성: {{ score.안정성.점수 }}</h2>
+    <h2>영업력: {{ score.영업력.점수 }}</h2>
+    <h2>구매력: {{ score.구매력.점수 }}</h2>
+    <h2>집객력: {{ score.집객력.점수 }}</h2>
+>>>>>>> origin/score_data
   </div>
 </template>
 
@@ -40,8 +51,12 @@ export default {
     return {
       sgCode: '',
       sgName: '',
+<<<<<<< HEAD
       dong: '진관동',
       key: this.$store.state.modalsearch,
+=======
+      dong: '역삼2동',
+>>>>>>> origin/score_data
       sales_2018: {
         'q1': 0,
         'q2': 0,
@@ -61,7 +76,17 @@ export default {
           'sun': 0
         },
         'selng_co': 0,
-        'classification': {
+        'category': {
+          'CAT01': { 'name': '소매', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT02': { 'name': '학문/교육', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT03': { 'name': '숙박', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT04': { 'name': '생활서비스', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT05': { 'name': '음식', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT06': { 'name': '부동산', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT07': { 'name': '의료', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT08': { 'name': '관광/여가/오락', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 }
+        },
+        'subCategory': {
           'CS100001': { 'name': '한국음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100002': { 'name': '중식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100003': { 'name': '일식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
@@ -119,7 +144,17 @@ export default {
         'n3': 0,
         'n4': 0,
         'selng_co': 0,
-        'classification': {
+        'category': {
+          'CAT01': { 'name': '소매', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT02': { 'name': '학문/교육', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT03': { 'name': '숙박', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT04': { 'name': '생활서비스', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT05': { 'name': '음식', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT06': { 'name': '부동산', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT07': { 'name': '의료', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT08': { 'name': '관광/여가/오락', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 }
+        },
+        'subCategory': {
           'CS100001': { 'name': '한국음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100002': { 'name': '중식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100003': { 'name': '일식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
@@ -177,7 +212,17 @@ export default {
         'n3': 0,
         'n4': 0,
         'selng_co': 0,
-        'classification': {
+        'category': {
+          'CAT01': { 'name': '소매', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT02': { 'name': '학문/교육', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT03': { 'name': '숙박', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT04': { 'name': '생활서비스', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT05': { 'name': '음식', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT06': { 'name': '부동산', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT07': { 'name': '의료', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
+          'CAT08': { 'name': '관광/여가/오락', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 }
+        },
+        'subCategory': {
           'CS100001': { 'name': '한국음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100002': { 'name': '중식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
           'CS100003': { 'name': '일식음식점', 'q1': 0, 'q2': 0, 'q3': 0, 'q4': 0, 'n1': 0, 'n2': 0, 'n3': 0, 'n4': 0 },
@@ -243,6 +288,7 @@ export default {
         average: 0
       },
       score: {
+        '합계': 0,
         '성장성': {
           '점수': 0,
           '매출증감률': 0,
@@ -289,23 +335,6 @@ export default {
         vm.sgName = data2018[0].trdar_cd_nm
 
         // 집객력 > 주거인구, 직장인구
-        let requestPopulationUrl = 'http://70.12.247.78:8080/' + vm.sgCode
-        axios.get(requestPopulationUrl)
-          .then(res => {
-            vm.populations.living = Number(res.data.상주인구수)
-            vm.score.집객력.주거인구 = Number((vm.populations.living * 5 / 4400).toFixed(2))
-            vm.populations.working = Number(res.data.직장인구수)
-            vm.score.집객력.직장인구 = Number((vm.populations.working * 5 / 4500).toFixed(2))
-          })
-          .then(() => {
-            if (vm.score.집객력.주거인구 > 5) {
-              vm.score.집객력.주거인구 = 5
-            }
-            if (vm.score.집객력.직장인구 > 5) {
-              vm.score.집객력.직장인구 = 5
-            }
-          })
-
         for (let index = 0; index < data2018.length; index++) {
           let temp2018 = data2018[index]
           let serviceCode2018 = temp2018.svc_induty_cd // 업종 코드
@@ -314,18 +343,18 @@ export default {
           if (temp2018.stdr_qu_cd === '1') {
             vm.sales_2018.q1 += Number(temp2018.thsmon_selng_amt)
             vm.sales_2018.n1 += Number(temp2018.stor_co)
-            vm.sales_2018.classification[serviceCode2018].q1 += Number(temp2018.thsmon_selng_amt)
-            vm.sales_2018.classification[serviceCode2018].n1 += Number(temp2018.stor_co)
+            vm.sales_2018.subCategory[serviceCode2018].q1 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.subCategory[serviceCode2018].n1 += Number(temp2018.stor_co)
           } else if (temp2018.stdr_qu_cd === '2') {
             vm.sales_2018.q2 += Number(temp2018.thsmon_selng_amt)
             vm.sales_2018.n2 += Number(temp2018.stor_co)
-            vm.sales_2018.classification[serviceCode2018].q2 += Number(temp2018.thsmon_selng_amt)
-            vm.sales_2018.classification[serviceCode2018].n2 += Number(temp2018.stor_co)
+            vm.sales_2018.subCategory[serviceCode2018].q2 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.subCategory[serviceCode2018].n2 += Number(temp2018.stor_co)
           } else if (temp2018.stdr_qu_cd === '3') {
             vm.sales_2018.q3 += Number(temp2018.thsmon_selng_amt)
             vm.sales_2018.n3 += Number(temp2018.stor_co)
-            vm.sales_2018.classification[serviceCode2018].q3 += Number(temp2018.thsmon_selng_amt)
-            vm.sales_2018.classification[serviceCode2018].n3 += Number(temp2018.stor_co)
+            vm.sales_2018.subCategory[serviceCode2018].q3 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.subCategory[serviceCode2018].n3 += Number(temp2018.stor_co)
             // 요일별 매출 => 가을 기준
             vm.sales_2018.inWeek.mon += Number(temp2018.mon_selng_amt)
             vm.sales_2018.inWeek.tue += Number(temp2018.tues_selng_amt)
@@ -337,8 +366,8 @@ export default {
           } else {
             vm.sales_2018.q4 += Number(temp2018.thsmon_selng_amt)
             vm.sales_2018.n4 += Number(temp2018.stor_co)
-            vm.sales_2018.classification[serviceCode2018].q4 += Number(temp2018.thsmon_selng_amt)
-            vm.sales_2018.classification[serviceCode2018].n4 += Number(temp2018.stor_co)
+            vm.sales_2018.subCategory[serviceCode2018].q4 += Number(temp2018.thsmon_selng_amt)
+            vm.sales_2018.subCategory[serviceCode2018].n4 += Number(temp2018.stor_co)
           }
         }
 
@@ -351,23 +380,23 @@ export default {
           if (temp2017.stdr_qu_cd === '1') {
             vm.sales_2017.q1 += Number(temp2017.thsmon_selng_amt)
             vm.sales_2017.n1 += Number(temp2017.stor_co)
-            vm.sales_2017.classification[serviceCode2017].q1 += Number(temp2017.thsmon_selng_amt)
-            vm.sales_2017.classification[serviceCode2017].n1 += Number(temp2017.stor_co)
+            vm.sales_2017.subCategory[serviceCode2017].q1 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.subCategory[serviceCode2017].n1 += Number(temp2017.stor_co)
           } else if (temp2017.stdr_qu_cd === '2') {
             vm.sales_2017.q2 += Number(temp2017.thsmon_selng_amt)
             vm.sales_2017.n2 += Number(temp2017.stor_co)
-            vm.sales_2017.classification[serviceCode2017].q2 += Number(temp2017.thsmon_selng_amt)
-            vm.sales_2017.classification[serviceCode2017].n2 += Number(temp2017.stor_co)
+            vm.sales_2017.subCategory[serviceCode2017].q2 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.subCategory[serviceCode2017].n2 += Number(temp2017.stor_co)
           } else if (temp2017.stdr_qu_cd === '3') {
             vm.sales_2017.q3 += Number(temp2017.thsmon_selng_amt)
             vm.sales_2017.n3 += Number(temp2017.stor_co)
-            vm.sales_2017.classification[serviceCode2017].q3 += Number(temp2017.thsmon_selng_amt)
-            vm.sales_2017.classification[serviceCode2017].n3 += Number(temp2017.stor_co)
+            vm.sales_2017.subCategory[serviceCode2017].q3 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.subCategory[serviceCode2017].n3 += Number(temp2017.stor_co)
           } else {
             vm.sales_2017.q4 += Number(temp2017.thsmon_selng_amt)
             vm.sales_2017.n4 += Number(temp2017.stor_co)
-            vm.sales_2017.classification[serviceCode2017].q4 += Number(temp2017.thsmon_selng_amt)
-            vm.sales_2017.classification[serviceCode2017].n4 += Number(temp2017.stor_co)
+            vm.sales_2017.subCategory[serviceCode2017].q4 += Number(temp2017.thsmon_selng_amt)
+            vm.sales_2017.subCategory[serviceCode2017].n4 += Number(temp2017.stor_co)
           }
         }
 
@@ -380,160 +409,175 @@ export default {
           if (temp2016.stdr_qu_cd === '1') {
             vm.sales_2016.q1 += Number(temp2016.thsmon_selng_amt)
             vm.sales_2016.n1 += Number(temp2016.stor_co)
-            vm.sales_2016.classification[serviceCode2016].q1 += Number(temp2016.thsmon_selng_amt)
-            vm.sales_2016.classification[serviceCode2016].n1 += Number(temp2016.stor_co)
+            vm.sales_2016.subCategory[serviceCode2016].q1 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.subCategory[serviceCode2016].n1 += Number(temp2016.stor_co)
           } else if (temp2016.stdr_qu_cd === '2') {
             vm.sales_2016.q2 += Number(temp2016.thsmon_selng_amt)
             vm.sales_2016.n2 += Number(temp2016.stor_co)
-            vm.sales_2016.classification[serviceCode2016].q2 += Number(temp2016.thsmon_selng_amt)
-            vm.sales_2016.classification[serviceCode2016].n2 += Number(temp2016.stor_co)
+            vm.sales_2016.subCategory[serviceCode2016].q2 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.subCategory[serviceCode2016].n2 += Number(temp2016.stor_co)
           } else if (temp2016.stdr_qu_cd === '3') {
             vm.sales_2016.q3 += Number(temp2016.thsmon_selng_amt)
             vm.sales_2016.n3 += Number(temp2016.stor_co)
-            vm.sales_2016.classification[serviceCode2016].q3 += Number(temp2016.thsmon_selng_amt)
-            vm.sales_2016.classification[serviceCode2016].n3 += Number(temp2016.stor_co)
+            vm.sales_2016.subCategory[serviceCode2016].q3 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.subCategory[serviceCode2016].n3 += Number(temp2016.stor_co)
           } else {
             vm.sales_2016.q4 += Number(temp2016.thsmon_selng_amt)
             vm.sales_2016.n4 += Number(temp2016.stor_co)
-            vm.sales_2016.classification[serviceCode2016].q4 += Number(temp2016.thsmon_selng_amt)
-            vm.sales_2016.classification[serviceCode2016].n4 += Number(temp2016.stor_co)
+            vm.sales_2016.subCategory[serviceCode2016].q4 += Number(temp2016.thsmon_selng_amt)
+            vm.sales_2016.subCategory[serviceCode2016].n4 += Number(temp2016.stor_co)
           }
         }
-      }).then(() => {
-        // 성장성 > 매출 증감률
-        let total2018 = vm.sales_2018.q1 + vm.sales_2018.q2 + vm.sales_2018.q3 + vm.sales_2018.q4
-        let total2016 = vm.sales_2016.q1 + vm.sales_2016.q2 + vm.sales_2016.q3 + vm.sales_2016.q4
-        vm.score.성장성.매출증감률 = 5 + Number(((total2018 - total2016) * 100 / total2016).toFixed(2))
-
-        // 성장성 > 예상 성장률
-        vm.growth_rate.average_rate = (total2018 / total2016) ** (1 / 3) - 1
-        vm.score.성장성.예상성장률 = Number((vm.growth_rate.average_rate * 100 + 5).toFixed(2))
-
-        // 안정성 > 점포 변동률
-        let dn1 = Number((Math.abs(vm.sales_2018.n4 - vm.sales_2018.n3) / vm.sales_2018.n3).toFixed(2))
-        let dn2 = Number((Math.abs(vm.sales_2018.n3 - vm.sales_2018.n2) / vm.sales_2018.n2).toFixed(2))
-        let dn3 = Number((Math.abs(vm.sales_2018.n2 - vm.sales_2018.n1) / vm.sales_2018.n1).toFixed(2))
-        let dn4 = Number((Math.abs(vm.sales_2018.n1 - vm.sales_2017.n4) / vm.sales_2017.n4).toFixed(2))
-        let dn5 = Number((Math.abs(vm.sales_2017.n4 - vm.sales_2017.n3) / vm.sales_2017.n3).toFixed(2))
-        let dn6 = Number((Math.abs(vm.sales_2017.n3 - vm.sales_2017.n2) / vm.sales_2017.n2).toFixed(2))
-        let dn7 = Number((Math.abs(vm.sales_2017.n2 - vm.sales_2017.n1) / vm.sales_2017.n1).toFixed(2))
-        let dn8 = Number((Math.abs(vm.sales_2017.n1 - vm.sales_2016.n4) / vm.sales_2016.n4).toFixed(2))
-        vm.score.안정성.점포변동률 = 5 - Number(((dn1 + dn2 + dn3 + dn4 + dn5 + dn6 + dn7 + dn8) * 100 / 8).toFixed(2))
-
-        // 안정성 > 매출 변동률
-        let ds1 = Number((Math.abs(vm.sales_2018.q4 - vm.sales_2018.q3) / vm.sales_2018.q3).toFixed(2))
-        let ds2 = Number((Math.abs(vm.sales_2018.q3 - vm.sales_2018.q2) / vm.sales_2018.q2).toFixed(2))
-        let ds3 = Number((Math.abs(vm.sales_2018.q2 - vm.sales_2018.q1) / vm.sales_2018.q1).toFixed(2))
-        let ds4 = Number((Math.abs(vm.sales_2018.q1 - vm.sales_2017.q4) / vm.sales_2017.q4).toFixed(2))
-        let ds5 = Number((Math.abs(vm.sales_2017.q4 - vm.sales_2017.q3) / vm.sales_2017.q3).toFixed(2))
-        let ds6 = Number((Math.abs(vm.sales_2017.q3 - vm.sales_2017.q2) / vm.sales_2017.q2).toFixed(2))
-        let ds7 = Number((Math.abs(vm.sales_2017.q2 - vm.sales_2017.q1) / vm.sales_2017.q1).toFixed(2))
-        let ds8 = Number((Math.abs(vm.sales_2017.q1 - vm.sales_2016.q4) / vm.sales_2016.q4).toFixed(2))
-        vm.score.안정성.매출변동률 = 13 - Number(((ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8) * 100 / 8).toFixed(2))
-
-        // 영업력 > 분기별 매출 편차
-        let qmax = Math.max(vm.sales_2018.q1, vm.sales_2018.q2, vm.sales_2018.q3, vm.sales_2018.q4)
-        let qmin = Math.min(vm.sales_2018.q1, vm.sales_2018.q2, vm.sales_2018.q3, vm.sales_2018.q4)
-        vm.score.영업력.분기별매출편차 = Number((qmin * 5 / qmax).toFixed(2))
-
-        // 영업력 > 요일별 매출 편차
-        let dmax = Math.max(vm.sales_2018.inWeek.mon, vm.sales_2018.inWeek.tue, vm.sales_2018.inWeek.wed, vm.sales_2018.inWeek.thu, vm.sales_2018.inWeek.fri, vm.sales_2018.inWeek.sat, vm.sales_2018.inWeek.sun)
-        let dmin = Math.min(vm.sales_2018.inWeek.mon, vm.sales_2018.inWeek.tue, vm.sales_2018.inWeek.wed, vm.sales_2018.inWeek.thu, vm.sales_2018.inWeek.fri, vm.sales_2018.inWeek.sat, vm.sales_2018.inWeek.sun)
-        vm.score.영업력.요일별매출편차 = Number((dmin * 5 / dmax).toFixed(2))
-
-        // 영업력 > 공급 대비 수요
-        let demands = Number(total2018 / 56900000000000)
-        let supplies = Number((vm.sales_2018.n1 + vm.sales_2018.n2 + vm.sales_2018.n3 + vm.sales_2018.n4) / 865566)
-        vm.score.영업력.공급대비수요 = Number((demands * 10 / supplies).toFixed(2))
-
-        // 구매력 > 상권 평균 매출규모
-        vm.score.구매력.상권매출규모 = 5 + Number(((total2018 - 461580856) * 10 / 461580856).toFixed(2))
-
-        // 구매력 > 평균 건당 결제금액
-        let avgPrice = Number((total2018 / vm.sales_2018.selng_co).toFixed(2))
-        vm.score.구매력.건당결제금액 = Number((avgPrice * 10 / 40000).toFixed(2))
       })
       .then(() => {
-        if (vm.score.성장성.매출증감률 > 10) {
-          vm.score.성장성.매출증감률 = 10
-        } else if (vm.score.성장성.매출증감률 < 0) {
-          vm.score.성장성.매출증감률 = 0
-        }
-        if (vm.score.성장성.예상성장률 > 10) {
-          vm.score.성장성.예상성장률 = 10
-        } else if (vm.score.성장성.예상성장률 < 0) {
-          vm.score.성장성.예상성장률 = 0
-        }
-        if (vm.score.안정성.점포변동률 < 0) {
-          vm.score.안정성.점포변동률 = 0
-        }
-        if (vm.score.안정성.매출변동률 > 10) {
-          vm.score.안정성.매출변동률 = 10
-        } else if (vm.score.안정성.매출변동률 < 0) {
-          vm.score.안정성.매출변동률 = 0
-        }
-        if (vm.score.구매력.상권매출규모 > 10) {
-          vm.score.구매력.상권매출규모 = 10
-        } else if (vm.score.구매력.상권매출규모 < 0) {
-          vm.score.구매력.상권매출규모 = 0
-        }
-        if (vm.score.구매력.건당결제금액 > 10) {
-          vm.score.구매력.건당결제금액 = 10
-        }
-        if (vm.score.영업력.공급대비수요 > 10) {
-          vm.score.영업력.공급대비수요 = 10
-        }
+        let requestPopulationUrl = 'http://70.12.246.137:8080/population/getPopulationByBusiness/' + vm.sgCode
+        axios.get(requestPopulationUrl)
+          .then(res => {
+            vm.populations.living = Number(res.data.data[0].total_co)
+            vm.score.집객력.주거인구 = Number((vm.populations.living * 5 / 4400).toFixed(2))
+            vm.populations.working = Number(res.data.data[0].total_bz_co)
+            vm.score.집객력.직장인구 = Number((vm.populations.working * 5 / 4500).toFixed(2))
+            // vm.populations.floating = Number()
+            // vm.score.집객력.유동인구 = Number((vm.populations.floating / 20000).toFixed(2))
+          })
+          .then(() => {
+            if (vm.score.집객력.주거인구 > 5) {
+              vm.score.집객력.주거인구 = 5
+            }
+            if (vm.score.집객력.직장인구 > 5) {
+              vm.score.집객력.직장인구 = 5
+            }
+            if (vm.score.집객력.유동인구 > 10) {
+              vm.score.집객력.유동인구 = 10
+            }
+            console.log('주거인구 : ', vm.score.집객력.주거인구)
+            console.log('직장인구 : ', vm.score.집객력.직장인구)
+            console.log('유동인구 : ', vm.score.집객력.유동인구)
+          })
+          .then(() => {
+            let resquestHistoryUrl = 'http://13.125.20.125:80/change/getHistory/' + vm.dong
+            axios.get(resquestHistoryUrl)
+              .then(res => {
+                let continuousYears = Number(res.data.cblist[5].g)
+                let avgSeoul = Number(res.data.cblist[5].i)
+                vm.score.안정성.운영연수 = Number(((continuousYears / (avgSeoul + 2)) * 5).toFixed(2))
+              })
+              .then(() => {
+                if (vm.score.안정성.운영연수 > 5) {
+                  vm.score.안정성.운영연수 = 5
+                }
+                console.log('운영연수 : ', vm.score.안정성.운영연수)
+              })
+              .then(() => {
+                // 성장성 > 매출 증감률
+                let total2018 = vm.sales_2018.q1 + vm.sales_2018.q2 + vm.sales_2018.q3 + vm.sales_2018.q4
+                let total2016 = vm.sales_2016.q1 + vm.sales_2016.q2 + vm.sales_2016.q3 + vm.sales_2016.q4
+                vm.score.성장성.매출증감률 = 5 + Number(((total2018 - total2016) * 100 / total2016).toFixed(2))
 
-        console.log('매출증감률 : ', vm.score.성장성.매출증감률)
-        console.log('예상성장률 : ', vm.score.성장성.예상성장률)
+                // 성장성 > 예상 성장률
+                vm.growth_rate.average_rate = (total2018 / total2016) ** (1 / 3) - 1
+                vm.score.성장성.예상성장률 = Number((vm.growth_rate.average_rate * 100 + 5).toFixed(2))
 
-        console.log('점포변동률 : ', vm.score.안정성.점포변동률)
-        console.log('매출변동률 : ', vm.score.안정성.매출변동률)
+                // 안정성 > 점포 변동률
+                let dn1 = Number((Math.abs(vm.sales_2018.n4 - vm.sales_2018.n3) / vm.sales_2018.n3).toFixed(2))
+                let dn2 = Number((Math.abs(vm.sales_2018.n3 - vm.sales_2018.n2) / vm.sales_2018.n2).toFixed(2))
+                let dn3 = Number((Math.abs(vm.sales_2018.n2 - vm.sales_2018.n1) / vm.sales_2018.n1).toFixed(2))
+                let dn4 = Number((Math.abs(vm.sales_2018.n1 - vm.sales_2017.n4) / vm.sales_2017.n4).toFixed(2))
+                let dn5 = Number((Math.abs(vm.sales_2017.n4 - vm.sales_2017.n3) / vm.sales_2017.n3).toFixed(2))
+                let dn6 = Number((Math.abs(vm.sales_2017.n3 - vm.sales_2017.n2) / vm.sales_2017.n2).toFixed(2))
+                let dn7 = Number((Math.abs(vm.sales_2017.n2 - vm.sales_2017.n1) / vm.sales_2017.n1).toFixed(2))
+                let dn8 = Number((Math.abs(vm.sales_2017.n1 - vm.sales_2016.n4) / vm.sales_2016.n4).toFixed(2))
+                vm.score.안정성.점포변동률 = 5 - Number(((dn1 + dn2 + dn3 + dn4 + dn5 + dn6 + dn7 + dn8) * 100 / 8).toFixed(2))
 
-        console.log('분기별매출편차 : ', vm.score.영업력.분기별매출편차)
-        console.log('요일별매출편차 : ', vm.score.영업력.요일별매출편차)
-        console.log('공급대비수요 : ', vm.score.영업력.공급대비수요)
+                // 안정성 > 매출 변동률
+                let ds1 = Number((Math.abs(vm.sales_2018.q4 - vm.sales_2018.q3) / vm.sales_2018.q3).toFixed(2))
+                let ds2 = Number((Math.abs(vm.sales_2018.q3 - vm.sales_2018.q2) / vm.sales_2018.q2).toFixed(2))
+                let ds3 = Number((Math.abs(vm.sales_2018.q2 - vm.sales_2018.q1) / vm.sales_2018.q1).toFixed(2))
+                let ds4 = Number((Math.abs(vm.sales_2018.q1 - vm.sales_2017.q4) / vm.sales_2017.q4).toFixed(2))
+                let ds5 = Number((Math.abs(vm.sales_2017.q4 - vm.sales_2017.q3) / vm.sales_2017.q3).toFixed(2))
+                let ds6 = Number((Math.abs(vm.sales_2017.q3 - vm.sales_2017.q2) / vm.sales_2017.q2).toFixed(2))
+                let ds7 = Number((Math.abs(vm.sales_2017.q2 - vm.sales_2017.q1) / vm.sales_2017.q1).toFixed(2))
+                let ds8 = Number((Math.abs(vm.sales_2017.q1 - vm.sales_2016.q4) / vm.sales_2016.q4).toFixed(2))
+                vm.score.안정성.매출변동률 = 13 - Number(((ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8) * 100 / 8).toFixed(2))
 
-        console.log('평균 매출 규모 : ', vm.score.구매력.상권매출규모)
-        console.log('건당 평균 결제금액 : ', vm.score.구매력.건당결제금액)
-      })
+                // 영업력 > 분기별 매출 편차
+                let qmax = Math.max(vm.sales_2018.q1, vm.sales_2018.q2, vm.sales_2018.q3, vm.sales_2018.q4)
+                let qmin = Math.min(vm.sales_2018.q1, vm.sales_2018.q2, vm.sales_2018.q3, vm.sales_2018.q4)
+                vm.score.영업력.분기별매출편차 = Number((qmin * 5 / qmax).toFixed(2))
 
-    // 안정성 > 운영연수
-    let resquestHistoryUrl = 'http://70.12.247.78:8080/change/getHistory/' + vm.dong
-    axios.get(resquestHistoryUrl)
-      .then(res => {
-        vm.years.continuousYears = Number(res.data.cblist[5].g)
-        vm.years.avgSeoul = Number(res.data.cblist[5].i)
-      })
-      .then(() => {
-        vm.score.안정성.운영연수 = Number(((vm.years.continuousYears / (vm.years.avgSeoul + 2)) * 5).toFixed(2))        
-      })
-      .then(() => {
-        if (vm.score.안정성.운영연수 > 5) {
-          vm.score.안정성.운영연수 = 5
-        }
-        console.log('운영연수 : ', vm.score.안정성.운영연수)
-      })
+                // 영업력 > 요일별 매출 편차
+                let dmax = Math.max(vm.sales_2018.inWeek.mon, vm.sales_2018.inWeek.tue, vm.sales_2018.inWeek.wed, vm.sales_2018.inWeek.thu, vm.sales_2018.inWeek.fri, vm.sales_2018.inWeek.sat, vm.sales_2018.inWeek.sun)
+                let dmin = Math.min(vm.sales_2018.inWeek.mon, vm.sales_2018.inWeek.tue, vm.sales_2018.inWeek.wed, vm.sales_2018.inWeek.thu, vm.sales_2018.inWeek.fri, vm.sales_2018.inWeek.sat, vm.sales_2018.inWeek.sun)
+                vm.score.영업력.요일별매출편차 = Number((dmin * 5 / dmax).toFixed(2))
 
-    // 집객력 > 유동인구
-    let requestFloatingPopulationUrl = 'http://70.12.247.78:8080/population/getPopulationByDong/' + vm.dong
-    axios.get(requestFloatingPopulationUrl)
-      .then(res => {
-        vm.populations.floating = Number()
-        vm.score.집객력.유동인구 = Number((vm.populations.floating / 20000).toFixed(2))
+                // 영업력 > 공급 대비 수요
+                let demands = Number(total2018 / 56900000000000)
+                let supplies = Number((vm.sales_2018.n1 + vm.sales_2018.n2 + vm.sales_2018.n3 + vm.sales_2018.n4) / 865566)
+                vm.score.영업력.공급대비수요 = Number((demands * 10 / supplies).toFixed(2))
+
+                // 구매력 > 상권 평균 매출규모
+                vm.score.구매력.상권매출규모 = 5 + Number(((total2018 - 461580856) * 10 / 461580856).toFixed(2))
+
+                // 구매력 > 평균 건당 결제금액
+                let avgPrice = Number((total2018 / vm.sales_2018.selng_co).toFixed(2))
+                vm.score.구매력.건당결제금액 = Number((avgPrice * 10 / 40000).toFixed(2))
+              })
+              .then(() => {
+                if (vm.score.성장성.매출증감률 > 10) {
+                  vm.score.성장성.매출증감률 = 10
+                } else if (vm.score.성장성.매출증감률 < 0) {
+                  vm.score.성장성.매출증감률 = 0
+                }
+                if (vm.score.성장성.예상성장률 > 10) {
+                  vm.score.성장성.예상성장률 = 10
+                } else if (vm.score.성장성.예상성장률 < 0) {
+                  vm.score.성장성.예상성장률 = 0
+                }
+                if (vm.score.안정성.점포변동률 < 0) {
+                  vm.score.안정성.점포변동률 = 0
+                }
+                if (vm.score.안정성.매출변동률 > 10) {
+                  vm.score.안정성.매출변동률 = 10
+                } else if (vm.score.안정성.매출변동률 < 0) {
+                  vm.score.안정성.매출변동률 = 0
+                }
+                if (vm.score.구매력.상권매출규모 > 10) {
+                  vm.score.구매력.상권매출규모 = 10
+                } else if (vm.score.구매력.상권매출규모 < 0) {
+                  vm.score.구매력.상권매출규모 = 0
+                }
+                if (vm.score.구매력.건당결제금액 > 10) {
+                  vm.score.구매력.건당결제금액 = 10
+                }
+                if (vm.score.영업력.공급대비수요 > 10) {
+                  vm.score.영업력.공급대비수요 = 10
+                }
+
+                console.log('매출증감률 : ', vm.score.성장성.매출증감률)
+                console.log('예상성장률 : ', vm.score.성장성.예상성장률)
+
+                console.log('점포변동률 : ', vm.score.안정성.점포변동률)
+                console.log('매출변동률 : ', vm.score.안정성.매출변동률)
+
+                console.log('분기별매출편차 : ', vm.score.영업력.분기별매출편차)
+                console.log('요일별매출편차 : ', vm.score.영업력.요일별매출편차)
+                console.log('공급대비수요 : ', vm.score.영업력.공급대비수요)
+
+                console.log('평균 매출 규모 : ', vm.score.구매력.상권매출규모)
+                console.log('건당 평균 결제금액 : ', vm.score.구매력.건당결제금액)
+              })
+              .then(() => {
+                vm.score.성장성.점수 = Number((vm.score.성장성.매출증감률 + vm.score.성장성.예상성장률).toFixed(1))
+                vm.score.안정성.점수 = Number((vm.score.안정성.매출변동률 + vm.score.안정성.점포변동률 + vm.score.안정성.운영연수).toFixed(1))
+                vm.score.영업력.점수 = Number((vm.score.영업력.분기별매출편차 + vm.score.영업력.요일별매출편차).toFixed(1))
+                vm.score.구매력.점수 = Number((vm.score.구매력.상권매출규모 + vm.score.구매력.건당결제금액).toFixed(1))
+                vm.score.집객력.점수 = Number((vm.score.집객력.유동인구 + vm.score.집객력.주거인구 + vm.score.집객력.직장인구).toFixed(1))
+              })
+              .then(() => {
+                vm.score.합계 = Number((vm.score.성장성.점수 + vm.score.안정성.점수 + vm.score.영업력.점수 + vm.score.구매력.점수 + vm.score.집객력.점수).toFixed(1))
+              })
+          })
       })
-      .then(() => {
-        if (vm.score.집객력.유동인구 > 10) {
-          vm.score.집객력.유동인구 = 10
-        }
-        console.log('유동인구 : ', vm.score.집객력.유동인구)
-      })
-  },
-  mounted () {
-    let vm = this
-    vm.score.성장성.점수 = vm.score.성장성.매출증감률 + vm.score.성장성.예상성장률
-    vm.score.안정성.점수 = vm.score.안정성.매출변동률 + vm.score.안정성.점포변동률 + vm.score.안정성.운영연수
-    vm.score.영업력.점수 = vm.score.영업력.분기별매출편차
   }
 }
 
