@@ -24,7 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 public class KakaoApi {
 	private final String client_id = "64c7963937495c25ab3d30bc9f6e65e7";
 
-	// 토큰으로 유저 정보얻기
+	/**
+	 * front에서 받아오는 refresh_token으로 access_token발급받기
+	 * @param refresh_token
+	 * @return access_token
+	 */
 	public String getAccessToken(String refresh_token) {
 		String access_Token = "";
 		String reqURL = "https://kauth.kakao.com/oauth/token";
@@ -68,11 +72,15 @@ public class KakaoApi {
 			e.printStackTrace();
 			log.error("카카오 토큰 받기 실패 : {}", e);
 		}
-
+		
 		return access_Token;
 	}
 	
-	// 토큰으로 유저정보 얻기
+	/**
+	 * access_token으로 유저정보 얻기
+	 * @param access_Token
+	 * @return 유저정보
+	 */
 	public HashMap<String, Object> getUserInfo(String access_Token) {
 		HashMap<String, Object> userInfo = new HashMap<>();
 		String reqURL = "https://kapi.kakao.com/v2/user/me";
@@ -116,7 +124,10 @@ public class KakaoApi {
 		return userInfo;
 	}
 	
-	// 카카오 로그아웃
+	/**
+	 * 카카오 로그아웃
+	 * @param access_Token
+	 */
 	public void kakaoLogout(String access_Token) {
 		String reqURL = "https://kapi.kakao.com/v1/user/logout";
 		try {
@@ -141,5 +152,4 @@ public class KakaoApi {
 			e.printStackTrace();
 		}
 	}
-
 }

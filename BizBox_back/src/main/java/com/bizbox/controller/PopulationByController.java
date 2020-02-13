@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bizbox.Service.JusoService;
 import com.bizbox.Service.PopulationByService;
 import com.bizbox.apis.JusoApi;
 import com.bizbox.vo.PopulationByDong;
@@ -35,7 +36,16 @@ public class PopulationByController {
 
 	@Autowired
 	PopulationByService service;
+	
+	@Autowired
+	JusoService jusoService;
+	
+	@Autowired
+	JusoApi jusoApi;
 
+	@Autowired
+	AddressUtil util;
+	
 	@GetMapping("/getPopulationByTime/{address}")
 	public ResponseEntity<Object> getPopulationByTime(@PathVariable String address) {
 		PopulationByTime pbt;
@@ -44,12 +54,10 @@ public class PopulationByController {
 		try {
 
 			JSONObject jsonObject = new JSONObject();
-			JusoApi api = new JusoApi();
-			AddressUtil util = new AddressUtil();
 			String RemovedAddress = util.RemoveNumber(address);
-			String predoroname = api.getAddressByName(RemovedAddress).split(",")[11];// 도로명
+			String predoroname = jusoService.getAddressByName(RemovedAddress).split(",")[11];// 도로명
 			System.out.println(predoroname);
-			adlist = api.getAddressSetByName(RemovedAddress);
+			adlist = jusoService.getAddressSetByName(RemovedAddress);
 			for (String string : adlist) {
 				System.out.println(string);
 			}
@@ -66,7 +74,7 @@ public class PopulationByController {
 					System.out.println("테이블에 정보가 없어 address테이블에서 동코드를 가져옵니다.....!");
 
 					List<PopulationBytimeByDongCode> list = new LinkedList<PopulationBytimeByDongCode>();
-					predoroname = api.getAddressByName(address).split(",")[5];
+					predoroname = jusoService.getAddressByName(address).split(",")[5];
 					String realname = predoroname;
 					System.out.println(predoroname);
 					String dongcode = service.getDongCodeList(predoroname);
@@ -125,11 +133,9 @@ public class PopulationByController {
 		int Point = 0;
 		try {
 			JSONObject jsonObject = new JSONObject();
-			JusoApi api = new JusoApi();
-			AddressUtil util = new AddressUtil();
 			String RemovedAddress = util.RemoveNumber(address);
-			String predoroname = api.getAddressByName(RemovedAddress).split(",")[11];// 도로명
-			adlist = api.getAddressSetByName(RemovedAddress);
+			String predoroname = jusoService.getAddressByName(RemovedAddress).split(",")[11];// 도로명
+			adlist = jusoService.getAddressSetByName(RemovedAddress);
 			pbl = service.populationByLocation(address);
 
 			if (pbl == null) {
@@ -142,7 +148,7 @@ public class PopulationByController {
 				}
 				if (pbl == null) {// 끝까지 정보 없으면 address테이블에서 동코드 가져옴
 					System.out.println("테이블에 정보가 없어 address테이블에서 동코드를 가져옵니다.....!");
-					predoroname = api.getAddressByName(address).split(",")[5];
+					predoroname = jusoService.getAddressByName(address).split(",")[5];
 					String realname = predoroname;
 					System.out.println(predoroname);
 					String dongcode = service.getDongCodeList(predoroname);
@@ -180,7 +186,6 @@ public class PopulationByController {
 		try {
 			JSONObject jsonObject = new JSONObject();
 			pbd = service.populationByDong(address);
-			System.out.println(pbd);
 			jsonObject.put("pbd", pbd);
 			jsonObject.put("point", Point);
 			return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);

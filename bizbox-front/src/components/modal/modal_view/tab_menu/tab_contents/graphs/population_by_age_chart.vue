@@ -32,6 +32,7 @@ import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
 import Spinner from '../../../../result/Spinner'
 import './graphs.css'
+import { eventBus } from '@/js/bus'
 export default {
   components: {
     BarChart,
@@ -44,7 +45,7 @@ export default {
       chartoptions: null,
       result: null,
       road: '',
-      key: '오류동',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연령별 유동인구',
       point: 0,
@@ -82,19 +83,25 @@ export default {
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
+      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
       let maxAge = -1
+      let idx = 0
       for (let index = 0; index < total.length; index++) {
         if (maxAge < total[index]) {
-          maxAge = index
+          maxAge = total[index]
+          idx = index
         }
       }
-      if (maxAge === 5) return (maxAge + 1) * 10 + '대 이상'
-      return (maxAge + 1) * 10 + '대'
+      if (idx === 5) return (idx + 1) * 10 + '대 이상'
+      return (idx + 1) * 10 + '대'
     }
   },
   mounted () {
     this.draw()
+    eventBus.$on('clickmap', name => {
+      this.key = name
+      this.draw()
+    })
   },
   methods: {
     popup () {

@@ -11,6 +11,7 @@ import com.bizbox.apis.JusoApi;
 import com.bizbox.dao.ChangeBusinessDAO;
 import com.bizbox.utils.AddressUtil;
 import com.bizbox.vo.Changebusiness;
+import com.bizbox.vo.color;
 
 
 
@@ -19,6 +20,12 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 
 	@Autowired
 	ChangeBusinessDAO dao;
+	
+	@Autowired
+	AddressUtil util;
+	
+	@Autowired
+	JusoService jusoService;
 	
 	@Override
 	public List<Changebusiness> getChangeHistory(String dongcode) {
@@ -41,10 +48,8 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 		for (int i = 0; i < 6; i++) {
 			cblist.add(new Changebusiness((2014 + i) + ""));
 		}
-		JusoApi api = new JusoApi();
-		AddressUtil util = new AddressUtil();
 		List<String> donglist = new LinkedList<String>();
-		donglist = api.getDongSetByName(dong);
+		donglist = jusoService.getDongSetByName(dong);
 
 		for (String string : donglist) {
 			precblist = getChangeHistory(string);
@@ -140,7 +145,7 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 		JusoApi api = new JusoApi();
 		AddressUtil util = new AddressUtil();
 		List<String> donglist = new LinkedList<String>();
-		donglist = api.getDongSetByName(dong);
+		donglist = jusoService.getDongSetByName(dong);
 
 		for (String string : donglist) {
 			precblist = getChangeHistory(string);
@@ -177,6 +182,21 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 
 		}
 		return cblist;
+	}
+
+	@Override
+	public JSONObject getColorlist() {
+		JSONObject jsonObject = new JSONObject();
+		List<color> colorlist = new LinkedList<color>();
+		colorlist=dao.getColor();
+		jsonObject.put("colorlist", colorlist);
+		return jsonObject;
+	}
+
+	@Override
+	public JSONObject getChangeHistorySubtoAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

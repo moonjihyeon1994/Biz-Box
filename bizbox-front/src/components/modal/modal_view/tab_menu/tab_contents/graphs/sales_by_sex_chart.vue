@@ -32,6 +32,7 @@ import PieChart from '@/lib/PieChart'
 import axios from '@/js/http-commons'
 import Spinner from '../../../../result/Spinner'
 import './graphs.css'
+import { eventBus } from '@/js/bus'
 export default {
   components: {
     PieChart,
@@ -46,7 +47,7 @@ export default {
       chartoptions: null,
       result: null,
       road: '',
-      key: '오류동',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '성별 매출',
       point: 0,
@@ -96,6 +97,10 @@ export default {
   },
   mounted () {
     this.draw()
+    eventBus.$on('clickmap', name => {
+      this.key = name
+      this.draw()
+    })
   },
   methods: {
     popup () {

@@ -42,6 +42,7 @@ import axios from '@/js/http-commons'
 // import Spinner from '../../../../result/Spinner'
 import './graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
+import { eventBus } from '@/js/bus'
 export default {
   components: {
     // Spinner
@@ -57,7 +58,7 @@ export default {
       range: 1000,
       result: null,
       road: '',
-      key: '경인로 248-14',
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연도별 상권 변화 지표',
       point: 0

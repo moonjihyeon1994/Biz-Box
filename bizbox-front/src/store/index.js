@@ -11,7 +11,12 @@ const store = new Vuex.Store({
         lat: 37.505691, lng: 127.0298106
       }
     },
-    mode: 0
+    mode: 0,
+    level: false,
+    modalsearch: '역삼동',
+    Coords: {
+      lat: 37.505691, lng: 127.0298106
+    }
   },
   actions: {
     'ChangeCenter': (store, payload) => {

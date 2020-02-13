@@ -78,9 +78,11 @@ export default {
     scoring,
     Chart
   },
-  data: () => {
+  data () {
     return {
-      key: '진관동',
+      key: this.$store.state.modalsearch,
+      x: this.$store.state.Coords.lat,
+      y: this.$store.state.Coords.lng,
       seen: true,
       lightcolor: {
         backgroundColor: '#14bdfb'
@@ -120,7 +122,7 @@ export default {
       chartoptions: null
     }
   },
-  created () {
+  mouonted () {
     const suggestionUrl = 'http://70.12.247.78:8080/suggestion/Industry/' + this.key
     axios.get(suggestionUrl)
       .then(res => {
