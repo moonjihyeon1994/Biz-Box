@@ -24,7 +24,7 @@
       </div>
 
       <div class='eachCard bz-col-lg-4 bz-col-md-6'>
-        <person-card name="문요한" role="Frontend Developer" img="myh.jpg" git='https://github.com/munyohan/MoonNote' insta='https://www.instagram.com/moonyohan25/'></person-card>
+        <person-card name="문요한" role="Frontend Developer" img="myh.jpg" git='https://github.com/munyohan' insta='https://www.instagram.com/moonyohan25/'></person-card>
       </div>
     </div>
   </div>

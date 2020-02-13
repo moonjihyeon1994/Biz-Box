@@ -1,11 +1,34 @@
 <template>
-  <div>
-    <h1>{{ sgName }}</h1>
-    <h2>성장성: {{ score.성장성.점수 }}</h2>
-    <h2>안정성: {{ score.안정성.점수 }}</h2>
-    <h2>영업력: {{ score.영업력.점수 }}</h2>
-    <h2>구매력: {{ score.구매력.점수 }}</h2>
-    <h2>집객력: {{ score.집객력.점수 }}</h2>
+  <div id='bz-container'>
+    <table>
+      <caption>{{ sgName }}</caption>
+      <tbody>
+        <tr>
+          <th>성장성</th>
+          <td>{{ score.성장성.점수 }}</td>
+        </tr>
+
+        <tr>
+          <th>안정성</th>
+          <td>{{ score.안정성.점수 }}</td>
+        </tr>
+
+        <tr>
+          <th>영업력</th>
+          <td>{{ score.영업력.점수 }}</td>
+        </tr>
+
+        <tr>
+          <th>구매력</th>
+          <td>{{ score.구매력.점수 }}</td>
+        </tr>
+
+        <tr>
+          <th>집객력</th>
+          <td>{{ score.집객력.점수 }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -516,4 +539,4 @@ export default {
 
 </script>
 
-<style></style>
+<style scoped src='./Scoring.scss' lang='scss'></style>
