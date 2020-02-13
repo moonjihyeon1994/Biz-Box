@@ -32,6 +32,7 @@ import HorizontalBarChart from '@/lib/HorizontalBarChart'
 import axios from '@/js/http-commons'
 import Spinner from '../../../../result/Spinner'
 import './graphs.css'
+import { eventBus } from '@/js/bus'
 export default {
   components: {
     HorizontalBarChart,
@@ -93,6 +94,10 @@ export default {
   },
   mounted () {
     this.draw()
+    eventBus.$on('clickmap', name => {
+      this.key = name
+      this.draw()
+    })
   },
   methods: {
     popup () {

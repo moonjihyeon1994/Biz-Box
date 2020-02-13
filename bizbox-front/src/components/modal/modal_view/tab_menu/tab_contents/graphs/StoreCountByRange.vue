@@ -71,10 +71,6 @@ export default {
   },
   mounted () {
     this.slider()
-    eventBus.$on('clickmap', name => {
-      this.key = name
-      this.draw()
-    })
   },
   methods: {
     slider () {
