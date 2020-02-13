@@ -42,6 +42,7 @@ import axios from '@/js/http-commons'
 // import Spinner from '../../../../result/Spinner'
 import './graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
+import { eventBus } from '@/js/bus'
 export default {
   components: {
     // Spinner
@@ -70,6 +71,10 @@ export default {
   },
   mounted () {
     this.slider()
+    eventBus.$on('clickmap', name => {
+      this.key = name
+      this.draw()
+    })
   },
   methods: {
     slider () {
