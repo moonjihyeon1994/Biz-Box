@@ -101,7 +101,7 @@ export default {
     }
   },
   created () {
-    const suggestionUrl = 'http://70.12.247.78:8080/suggestion/Industry/' + this.key
+    const suggestionUrl = 'http://70.12.246.137:8080/suggestion/Industry/' + this.key
     axios.get(suggestionUrl)
       .then(res => {
         console.log('success to get suggestion')
@@ -124,7 +124,7 @@ export default {
         this.seen = true
       })
       .catch(err => console.log(err))
-    const storeCountUrl = 'http://70.12.247.78:8080/storecount/' + this.key + '/1000'
+    const storeCountUrl = 'http://70.12.246.137:8080/storecount/' + this.key + '/1000'
     axios.get(storeCountUrl)
       .then(res => {
         console.log('success to get storeCount')
