@@ -65,6 +65,7 @@ export default {
       radiusObj: null,
       loadingStatus: false,
       drawingFlag: false, // 원이 그려지고 있는 상태를
+      hashover: false,
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
       drawingLine: false, // 그려지고 있는 원의 반지름을 표시할 선 객체
@@ -143,9 +144,6 @@ export default {
     kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
     }) // 지도에 무브 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'rightclick', function(mouseEvent) {
-      vm.RightMouseClick(mouseEvent)
-    })
     axios
       .get('/population/getPopulationByTime/' + this.name)
       .then(res => {
@@ -452,7 +450,7 @@ export default {
         }
       })
     },
-    CircleMouseClick(mouseEvent) {
+    async CircleMouseClick(mouseEvent) {
       // 지도에 클릭 이벤트를 등록
 
       this.removeCircles()
@@ -499,10 +497,43 @@ export default {
           }
         }
       }
+      if (this.drawingFlag) {
+        if (this.hashover) {
+          this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+          this.polyline = new kakao.maps.Polyline({
+            // 원의 반경을 표시할 선 객체를 생성합니다
+            path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+            strokeWeight: 1, // 선의 두께 입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+          })
+          this.circle = new kakao.maps.Circle({
+            // 원 객체를 생성합니다
+            center: this.centerPosition, // 원의 중심좌표입니다
+            radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+            strokeWeight: 0, // 선의 두께입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid', // 선의 스타일입니다
+            fillColor: '#00a0e9', // 채우기 색깔입니다
+            fillOpacity: 0.2 // 채우기 불투명도입니다
+          })
+          var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+          this.range = radius
+          await this.getDataCircle()
+
+          this.centerPosition = null // 중심 좌표를 초기화 합니다
+          this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+          this.drawingLine.setMap(null)
+          this.drawingOverlay.setMap(null)
+        }
+      }
     },
     CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
         // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
+        this.hashover = true
         var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
         var linePath = [this.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
         this.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
@@ -529,38 +560,6 @@ export default {
           this.drawingLine.setMap(null)
           this.drawingOverlay.setMap(null)
         }
-      }
-    },
-    async RightMouseClick(mouseEvent) {
-      if (this.drawingFlag) {
-        this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-        this.polyline = new kakao.maps.Polyline({
-          // 원의 반경을 표시할 선 객체를 생성합니다
-          path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
-          strokeWeight: 1, // 선의 두께 입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid' // 선의 스타일입니다
-        })
-        this.circle = new kakao.maps.Circle({
-          // 원 객체를 생성합니다
-          center: this.centerPosition, // 원의 중심좌표입니다
-          radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
-          strokeWeight: 0, // 선의 두께입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid', // 선의 스타일입니다
-          fillColor: '#00a0e9', // 채우기 색깔입니다
-          fillOpacity: 0.2 // 채우기 불투명도입니다
-        })
-        var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
-        this.range = radius
-        await this.getDataCircle()
-
-        this.centerPosition = null // 중심 좌표를 초기화 합니다
-        this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
-        this.drawingLine.setMap(null)
-        this.drawingOverlay.setMap(null)
       }
     },
     // 원 html 만들기
@@ -1326,6 +1325,7 @@ export default {
             .finally(() => {
               let vm = this
               vm.loadingStatus = false
+              vm.hashover = false
               vm.$store.state.mode = 0
               vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
               this.radiusObj = {
