@@ -13,5 +13,6 @@ public interface JusoService {
 	public JSONObject findAllStore(String xy, String radius) throws IOException;
 	public HashMap<String, Integer> findStoreToSpring(String xy, String radius) throws IOException;
 	public JSONObject findAllStoreByLarge(String xy, String radius) throws IOException;
+	public JSONObject findAllStoreByLargeJson(String xy, String radius) throws IOException;
 	public JSONObject findStoreDetailByCategory(String xy, String range, String middle, String small) throws IOException;
 }

@@ -47,7 +47,7 @@ public class StoreCountController {
 	public ResponseEntity<Object> getEveryStore(@PathVariable String x, @PathVariable String y, @PathVariable String range){
 		try {
 			String xy = x+","+y;
-			JSONObject total = jusoService.findAllStore(xy, range);
+			JSONObject total = jusoService.findAllStoreByLargeJson(xy, range);
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

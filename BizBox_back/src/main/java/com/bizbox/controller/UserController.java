@@ -1,6 +1,7 @@
 package com.bizbox.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,20 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.JwtService;
+import com.bizbox.Service.StoreService;
 import com.bizbox.Service.UserService;
+import com.bizbox.vo.Point;
+import com.bizbox.vo.Store;
 import com.bizbox.vo.User;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping("/user")
+//@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
@@ -32,8 +39,10 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	StoreService storeService;
+	
 	@PostMapping("/signup")
-	@Transactional
 	public ResponseEntity<Map<String, Object>> signup(@RequestBody User user, HttpServletResponse res) {
 		log.info("유저 가입중 : {}", user.toString());
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -54,7 +63,6 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	@Transactional
 	public ResponseEntity<Map<String, Object>> Login(@RequestBody User user, HttpServletResponse res) {
 		log.info("유저 로그인중 : {}", user.toString());
 		Map<String, Object>resultMap = new HashMap<String, Object>();
@@ -92,6 +100,86 @@ public class UserController {
 			status = HttpStatus.ACCEPTED;
 		}catch(RuntimeException e) {
 			log.error("정보조회 실패", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String,Object>>(resultMap, status);
+	}
+	
+	@PostMapping("/addStore")
+	public ResponseEntity<Map<String, Object>> addStore(@RequestBody Store store){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = null;
+		try {
+			if(storeService.insertStore(store)) {
+				resultMap.put("status", true);
+			}else {
+				resultMap.put("status", false);
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch(RuntimeException e) {
+			log.error("상점 추가 실패", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String,Object>>(resultMap, status);
+	}
+	
+	@PutMapping("/closeStore")
+	public ResponseEntity<Map<String, Object>> closeStore(@RequestBody Store store){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = null;
+		try {
+			if(storeService.closeStore(store)) {
+				resultMap.put("status", true);
+			}else {
+				resultMap.put("status", false);
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch(RuntimeException e) {
+			log.error("상점 제거 실패", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String,Object>>(resultMap, status);
+	}
+	
+	@GetMapping("/getStoreByEmail/{email}")
+	public ResponseEntity<Map<String, Object>> getStoreByEmail(@PathVariable String email){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = null;
+		try {
+			List<Store> list = storeService.getStore(email);
+			if(list != null) {
+				resultMap.put("status", true);
+				resultMap.put("data", list);
+			} else {
+				resultMap.put("status", false);
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch(RuntimeException e) {
+			log.error("상점 찾기 실패", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String,Object>>(resultMap, status);
+	}
+	
+	@PostMapping("/getStoreByXY")
+	public ResponseEntity<Map<String, Object>> getStoreByXY(@RequestBody Point point){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = null;
+		try {
+			List<Store> list = storeService.getStoreByXY(point);
+			if(list != null) {
+				resultMap.put("status", true);
+				resultMap.put("data", list);
+			} else {
+				resultMap.put("status", false);
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch(RuntimeException e) {
+			log.error("상점 xy좌표로  찾기 실패", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
