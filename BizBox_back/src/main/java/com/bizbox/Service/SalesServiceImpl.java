@@ -7,23 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.bizbox.apis.JusoApi;
-import com.bizbox.dao.PopulationByDAO;
 import com.bizbox.dao.SalesDAO;
 import com.bizbox.utils.AddressUtil;
-import com.bizbox.vo.PopulationByDong;
-import com.bizbox.vo.PopulationByLocation;
-import com.bizbox.vo.PopulationByTime;
 import com.bizbox.vo.SalesInformation;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	SalesDAO dao;
-
+	
+	@Autowired
+	JusoService jusoService;
+	
+	@Autowired
+	AddressUtil util;
+	
 	@Override
 	public List<SalesInformation> salesInfo(String address) throws Exception {
 		return dao.salesInfo(address);
@@ -32,11 +32,9 @@ public class SalesServiceImpl implements SalesService {
 	@Cacheable(cacheNames = "salesInfosub")
 	public List<SalesInformation> salesInfosub(String address) throws Exception {
 		List<SalesInformation> list = new LinkedList<SalesInformation>();
-		AddressUtil util = new AddressUtil();
-		JusoApi juso = new JusoApi();
 		String preaddress = util.RemoveNumber(address);
 
-		List<String> adlist = juso.getAddressSetByName(preaddress);
+		List<String> adlist = jusoService.getAddressSetByName(preaddress);
 		list = salesInfo(address);
 		if (list.isEmpty()) {
 			for (int i = 0; i < adlist.size(); i++) {
@@ -65,8 +63,6 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	public String salesInfosub2(String address) {
-		AddressUtil util = new AddressUtil();
-		JusoApi juso = new JusoApi();
 		String preaddress = util.RemoveNumber(address);
 		return null;
 	}

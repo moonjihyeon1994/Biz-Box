@@ -13,4 +13,13 @@
 		select * from businesschange where f like concat('%',#{address},'%')  order by a DESC  limit 1
 	</select>
 	
+	<insert id="insert" parameterType="java.util.Map" >
+	insert into color (name, color) values 
+		(#{name}, #{color})
+	</insert>
+	
+	<select id="getcolor" parameterType="String" resultType="color">
+		select * from color
+	</select>
+	
 </mapper>
