@@ -1,11 +1,14 @@
 package com.bizbox.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bizbox.dao.PopulationByBusinessDAO;
 import com.bizbox.dao.PopulationByDAO;
+import com.bizbox.vo.PopulationByBusiness;
 import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
@@ -19,6 +22,9 @@ public class PopulationByServiceImpl implements PopulationByService{
 
 	@Autowired
 	PopulationByDAO dao;
+	
+	@Autowired
+	PopulationByBusinessDAO bzdao;
 	
 	@Override
 	public PopulationByTime populationByTime(String address) throws Exception {
@@ -56,4 +62,14 @@ public class PopulationByServiceImpl implements PopulationByService{
 		return dao.populationByTimeByDongCode(dongcode);
 	}
 
+	@Override
+	public List<PopulationByBusiness> getPopulation(String trdar_cd) {
+		List<PopulationByBusiness> list = null;		
+		try {
+			list = bzdao.getPopulation(trdar_cd);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 }
