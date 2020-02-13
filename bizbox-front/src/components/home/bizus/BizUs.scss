@@ -4,7 +4,7 @@
   height: 100%;
   margin: auto;
   padding: 50px 0;
-  background-color: rgb(250, 250, 250);
+  background-color: rgb(230, 230, 230);
 
   #bizus-title {
     font-size: 4em;
@@ -14,15 +14,31 @@
     letter-spacing: 10px;
   }
 
-  #row-container{
+  #row-container {
     position: relative;
     margin: auto;
-    width: 80%;
-  
-    .bz-row {
-      display: flex;
+    width: 70%;
+
+    .eachCard {
+      position: relative;
+    }
+  }
+
+  /* 리사이즈 */
+  @media only screen and (max-width: 1199px) {
+    #row-container {
+      width: 80%;
+    }
+  }
+
+  /* 스마트폰 */
+  @media only screen  and (max-width: 767px) {
+    #bizus-title {
+      font-size: 2.5em;
+    }
+
+    #row-container {
       width: 100%;
-      justify-content: space-around;
     }
   }
 }
