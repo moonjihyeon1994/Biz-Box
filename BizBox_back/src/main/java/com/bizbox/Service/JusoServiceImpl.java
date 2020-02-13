@@ -1,6 +1,7 @@
 package com.bizbox.Service;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,17 +14,21 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.bizbox.apis.JusoApi;
+import com.bizbox.dao.StoreDAO;
 import com.bizbox.utils.AddressUtil;
+import com.bizbox.vo.Point;
+import com.bizbox.vo.Store;
 @Service
 public class JusoServiceImpl implements JusoService{
 	@Autowired
 	JusoApi jusoapi;
 	@Autowired
 	AddressUtil adutil;
+	@Autowired
+	StoreDAO storedao;
 	
 	/**
 	 * 도로명주소로 입력 하여 정보를 String으로 받음
@@ -338,13 +343,14 @@ public class JusoServiceImpl implements JusoService{
 		for (int i = 0; i < itemsArray.size(); i++) {
 			JSONObject items = (JSONObject) itemsArray.get(i);
 			String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
-
+			
 			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
 				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
 			} else {
 				LNm.put(indsLclsNm, 1);
 			}
 		}
+		
 		JSONObject jsonObject = new JSONObject();
 		JSONArray array = new JSONArray();
 		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
@@ -358,6 +364,64 @@ public class JusoServiceImpl implements JusoService{
 		return jsonObject;
 	}
 	
+	/**
+	 * 위도,경도, 반경 입력하여 대분류 갯수 받기
+	 * @param xy (String 위도,경도)
+	 * @param radius (m, 미터)
+	 * @return Json(대분류당 객체로 리턴 개수)
+	 * @throws IOException
+	 */
+	public JSONObject findAllStoreByLargeJson(String xy, String radius) throws IOException {
+		String[] latlot = xy.split(",");
+		String lat = latlot[0];
+		String lot = latlot[1];
+		if(Double.parseDouble(latlot[0])>Double.parseDouble(latlot[1])) {
+			lat = latlot[1];
+			lot = latlot[0];
+		}
+		
+		String distance = String.valueOf(Double.parseDouble(radius)/1000.0);
+		Point point = new Point(lat, lot, distance);
+
+		List<Store> list = null;
+		try {
+			list = storedao.getStoreByXY(point);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
+		for (int i = 0; i < list.size(); i++) {
+			String indsLclsNm = list.get(i).getCategory_large();
+			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
+				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
+			} else {
+				LNm.put(indsLclsNm, 1);
+			}
+		}
+		
+		JSONArray itemsArray = jusoapi.findStore1(xy, radius);
+		for (int i = 0; i < itemsArray.size(); i++) {
+			JSONObject items = (JSONObject) itemsArray.get(i);
+			String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
+//			indsLclsNm = indsLclsNm.replace("/", "");
+			
+			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
+				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
+			} else {
+				LNm.put(indsLclsNm, 1);
+			}
+		}
+		
+		JSONObject jsonObject = new JSONObject();
+		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
+			String key = entry.getKey();
+			int value = entry.getValue();
+			jsonObject.put(key, value);
+		}
+		return jsonObject;
+	}
 	
 	/**
 	 * 소분류를 선택하면 범위에 해당하는 상점 이름과 주소 리턴
