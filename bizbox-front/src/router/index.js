@@ -11,6 +11,7 @@ import Modal from '@/components/modal/Modal.vue'
 import tap from '@/components/countstore/CountStores.vue'
 import result from '@/components/modal/result/Result.vue'
 import loading from '@/components/bizmap/loading/Loading.vue'
+import howToUse from '@/components/howToUse/HowToUse.vue'
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,11 @@ const routes = [
     path: '/loading',
     name: 'loading',
     component: loading
+  },
+  {
+    path: '/howToUse',
+    name: 'howToUse',
+    component: howToUse
   }
 ]
 
