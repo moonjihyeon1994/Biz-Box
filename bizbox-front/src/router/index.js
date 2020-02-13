@@ -5,11 +5,7 @@ import Home from '@/components/home/Home.vue'
 // import Result from '@/components/result/Result.vue'
 // import ResultSearch from '@/components/result/ResultSearch.vue'
 import map from '@/components/map/Newmap.vue'
-<<<<<<< HEAD
 import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'  
-=======
-import Map from '@/components/bizmap/kakaomap/Kakaomap.vue'
->>>>>>> origin/score_data
 import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
 import tap from '@/components/countstore/CountStores.vue'
