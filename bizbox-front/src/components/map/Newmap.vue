@@ -17,6 +17,7 @@
       </v-toolbar>
     </v-card>
     <condition v-on:myevent="myevent"></condition>
+    <Loading :loading='loadingStatus'></Loading>
     <div class="ssss"  v-show="isonececlick">
       <div class="info" id="graph-info">
         <canvas class="chart" id="horizontalbarChart"></canvas>
@@ -37,6 +38,7 @@ import color from '../../assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
 import axios from '../../js/http-commons'
 import { eventBus } from '../../js/bus'
+import Loading from '@/components/bizmap/loading/Loading.vue'
 
 export default {
   data: () => {
@@ -61,6 +63,7 @@ export default {
       circle: null,
       polyline: null,
       radiusObj: null,
+      loadingStatus: false,
       drawingFlag: false, // 원이 그려지고 있는 상태를
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
@@ -334,7 +337,8 @@ export default {
   },
   components: {
     condition,
-    Detail
+    Detail,
+    Loading
   },
   methods: {
     eventbus (name) {
@@ -1285,6 +1289,7 @@ export default {
       return content
     }, // 범위내 상가정보 받아오는 매서드
     async getDataCircle() {
+      this.loadingStatus = true
       axios
         .get(
           '/storecountByxy/' +
@@ -1295,7 +1300,7 @@ export default {
             this.range
         )
         .then(res => {
-          var jsonlarge = res.data.large
+          var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
           this.CountInfo.숙박 = jsonlarge.숙박
@@ -1320,6 +1325,8 @@ export default {
             })
             .finally(() => {
               let vm = this
+              vm.loadingStatus = false
+              vm.$store.state.mode = 0
               vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
               this.radiusObj = {
                 // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
@@ -1335,7 +1342,7 @@ export default {
       axios
         .get('/change/getHistory' + '/' + this.name)
         .then(res => {
-          var jsonlarge = res.data.large
+          var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
           this.CountInfo.숙박 = jsonlarge.숙박
