@@ -17,7 +17,7 @@
       </v-toolbar>
     </v-card>
     <condition v-on:myevent="myevent"></condition>
-    <div class="ssss"  v-show="isonececlick">
+    <div class="ssss" v-show="isonececlick">
       <div class="info" id="graph-info">
         <canvas class="chart" id="horizontalbarChart"></canvas>
       </div>
@@ -37,10 +37,13 @@ import color from '../../assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
 import axios from '../../js/http-commons'
 import { eventBus } from '../../js/bus'
+import { mapGetters } from 'vuex'
+import axi from 'axios'
 
 export default {
   data: () => {
     return {
+      member_marker: null,
       showModal: false,
       points: [],
       polygon: null,
@@ -88,7 +91,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -119,10 +122,56 @@ export default {
     this.customOverlay = new kakao.maps.CustomOverlay({})
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
-      map: this.map,
-      position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
+      map: this.map
+      //position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
-    kakao.maps.event.addListener(this.marker, 'click', function() {// 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
+    //console.log(this.$store.state)
+    if (this.$store.state.auth.token) {
+      var imageSrc =
+        'https://cdn.icon-icons.com/icons2/1152/PNG/512/1486506254-market-open-shopping-commerce-shop-store_81447.png' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+      // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+      var imageSize = new kakao.maps.Size(40, 40) // 마커이미지의 크기입니다
+      var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      var markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption
+      )
+      axi
+        .post(
+          'http://70.12.246.137:8080/user/info',
+          {
+            email: 'asdfasdfa',
+            pw: 'asdfasdfasdf'
+          },
+          {
+            headers: {
+              jwt: this.$store.state.auth.token
+            }
+          }
+        )
+        .then(res => {
+          // console.log('----')
+          // console.log(res)
+          res.data.data.forEach(element => {
+            this.$store.state.auth.mylist.push(element)
+          })
+        })
+        .then(() => {
+          let posi = this.getmystore()
+          for (let index = 0; index < posi.length; index++) {
+            this.member_marker = new kakao.maps.Marker({
+              map: this.map,
+              position: posi[index], // 최초 표시되는 마커의 위치
+              image: markerImage
+            }).setMap(this.map)
+          }
+        })
+      // 로그인하면 자신이 등록한 점포 위치 나옴
+    }
+
+    kakao.maps.event.addListener(this.marker, 'click', function() {
+      // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
       vm.changeModal()
     })
 
@@ -221,7 +270,7 @@ export default {
         strokeColor: '#004c80', // 선색
         strokeOpacity: 0.4, // 선 투명도
         fillColor: color,
-        fillOpacity: 0.2
+        fillOpacity: 0.13
       })
 
       kakao.maps.event.addListener(polygon, 'mouseover', mouseEvent => {
@@ -259,7 +308,7 @@ export default {
           vm.saveMouseEvent(mouseEvent, 0)
           let Name = name
           let coords = ''
-          vm.setSerchkey(name)// 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
           let Marker = vm.marker
           let InfoWindow = vm.infowindow
           vm.geocoder.addressSearch(Name, function(result, status) {
@@ -332,16 +381,53 @@ export default {
       })
     }
   },
+  created() {
+    // console.log('새로고침')
+    let vm = this
+    // axi
+    //   .post(
+    //     'http://70.12.246.137:8080/user/info',
+    //     {
+    //       email: 'asdfasdfa',
+    //       pw: 'asdfasdfasdf'
+    //     },
+    //     {
+    //       headers: {
+    //         jwt: this.$store.state.auth.token
+    //       }
+    //     }
+    //   )
+    //   .then(res => {
+    //     // console.log('----')
+    //     // console.log(res)
+    //     res.data.data.forEach(element => {
+    //       this.$store.state.auth.mylist.push(element)
+    //     })
+    //   })
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn'])
+  },
   components: {
     condition,
     Detail
   },
   methods: {
-    eventbus (name) {
-      // var eventBus = new Vue()
-      eventBus.$emit("clickmap", name)
+    getmystore() {
+      console.log(this.$store.state.auth)
+      let list = this.$store.state.auth.mylist
+      let posi = []
+      for (let index = 0; index < list.length; index++) {
+        let position = new kakao.maps.LatLng(list[index].lat, list[index].lot)
+        posi.push(position)
+      }
+      return posi
     },
-    myevent () {
+    eventbus(name) {
+      // var eventBus = new Vue()
+      eventBus.$emit('clickmap', name)
+    },
+    myevent() {
       this.saveMouseEvent(this.ME, 1)
       let name = this.$store.state.modalsearch
       if (this.$store.state.mode === 2) {
@@ -366,21 +452,25 @@ export default {
         this.makeOverlay8(this.ME, name)
       }
     },
-    saveMouseEvent(mouseEvent, flag) { // 마우스 커서의 위치를 저장하는 메서드
-      if (this.isonececlick === false && flag === 1) { // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
+    saveMouseEvent(mouseEvent, flag) {
+      // 마우스 커서의 위치를 저장하는 메서드
+      if (this.isonececlick === false && flag === 1) {
+        // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
         this.isonececlick = true
       }
       this.ME = mouseEvent
-      this.$store.state.Coords.lat = this.ME.latLng.getLat()// 모달에 전달할 xy 좌표
-      this.$store.state.Coords.lng = this.ME.latLng.getLng()//
+      this.$store.state.Coords.lat = this.ME.latLng.getLat() // 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.latLng.getLng() //
       console.log(null)
       console.log(this.$store.state.Coords.lat)
       console.log(this.$store.state.Coords.lng)
     },
-    setSerchkey(name) { // 마우스 커서위치의 동이름을 저장하는 메서드
+    setSerchkey(name) {
+      // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    changeModal() { // 
+    changeModal() {
+      //
       if (this.showModal === true) {
         this.showModal = false
       }
