@@ -7,6 +7,7 @@ const state = {
   username: null,
   email: null,
   errors: [],
+  mylist: [],
   loading: false,
   dialog: false
 }
@@ -15,7 +16,8 @@ const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
   isLoading: state => state.loading,
-  isPopup: state => state.dialog
+  isPopup: state => state.dialog,
+  getlist: state => state.mylist
 }
 
 const mutations = {
@@ -32,6 +34,9 @@ const mutations = {
   setUserEmail: (state, email) => {
     state.email = email
     sessionStorage.setItem('login_user_email', email)
+  },
+  setStoreList: (state, storelist) => {
+    state.mylist = storelist
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = [])
@@ -76,6 +81,7 @@ const actions = {
             commit('setToken', res.headers['jwt-auth-token'])
             commit('setUsername', res.data.data.name)
             commit('setUserEmail', res.data.data.email)
+            commit('setStoreList', res.data.storelist)
             commit('setPopup', false)
             alert('로그인 되었습니다')
             // console.log(sessionStorage)
@@ -102,10 +108,12 @@ const actions = {
     axios.get(getUrl)
       .then(res => {
         if (res.data.status) {
+          //console.log(res.data)
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
           commit('setPopup', false)
+          commit('setStoreList', res.data.storelist)
           alert('로그인 되었습니다.')
           // console.log('sessionstorage')
           // console.log(sessionStorage)
