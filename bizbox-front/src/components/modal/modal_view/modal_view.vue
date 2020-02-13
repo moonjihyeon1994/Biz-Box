@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     handleResize () {
-      const boderHeight = 120
+      const boderHeight = 100
       let modalcontainer = document.getElementsByClassName('modal-container')
       let newHeight = window.innerHeight - boderHeight - 50 + 'px'
       try {

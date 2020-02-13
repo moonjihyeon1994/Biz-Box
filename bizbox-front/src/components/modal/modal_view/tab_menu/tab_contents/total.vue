@@ -1,8 +1,24 @@
 <template>
   <div class="main-content" v-if="seen">
-    <h1><strong>상권 종합평가</strong></h1>
-    <scoring></scoring>
-    <div class="container1">
+    <div id='title'>상권 종합평가</div>
+
+    <div id='bz-score-box'>
+      <div id='bz-score-box-pretext'>논현동의 종합 점수는...</div>
+      <div id='bz-score-box-score'>92</div>
+      <div id='bz-score-box-posttext'>입니다.</div>
+    </div>
+
+    <div id='each-point-box'>
+      <div class='bz-each-title'>상권 항목별 점수</div>
+      <scoring></scoring>
+    </div>
+
+    <div id='chart-box'>
+      <div class='bz-each-title'>상권 매출 차트</div>
+      <chart></chart>
+    </div>
+
+    <!-- <div class="container1">
       <div id="map-box"></div><br>
       <div id="info-box">
         <div id="prospect-box" v-bind:style="lightcolor">{{ result.prospect }}</div>
@@ -48,17 +64,19 @@
     </div>
 
     <h1><strong>상권 주요차트</strong></h1>
-    <div>here</div>
+    <div>here</div> -->
   </div>
 </template>
 
 <script>
 import scoring from './totals/scoring.vue'
+import Chart from './chart/Chart.vue'
 import axios from 'axios'
 
 export default {
   components: {
-    scoring
+    scoring,
+    Chart
   },
   data: () => {
     return {
@@ -97,7 +115,9 @@ export default {
         '주거': '',
         '직장': '',
         '유동': ''
-      }
+      },
+      chartdata: null,
+      chartoptions: null
     }
   },
   created () {
@@ -124,6 +144,7 @@ export default {
         this.seen = true
       })
       .catch(err => console.log(err))
+
     const storeCountUrl = 'http://70.12.247.78:8080/storecount/' + this.key + '/1000'
     axios.get(storeCountUrl)
       .then(res => {
@@ -157,65 +178,4 @@ export default {
 
 </script>
 
-<style>
-.main-content {
-  box-sizing: border-box;
-  width: auto;
-  border: 1px solid black;
-}
-.main-content > div {
-  padding: 30px;
-  margin-bottom: 20px;
-  /* box-sizing: border-box;
-  width: 100%; */
-  width: auto;
-  border: 1px solid red;
-  text-align: center;
-}
-#map-box {
-  display: inline-block;
-  width: 330px;
-  height: 300px;
-  background-image: url('http://sg.sbiz.or.kr/repos/analyFiles/sgAnaly/20200204/4350175/map0.jpg');
-  background-size: contain;
-  border: 1px solid black;
-  margin-bottom: 20px;
-}
-#info-box {
-  display: inline-block;
-  /* need to check margin & padding */
-  width: 300px;
-  height: 70px;
-  font-size: 25px;
-}
-#prospect-box {
-  display: inline-block;
-  width: 100px;
-  height: 30px;
-  padding: 5px 10px;
-  font-size: 16px;
-  border-radius: 10px;
-}
-.light {
-  display: inline-block;
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-}
-h1 {
-  font-size: 20px;
-}
-table {
-  display: inline-block;
-  border: 1px solid black;
-}
-td {
-  text-align: center;
-  border: 1px solid black;
-}
-th {
-  padding: 5px 10px;
-  border: 1px solid black;
-  background-color: rgb(250, 241, 229);
-}
-</style>
+<style scoped src='./Total.scss' lang='scss'></style>
