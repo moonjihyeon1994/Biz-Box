@@ -1,10 +1,14 @@
 package com.bizbox.interceptor;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.bizbox.Service.JwtService;
@@ -25,7 +29,8 @@ public class JwtInterceptor implements HandlerInterceptor{
 		if(request.getMethod().equals("OPTIONS")) {
 			return true;
 		}else {
-			String token = request.getHeader("jwt-auth-token");
+			String token = request.getHeader("jwt");
+			
 			if(token != null && token.length() > 0) {
 				jwtService.checkValid(token);
 				log.trace("토큰 사용 가능: {}", token);
