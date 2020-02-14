@@ -4,6 +4,7 @@ import Home from '@/components/home/Home.vue'
 // import About from '@/components/about/About.vue'
 // import Result from '@/components/result/Result.vue'
 // import ResultSearch from '@/components/result/ResultSearch.vue'
+import MyPage from '@/components/mypage/MyPage.vue'
 import map from '@/components/map/Newmap.vue'
 import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'  
 import BizMap from '@/components/bizmap/BizMap'
@@ -20,11 +21,11 @@ const routes = [
     name: 'home',
     component: Home
   },
-  // {
-  //   path: '/result2',
-  //   name: 'newResult',
-  //   component: ResultSearch
-  // },
+  {
+    path: '/mypage',
+    name: 'mypage',
+    component: MyPage
+  },
   {
     path: '/map',
     name: 'newResult',
