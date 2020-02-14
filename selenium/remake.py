@@ -39,23 +39,22 @@ for data in total_dict:
             })
     if not new_dict[location].get(indu_M):
         new_dict[location][indu_M] = {
-            'op_cnt': [],
-            'op_per': [],
-            'cl_cnt': [],
-            'cl_per': [],
-            'tot_cnt': [],
-            'sim_cnt': [],
+            'opcnt': [],
+            'opper': [],
+            'clcnt': [],
+            'clper': [],
+            'totcnt': [],
+            'simcnt': [],
+            'yearqut': []
         }
-    when = int(year)*10 + int(qut)
-    new_dict[location][indu_M]['op_cnt'].append((when, open_cnt))
-    new_dict[location][indu_M]['op_per'].append((when, open_per))
-    new_dict[location][indu_M]['cl_cnt'].append((when, close_cnt))
-    new_dict[location][indu_M]['cl_per'].append((when, close_per))
-    new_dict[location][indu_M]['tot_cnt'].append((when, store_cnt))
-    new_dict[location][indu_M]['sim_cnt'].append((when, sim_cnt))
+    when = year + '년 ' + qut + '분기'
+    new_dict[location][indu_M]['opcnt'].insert(0, open_cnt)
+    new_dict[location][indu_M]['opper'].insert(0, open_per)
+    new_dict[location][indu_M]['clcnt'].insert(0, close_cnt)
+    new_dict[location][indu_M]['clper'].insert(0, close_per)
+    new_dict[location][indu_M]['totcnt'].insert(0, store_cnt)
+    new_dict[location][indu_M]['simcnt'].insert(0, sim_cnt)
+    new_dict[location][indu_M]['yearqut'].insert(0, when)
 
-for loc in new_dict:
-    for item in new_dict[loc]:
-        for lst in new_dict[loc][item]:
-            new_dict[loc][item][lst].sort()
-    print(loc, new_dict[loc])
+with open('openclose.json', 'w', encoding='utf-8') as fp:
+    json.dump(new_dict, fp, ensure_ascii=False, indent="\t")
