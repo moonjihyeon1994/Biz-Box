@@ -1,36 +1,66 @@
 <template>
   <div class="mapContainer">
-    <v-card>
-      <v-toolbar class="searchBox">
-        <v-text-field
-          Elevation="14"
-          hide-details
-          v-on:keyup.enter="serch"
-          v-model.trim="name"
-          single-line
-          clearable
-          label="Search..."
-        ></v-text-field>
-        <v-btn v-on:click="serch" icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-card>
-    <condition v-on:myevent="myevent"></condition>
-    <div class="ssss" v-show="isonececlick">
-      <div class="info" id="graph-info">
-        <canvas class="chart" id="horizontalbarChart"></canvas>
+    <div class="flip-card">
+      <div :style='flipStyle' class="flip-card-inner" >
+        <div class="flip-card-front">
+                <v-card>
+                  <v-toolbar class="searchBox">
+                    <v-text-field
+                      Elevation="14"
+                      hide-details
+                      v-on:keyup.enter="serch"
+                      v-model.trim="name"
+                      single-line
+                      clearable
+                      label="Search..."
+                    ></v-text-field>
+                    <v-btn v-on:click="serch" icon>
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+                  </v-toolbar>
+                </v-card>
+                <condition v-on:myevent="myevent"></condition>
+                <div class="ssss" v-show="isonececlick">
+                  <div class="info" id="graph-info">
+                    <canvas class="chart" id="horizontalbarChart"></canvas>
+                  </div>
+                </div>
+                <!-- <div class="map" id="map"></div> -->
+                <v-btn class="addbt" v-on:click="addMyStore" icon>
+                  현재 위치에 내 점포 추가하기
+                  <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+        </div>
+        <div class="flip-card-back">
+          <div class="addstore" v-if="showAdd">
+            <span class="addstore-title">BizBox</span>
+            <span class="addstore-category-name">
+              점포 상호명
+              <span class="addstore-input-container"><input class="addstore-input" type="text" name="store_name" v-model="storeName" /></span>
+            </span>
+            <span class="addstore-category-large">
+              업종 대분류
+              <span class="addstore-input-container"><input class="addstore-input" type="text" name="category_large" v-model="Clarge" /></span>
+            </span>
+            <span class="addstore-category-middle">
+              업종 중분류
+              <span class="addstore-input-container"><input class="addstore-input" type="text" name="category_middle" v-model="Cmiddle" /></span>
+            </span>
+            <span class="addstore-category-small">
+              업종 소분류
+              <span class="addstore-input-container"><input class="addstore-input" type="text" name="category_small" v-model="Csmall" /></span>
+            </span>
+            <div class="addstore-bt" style="background-color:tomato;">
+              <button @click="storeAdd,add"  value="추가하기">add</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="map" id="map"></div>
-    <v-btn class="addbt" v-on:click="add" icon>
-      현재 위치에 내 점포 추가하기
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn>
     <Detail v-if="showModal" @close="showModal = false">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
-    <div class="addstore" v-if="showAdd">
+    <!-- <div class="addstore" v-if="showAdd">
       <div>
         점포 상호명:
         <br />
@@ -54,7 +84,8 @@
       <div style="background-color:tomato;">
         <button @click="storeAdd,add"  value="추가하기">add</button>
       </div>
-    </div>
+    </div> -->
+    <div class="map" id="map"></div>
   </div>
 </template>
 
@@ -68,10 +99,14 @@ import axios from '../../js/http-commons'
 import { eventBus } from '../../js/bus'
 import { mapGetters } from 'vuex'
 import axi from 'axios'
+import './AddStore.scss'
 
 export default {
   data: () => {
     return {
+      filpStyle: {
+        transform: 'rotateY(180deg)'
+      },
       storeName: '',
       Clarge: '',
       Cmiddle: '',
@@ -126,7 +161,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -483,10 +518,15 @@ export default {
       // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    add() {
+    addMyStore () {
       this.showAdd = !this.showAdd
+      let cardinner = document.getElementsByClassName('flip-card-inner')
+      for (let i = 0; i < cardinner.length; i++) {
+        cardinner[i].className = cardinner[i].className.replace(' fflip', '') 
+      }
+      cardinner[0].className += ' fflip'
     },
-    changeModal() {
+    changeModal () {
       //
       if (this.showModal === true) {
         this.showModal = false
@@ -495,7 +535,7 @@ export default {
         this.showModal = true
       }
     },
-    ClickMove() {
+    ClickMove () {
       if (this.$store.state.mode === 0) {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         // vm.points = vm.centroid(points)
@@ -1565,17 +1605,6 @@ button {
   top: 350px;
   left: 50px;
   border-radius: 3px;
-}
-.addstore {
-  display: inline-block;
-  z-index: 2;
-  position: fixed;
-  width: 360px;
-  height: 400px;
-  top: 100px;
-  left: 450px;
-  border-radius: 3px;
-  background-color: #fff;
 }
 .addinput {
   color: tomato;
