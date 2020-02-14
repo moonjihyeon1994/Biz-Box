@@ -20,13 +20,10 @@ public class AddressUtil {
 				break;
 			}
 		}
-		System.out.println("index: " + index);
 		if (index != 0) {
 			String removedAddress = address.substring(0, index);
-			System.out.println(address + " " + "==>" + " " + removedAddress);
 			return removedAddress;
 		}
-		System.out.println(address + " " + "==>" + " " + address);
 
 		return address;
 	}
@@ -42,14 +39,11 @@ public class AddressUtil {
 				break;
 			}
 		}
-		System.out.println("index: " + index);
 		if (index != 0) {
 			String removedAddress = address.substring(0, index);
-			System.out.println(address + " " + "==>" + " " + removedAddress);
 			return removedAddress;
 		}
 		
-		System.out.println(address + " " + "==>" + " " + address);
 
 		return address;
 	}

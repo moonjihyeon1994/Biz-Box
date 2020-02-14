@@ -2,6 +2,7 @@ package com.bizbox.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bizbox.dao.SaltFindDAO;
 import com.bizbox.dao.UserServiceDAO;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService{
 	SaltFindDAO saltDao;
 	
 	@Override
+	@Transactional
 	public int singupUser(User user) throws Exception{
 		String salt = shaUtil.generateSalt();	//salt생성
 		String pw = user.getPw();
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public boolean loginUser(User user) throws Exception{
 		String salt = saltDao.findSalt(user.getEmail());
 		String targetPw = shaUtil.getEncrypt(user.getPw(), salt);
@@ -46,11 +49,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public User checkUser(User user) throws Exception {
 		return userDao.login(user);
 	}
 
 	@Override
+	@Transactional
 	public void socialSingupUser(User user) throws Exception {
 		userDao.singupUser(user);
 	}

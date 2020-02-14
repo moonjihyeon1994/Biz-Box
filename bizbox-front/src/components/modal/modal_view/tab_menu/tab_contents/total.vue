@@ -3,80 +3,39 @@
     <div id='title'>상권 종합평가</div>
 
     <div id='bz-score-box'>
-      <div id='bz-score-box-pretext'>논현동의 종합 점수는...</div>
-      <div id='bz-score-box-score'>92</div>
+      <loading :loading='loadingStatus' transparent='true'></loading>
+      <div id='bz-score-box-pretext'>{{ sgName }}의 종합 점수는...</div>
+      <div id='bz-score-box-score'>{{ totalScore }}</div>
       <div id='bz-score-box-posttext'>입니다.</div>
     </div>
 
     <div id='each-point-box'>
+      <loading :loading='loadingStatus' :transparent='true'></loading>
       <div class='bz-each-title'>상권 항목별 점수</div>
-      <scoring></scoring>
+      <scoring @childs-event='parentsMethod'></scoring>
     </div>
 
     <div id='chart-box'>
       <div class='bz-each-title'>상권 매출 차트</div>
-      <chart></chart>
+      <select-box id='sel-box'></select-box>
+      <chart id='line-chart'></chart>
     </div>
-
-    <!-- <div class="container1">
-      <div id="map-box"></div><br>
-      <div id="info-box">
-        <div id="prospect-box" v-bind:style="lightcolor">{{ result.prospect }}</div>
-        <span class="score">{{ result.score }}</span>
-      </div>
-    </div>
-
-    <h1><strong>상권 주요정보</strong></h1>
-    <div class="container2">
-      <table>
-        <col>
-        <colgroup span="2"></colgroup>
-        <colgroup span="2"></colgroup>
-        <tr>
-          <td rowspan="2"></td>
-          <th colspan="6" scope="colgroup">업소수</th>
-          <th colspan="3" scope="colgroup">인구</th>
-        </tr>
-        <tr>
-          <th scope="col">전체</th>
-          <th scope="col">음식</th>
-          <th scope="col">서비스</th>
-          <th scope="col">도/소매</th>
-          <th scope="col">숙박</th>
-          <th scope="col">여가/오락</th>
-          <th scope="col">주거</th>
-          <th scope="col">직장</th>
-          <th scope="col">유동</th>
-        </tr>
-        <tr>
-          <th scope="row">{{ key }}</th>
-          <td>{{ stores.전체 }}</td>
-          <td>{{ stores.음식 }}</td>
-          <td>{{ stores.서비스 }}</td>
-          <td>{{ stores.소매 }}</td>
-          <td>{{ stores.숙박 }}</td>
-          <td>{{ stores.오락 }}</td>
-          <td>{{ population.주거 }}</td>
-          <td>{{ population.직장 }}</td>
-          <td>{{ population.유동 }}</td>
-        </tr>
-      </table>
-    </div>
-
-    <h1><strong>상권 주요차트</strong></h1>
-    <div>here</div> -->
   </div>
 </template>
 
 <script>
-import scoring from './totals/scoring.vue'
+import scoring from './scoring/scoring.vue'
 import Chart from './chart/Chart.vue'
+import Loading from '@/components/bizmap/loading/Loading.vue'
+import SelectBox from './selectbox/SelectBox.vue'
 import axios from 'axios'
 
 export default {
   components: {
     scoring,
-    Chart
+    Chart,
+    Loading,
+    SelectBox
   },
   data () {
     return {
@@ -119,35 +78,14 @@ export default {
         '유동': ''
       },
       chartdata: null,
-      chartoptions: null
+      chartoptions: null,
+      totalScore: null,
+      sgName: '',
+      loadingStatus: true
     }
   },
-  mouonted () {
-    const suggestionUrl = 'http://70.12.247.78:8080/suggestion/Industry/' + this.key
-    axios.get(suggestionUrl)
-      .then(res => {
-        console.log('success to get suggestion')
-        this.result.summary = res.data.bl.name
-        this.result.score = 80
-        if (this.result.score >= 80) {
-          this.lightcolor.backgroundColor = '#14bdfb'
-          this.result.prospect = '상권 평가 : 좋음'
-        } else if (this.result.score >= 60) {
-          this.lightcolor.backgroundColor = '#39e600'
-          this.result.prospect = '상권 평가 : 보통'
-        } else if (this.result.score >= 40) {
-          this.lightcolor.backgroundColor = '#ffd633'
-          this.result.prospect = '상권 평가 : 나쁨'
-        } else {
-          this.lightcolor.backgroundColor = '#ff6600'
-          this.result.prospect = '상권 평가 : 최악'
-        }
-        this.result.score = '70점'
-        this.seen = true
-      })
-      .catch(err => console.log(err))
-
-    const storeCountUrl = 'http://70.12.247.78:8080/storecount/' + this.key + '/1000'
+  created () {
+    const storeCountUrl = '/storecount/' + this.key + '/1000'
     axios.get(storeCountUrl)
       .then(res => {
         console.log('success to get storeCount')
@@ -175,6 +113,13 @@ export default {
         }
         this.stores.전체 = totalCount.toString()
       })
+  },
+  methods: {
+    parentsMethod (score, name) {
+      this.totalScore = score
+      this.sgName = name
+      this.loadingStatus = false
+    }
   }
 }
 

@@ -16,6 +16,9 @@
   	<typeAlias type="com.bizbox.vo.User"  alias="user"/>
   	<typeAlias type="com.bizbox.vo.color"  alias="color"/>
   	<typeAlias type="com.bizbox.vo.Prediction"  alias="prediction"/>
+  	<typeAlias type="com.bizbox.vo.Store"  alias="store"/>
+  	<typeAlias type="com.bizbox.vo.Point"  alias="point"/>
+  	<typeAlias type="com.bizbox.vo.PopulationByBusiness"  alias="pb"/>
   </typeAliases>
   
   <mappers>
@@ -25,5 +28,7 @@
    <mapper resource="mapper/userServiceMapper.xml"/>
    <mapper resource="mapper/passMapper.xml"/>
    <mapper resource="mapper/predictionMapper.xml"/>
+   <mapper resource="mapper/storeMapper.xml"/>
+   <mapper resource="mapper/populationByBusinessMapper.xml"/>
   </mappers>
 </configuration>

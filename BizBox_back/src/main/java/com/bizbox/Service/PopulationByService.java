@@ -2,6 +2,7 @@ package com.bizbox.Service;
 
 import java.util.List;
 
+import com.bizbox.vo.PopulationByBusiness;
 import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
@@ -15,4 +16,5 @@ public interface PopulationByService {
 	public String getDongCodeList(String predoroname);
 	public PopulationByLocation getByDongCode(String dongcode);
 	public List<PopulationBytimeByDongCode> getTimeByDongCode(String dongcode);
+	List<PopulationByBusiness> getPopulation(String trdar_cd);
 }
