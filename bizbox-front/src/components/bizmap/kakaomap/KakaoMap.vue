@@ -17,6 +17,7 @@
       </v-toolbar>
     </v-card>
     <condition v-on:myevent="myevent"></condition>
+    <Loading :loading='loadingStatus'></Loading>
     <div class="ssss" v-show="isonececlick">
       <div class="info" id="graph-info">
         <canvas class="chart" id="horizontalbarChart"></canvas>
@@ -60,14 +61,15 @@
 
 <script>
 import Detail from '@/components/modal/modal_view/modal_view.vue'
-import '../modal/Modal.css'
-import Dong from '../../assets/json/newcolor.json'
-import color from '../../assets/json/color.json'
+import '@/components/modal/Modal.css'
+import Dong from '@/assets/json/newcolor.json'
+import color from '@/assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
-import axios from '../../js/http-commons'
-import { eventBus } from '../../js/bus'
+import axios from '@/js/http-commons'
+import { eventBus } from '@/js/bus'
 import { mapGetters } from 'vuex'
 import axi from 'axios'
+import Loading from '@/components/bizmap/loading/Loading.vue'
 
 export default {
   data: () => {
@@ -106,6 +108,8 @@ export default {
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
       customOverlay: false,
       wasDrawing: false,
+      isonececlick: false,
+      loadingStatus: false,
       circles: [],
       countResult: '',
       searchX: '',
@@ -113,7 +117,6 @@ export default {
       range: '',
       coords: '',
       ME: '',
-      isonececlick: false,
       CountInfo: {
         소매: '',
         학문교육: '',
@@ -219,16 +222,13 @@ export default {
     // -------------------------------------------------------------------------------------
 
     // 반경 그리는 이벤트 시작-------------------------------------------------------------------
-    kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
+    kakao.maps.event.addListener(this.map, 'click', function (mouseEvent) {
       vm.CircleMouseClick(mouseEvent)
       // vm.Controlllevel(vm.points)
     }) // 지도에 클릭 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
+    kakao.maps.event.addListener(this.map, 'mousemove', function (mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
     }) // 지도에 무브 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'rightclick', function(mouseEvent) {
-      vm.RightMouseClick(mouseEvent)
-    })
     axios
       .get('/population/getPopulationByTime/' + this.name)
       .then(res => {
@@ -403,7 +403,8 @@ export default {
   },
   components: {
     condition,
-    Detail
+    Detail,
+    Loading
   },
   methods: {
     storeAdd () {
@@ -555,7 +556,7 @@ export default {
         }
       })
     },
-    CircleMouseClick(mouseEvent) {
+    async CircleMouseClick(mouseEvent) {
       // 지도에 클릭 이벤트를 등록
 
       this.removeCircles()
@@ -602,10 +603,43 @@ export default {
           }
         }
       }
+      if (this.drawingFlag) {
+        if (this.hashover) {
+          this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+          this.polyline = new kakao.maps.Polyline({
+            // 원의 반경을 표시할 선 객체를 생성합니다
+            path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+            strokeWeight: 1, // 선의 두께 입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+          })
+          this.circle = new kakao.maps.Circle({
+            // 원 객체를 생성합니다
+            center: this.centerPosition, // 원의 중심좌표입니다
+            radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+            strokeWeight: 0, // 선의 두께입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid', // 선의 스타일입니다
+            fillColor: '#00a0e9', // 채우기 색깔입니다
+            fillOpacity: 0.2 // 채우기 불투명도입니다
+          })
+          var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+          this.range = radius
+          await this.getDataCircle()
+
+          this.centerPosition = null // 중심 좌표를 초기화 합니다
+          this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+          this.drawingLine.setMap(null)
+          this.drawingOverlay.setMap(null)
+        }
+      }
     },
     CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
         // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
+        this.hashover = true
         var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
         var linePath = [this.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
         this.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
@@ -634,38 +668,6 @@ export default {
         }
       }
     },
-    async RightMouseClick(mouseEvent) {
-      if (this.drawingFlag) {
-        this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-        this.polyline = new kakao.maps.Polyline({
-          // 원의 반경을 표시할 선 객체를 생성합니다
-          path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
-          strokeWeight: 1, // 선의 두께 입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid' // 선의 스타일입니다
-        })
-        this.circle = new kakao.maps.Circle({
-          // 원 객체를 생성합니다
-          center: this.centerPosition, // 원의 중심좌표입니다
-          radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
-          strokeWeight: 0, // 선의 두께입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid', // 선의 스타일입니다
-          fillColor: '#00a0e9', // 채우기 색깔입니다
-          fillOpacity: 0.2 // 채우기 불투명도입니다
-        })
-        var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
-        this.range = radius
-        await this.getDataCircle()
-
-        this.centerPosition = null // 중심 좌표를 초기화 합니다
-        this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
-        this.drawingLine.setMap(null)
-        this.drawingOverlay.setMap(null)
-      }
-    },
     // 원 html 만들기
     getOverlay(html, rClickPosition) {
       let radiusOverlay = new kakao.maps.CustomOverlay({
@@ -678,6 +680,7 @@ export default {
       })
       return radiusOverlay
     },
+
     // ------------------------------------------------
     // 표 만들기 시간별 유동인구
     // ------------------------------------------------
@@ -1391,7 +1394,8 @@ export default {
 
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    async getDataCircle() {
+    async getDataCircle () {
+      this.loadingStatus = true
       axios
         .get(
           '/storecountByxy/' +
@@ -1402,7 +1406,7 @@ export default {
             this.range
         )
         .then(res => {
-          var jsonlarge = res.data.large
+          var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
           this.CountInfo.숙박 = jsonlarge.숙박
@@ -1428,6 +1432,9 @@ export default {
             .finally(() => {
               let vm = this
               vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+              vm.$store.state.mode = 0
+              vm.loadingStatus = false
+              vm.hashover = false
               this.radiusObj = {
                 // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
                 polyline: vm.polyline,
@@ -1516,7 +1523,7 @@ button {
   display: inline-block;
   z-index: 2;
   position: fixed;
-  width: 360px;
+  width: 370px;
   height: 180px;
   top: 100px;
   left: 50px;
@@ -1560,7 +1567,7 @@ button {
   display: inline-block;
   z-index: 2;
   position: fixed;
-  width: 360px;
+  width: 370px;
   height: 40px;
   top: 350px;
   left: 50px;
