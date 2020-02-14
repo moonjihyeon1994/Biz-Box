@@ -1,0 +1,27 @@
+.btn-set {
+    justify-content: space-around;
+}
+
+.btn-item {
+    margin: 10px;
+    align-self: center;
+    width: 80%;
+    height: 50px;
+    background-color: cornflowerblue;
+    border-radius: 10px;
+}
+
+.btn-item:hover {
+    background-color: hotpink;
+}
+
+@media (min-width:700px) {
+    .btn-set {
+        margin: 0 10%;
+        display: flex;
+        flex-direction: row;
+    }
+    .btn-item {
+        flex: 1;
+    }
+}
