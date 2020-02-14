@@ -1335,7 +1335,7 @@ export default {
       axios
         .get('/change/getHistory' + '/' + this.name)
         .then(res => {
-          var jsonlarge = res.data.large
+          var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
           this.CountInfo.숙박 = jsonlarge.숙박
@@ -1344,6 +1344,7 @@ export default {
           this.CountInfo.부동산 = jsonlarge.부동산
           this.CountInfo.의료 = jsonlarge.의료
           this.CountInfo.관광여가오락 = jsonlarge.관광여가오락
+          console.log(this.CountInfo)
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
