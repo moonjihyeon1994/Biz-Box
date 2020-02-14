@@ -12,21 +12,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.JusoService;
 import com.bizbox.Service.PopulationByService;
 import com.bizbox.apis.JusoApi;
+import com.bizbox.vo.Point;
+import com.bizbox.vo.PopulationByBusiness;
 import com.bizbox.vo.PopulationByDong;
 import com.bizbox.vo.PopulationByLocation;
 import com.bizbox.vo.PopulationByTime;
 import com.bizbox.vo.PopulationBytimeByDongCode;
+import com.bizbox.vo.Store;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.bizbox.utils.*;
 
 @CrossOrigin({ "*" })
 @RestController
 @RequestMapping("/population")
+@Slf4j
 public class PopulationByController {
 	private final int max = 11715962;
 	private final int avgmax = 5073881;
@@ -193,5 +201,26 @@ public class PopulationByController {
 			e.printStackTrace();
 			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/getPopulationByBusiness/{trdar_cd}")
+	public ResponseEntity<Map<String, Object>> getPopulationByBusiness(@PathVariable String trdar_cd){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = null;
+		try {
+			List<PopulationByBusiness> list = service.getPopulation(trdar_cd);
+			if(list != null) {
+				resultMap.put("status", true);
+				resultMap.put("data", list);
+			} else {
+				resultMap.put("status", false);
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch(RuntimeException e) {
+			log.error("유동인구  찾기 실패", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String,Object>>(resultMap, status);
 	}
 }
