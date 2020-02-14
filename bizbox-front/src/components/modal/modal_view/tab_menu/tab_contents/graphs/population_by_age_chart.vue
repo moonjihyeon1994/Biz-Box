@@ -79,7 +79,7 @@ export default {
       if (this.result == null) return
       let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
       let totalNum = Math.max.apply(null, total)
-      return '(' + totalNum + '명' + ')'
+      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '명' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
