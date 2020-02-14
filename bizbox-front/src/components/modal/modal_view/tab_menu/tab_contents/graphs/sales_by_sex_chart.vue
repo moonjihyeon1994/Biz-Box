@@ -78,12 +78,12 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let woman = this.sumWoman * 100000000
-      let man = this.sumMan * 100000000
+      let woman = this.totalWoman
+      let man = this.totalMan
       if (woman >= man) {
-        return '(' + woman + '원)'
+        return '(' + woman.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
       } else {
-        return '(' + man + '원)'
+        return '(' + man.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
       }
     },
     maxAgeMaker: function () {
@@ -130,17 +130,19 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/sales/' + this.key)
+        .get('/predict/findBusiness/127.050826/37.507118')
         .then(res => {
-          this.result = res.data
-          this.road = res.data[0].d
+          this.result = res.data['2018']
+          // this.road = res.data[0].d
 
           for (let index = 0; index < this.result.length; index++) {
-            this.sumWoman += Number(this.result[index].y)
-            this.sumMan += Number(this.result[index].x)
+            this.sumWoman += Number(this.result[index].fml_selng_amt)
+            this.sumMan += Number(this.result[index].ml_selng_amt)
           }
+        })
+        .then(() => {
           this.totalWoman = this.sumWoman
-          this.totalMaN = this.sumMan
+          this.totalMan = this.sumMan
 
           this.sumWoman /= 100000000
           this.sumMan /= 100000000
@@ -164,10 +166,6 @@ export default {
 
           this.loadingStatus = false
           this.allowDiv.display = 'none'
-          this.btnStyle1.cursor = 'pointer'
-          this.btnStyle2.cursor = 'pointer'
-          this.btnStyle3.cursor = 'pointer'
-          this.btnStyle4.cursor = 'pointer'
         })
     }
   }
