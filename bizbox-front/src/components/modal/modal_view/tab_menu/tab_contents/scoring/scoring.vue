@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div id='bz-container'>
     <table>
       <caption>{{ sgName }}</caption>
@@ -30,16 +29,6 @@
         </tr>
       </tbody>
     </table>
-=======
-  <div>
-    <h1>{{ sgName }}</h1>
-    <h1>{{ score.합계 }}</h1>
-    <h2>성장성: {{ score.성장성.점수 }}</h2>
-    <h2>안정성: {{ score.안정성.점수 }}</h2>
-    <h2>영업력: {{ score.영업력.점수 }}</h2>
-    <h2>구매력: {{ score.구매력.점수 }}</h2>
-    <h2>집객력: {{ score.집객력.점수 }}</h2>
->>>>>>> origin/score_data
   </div>
 </template>
 
@@ -51,12 +40,8 @@ export default {
     return {
       sgCode: '',
       sgName: '',
-<<<<<<< HEAD
       dong: '진관동',
-      key: this.$store.state.modalsearch,
-=======
-      dong: '역삼2동',
->>>>>>> origin/score_data
+      // key: this.$store.state.modalsearch,
       sales_2018: {
         'q1': 0,
         'q2': 0,
@@ -324,7 +309,7 @@ export default {
   },
   created () {
     let vm = this
-    let requestSalesUrl = 'http://70.12.246.137:8080//predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat + '/'
+    let requestSalesUrl = '/predict/findBusiness/127.050826/37.507118/'
     axios.get(requestSalesUrl)
       .then(res => {
         let data2018 = res.data['2018']
@@ -430,7 +415,7 @@ export default {
         }
       })
       .then(() => {
-        let requestPopulationUrl = 'http://70.12.246.137:8080/population/getPopulationByBusiness/' + vm.sgCode
+        let requestPopulationUrl = '/population/getPopulationByBusiness/' + vm.sgCode
         axios.get(requestPopulationUrl)
           .then(res => {
             vm.populations.living = Number(res.data.data[0].total_co)
@@ -455,7 +440,7 @@ export default {
             console.log('유동인구 : ', vm.score.집객력.유동인구)
           })
           .then(() => {
-            let resquestHistoryUrl = 'http://13.125.20.125:80/change/getHistory/' + vm.dong
+            let resquestHistoryUrl = '/change/getHistory/' + vm.dong
             axios.get(resquestHistoryUrl)
               .then(res => {
                 let continuousYears = Number(res.data.cblist[5].g)
@@ -521,7 +506,7 @@ export default {
                 // 구매력 > 평균 건당 결제금액
                 let avgPrice = Number((total2018 / vm.sales_2018.selng_co).toFixed(2))
                 vm.score.구매력.건당결제금액 = Number((avgPrice * 10 / 40000).toFixed(2))
-              })
+              })``
               .then(() => {
                 if (vm.score.성장성.매출증감률 > 10) {
                   vm.score.성장성.매출증감률 = 10
@@ -575,6 +560,7 @@ export default {
               })
               .then(() => {
                 vm.score.합계 = Number((vm.score.성장성.점수 + vm.score.안정성.점수 + vm.score.영업력.점수 + vm.score.구매력.점수 + vm.score.집객력.점수).toFixed(1))
+                vm.$emit('childs-event', vm.score.합계, vm.sgName)
               })
           })
       })
