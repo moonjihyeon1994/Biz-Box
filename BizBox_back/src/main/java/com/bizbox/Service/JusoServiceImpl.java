@@ -13,10 +13,12 @@ import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bizbox.apis.JusoApi;
+import com.bizbox.apis.KakaoApi;
 import com.bizbox.dao.StoreDAO;
 import com.bizbox.utils.AddressUtil;
 import com.bizbox.vo.Point;
@@ -27,6 +29,8 @@ public class JusoServiceImpl implements JusoService{
 	JusoApi jusoapi;
 	@Autowired
 	AddressUtil adutil;
+	@Autowired
+	KakaoApi kakaoapi;
 	@Autowired
 	StoreDAO storedao;
 	
@@ -437,6 +441,43 @@ public class JusoServiceImpl implements JusoService{
 		JSONObject object = new JSONObject();
 		JSONArray array = new JSONArray();
 		
+		String[] latlot = xy.split(",");
+		String lat = latlot[0];
+		String lot = latlot[1];
+		if(Double.parseDouble(latlot[0])>Double.parseDouble(latlot[1])) {
+			lat = latlot[1];
+			lot = latlot[0];
+		}
+		
+		String distance = String.valueOf(Double.parseDouble(range)/1000.0);
+		Point point = new Point(lat, lot, distance);
+
+		List<Store> list = null;
+		try {
+			list = storedao.getStoreByXY(point);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			if(list.get(i).getCategory_middle().equals(middle) && list.get(i).getCategory_small().equals(small)) {
+				JSONObject data = new JSONObject();
+				String value = list.get(i).getStore_name();
+				data.put("name", value);
+				
+				value = "해당하는 위치의 주소가 없습니다";
+				try {
+					value = Coord2Addr(list.get(i).getLat(), list.get(i).getLot());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				data.put("addr", value);
+				array.add(data);
+			}
+		}
+		
+		
+		
 		if(small.equals("전체")) { //소분류 전체를 보여줄때
 			for (int i = 0; i < itemsArray.size(); i++) {
 				JSONObject items = (JSONObject) itemsArray.get(i);
@@ -474,5 +515,16 @@ public class JusoServiceImpl implements JusoService{
 		}
 		object.put("detail", array);
 		return object;
+	}
+
+	@Override
+	public String Coord2Addr(String x, String y) throws Exception {
+		JSONParser jsonParse = new JSONParser();
+		JSONObject jsonObj = (JSONObject) jsonParse.parse(kakaoapi.kakaoCoord2regioncode(x, y));
+		JSONArray itemsArray = (JSONArray) jsonObj.get("documents");
+		JSONObject document = (JSONObject) itemsArray.get(0);
+		JSONObject address = (JSONObject) document.get("address");
+		String address_name = (String) address.get("address_name");
+		return address_name;
 	}
 }
