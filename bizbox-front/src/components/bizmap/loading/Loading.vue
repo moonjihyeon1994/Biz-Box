@@ -1,6 +1,6 @@
 <template>
   <div id="bz-loading-container" v-if="loading">
-    <div id="bz-blur-background" :style='bg'></div>
+    <div id="bz-blur-background"></div>
     <div class="lds">
       <div></div>
       <div></div>
@@ -13,10 +13,6 @@
 export default {
   data () {
     return {
-      bg: {
-        backgroundColor: 'rgba(0,0,0,0.1)',
-        filter: 'blur(2px)'
-      }
     }
   },
   props: {

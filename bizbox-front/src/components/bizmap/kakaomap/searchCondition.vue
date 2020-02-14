@@ -8,7 +8,7 @@
           </div>
 
           <div class='mapBtn' @click="choice2()">
-            <img src="@/assets/icons/mapIcon2/greenpeople.png">
+            <img src="@/assets/icons/mapIcon2/yellowpeople.png">
             <span class='mapBtnText'>유동인구(시간)</span>
           </div>
 
@@ -17,7 +17,7 @@
             <span class='mapBtnText'>상권변화지수</span>
           </div>
           <div class='mapBtn' @click="choice4()">
-            <img src="@/assets/icons/mapIcon2/greygraph.png">
+            <img src="@/assets/icons/mapIcon2/greengraph.png">
             <span class='mapBtnText'>매출정보 (연령)</span>
           </div>
         </div>
@@ -34,7 +34,7 @@
           </div>
 
           <div class='mapBtn' @click="choice7()">
-            <img src="@/assets/icons/mapIcon2/yellowgraph.png">
+            <img src="@/assets/icons/mapIcon2/redgraph.png">
             <span class='mapBtnText'>매출정보 (시간)</span>
           </div>
 
@@ -54,58 +54,45 @@ export default {
   }),
   methods: {
     choice1: function (event) {
-      this.selected = this.$store.state.mode
-      if (this.selected === 1) {
-        this.selected = 0; alert(this.selected)
-      } else {
-        this.selected = 1
-        alert(this.selected)
-      }
+      this.selected = 1
       // alert('clicked : ' + this.selected)
-      this.$store.dispatch('ChangeMode', { mode: this.selected })
+      this.$store.dispatch('ChangeMode', { mode: 1 })
     },
     choice2: function (event) {
       this.selected = 2
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 2 })
-      this.$emit('myevent')
     },
     choice3: function (event) {
       this.selected = 3
       // alert('clicked : ' + this.selected)
       // alert("mode : "+ this.$store.state.mode)
       this.$store.dispatch('ChangeMode', { mode: 3 })
-      this.$emit('myevent')
     },
     choice4: function (event) {
       this.selected = 4
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 4 })
-      this.$emit('myevent')
     },
     choice5: function (event) {
       this.selected = 5
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 5 })
-      this.$emit('myevent')
     },
     choice6: function (event) {
       this.selected = 6
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 6 })
-      this.$emit('myevent')
     },
     choice7: function (event) {
       this.selected = 7
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 7 })
-      this.$emit('myevent')
     },
     choice8: function (event) {
       this.selected = 8
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 8 })
-      this.$emit('myevent')
     }
   }
 }
@@ -119,7 +106,7 @@ export default {
   left: 64px;
 }
 #sheet {
-  width: 360px;
+  width: 370px;
   height: 180px;
   background-color: white;
   border-radius: 3px;
