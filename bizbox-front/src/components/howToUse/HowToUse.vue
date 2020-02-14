@@ -12,7 +12,7 @@ import './howToUse.css'
 export default {
   data: () => {
     return {
-      showModal: true,
+      showModal: false,
       comment: "bizbox 사용방법 익히기"
     }
   },
