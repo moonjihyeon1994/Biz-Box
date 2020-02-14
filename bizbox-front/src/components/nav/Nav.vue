@@ -1,11 +1,14 @@
 <template>
   <nav>
-    <v-app-bar app color="rgb(255, 250, 246)" flat>
+    <v-app-bar app color="transparent" flat>
       <v-icon @click="goHome">mdi-alpha-b-box</v-icon>
       <v-spacer />
       <!-- Logout -->
       <v-list dense>
         <v-list-item v-if="isLoggedIn">
+          <v-list-item-action @click="goMypage">
+            <v-icon class="navIcon">mdi-store</v-icon>
+          </v-list-item-action>
           <v-list-item-action @click="logout">
             <v-icon class="navIcon">mdi-account-arrow-right</v-icon>
           </v-list-item-action>
@@ -36,6 +39,9 @@ export default {
     ...mapActions(['logout', 'popupDialog']),
     goHome () {
       router.push('/')
+    },
+    goMypage () {
+      router.push('/mypage')
     }
   }
 }
