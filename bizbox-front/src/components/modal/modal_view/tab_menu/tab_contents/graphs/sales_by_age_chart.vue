@@ -136,25 +136,26 @@ export default {
           sumOf50 /= 100000000
           sumOf60 /= 100000000
         })
-        .then(() => {
-          let maxData = this.data[0]
-          for (let index = 1; index < this.data.length; index++) {
-            if (maxData < this.data[index]) {
-              maxData = this.data[index]
-              this.maxIndex = index
-            }
-          }
-        })
-        .then(() => {
-          this.barColors[this.maxIndex] = '#ff4d4d'
-        })
+        // .then(() => {
+        //   let maxData = this.data[0]
+        //   for (let index = 1; index < this.data.length; index++) {
+        //     if (maxData < this.data[index]) {
+        //       maxData = this.data[index]
+        //       this.maxIndex = index
+        //     }
+        //   }
+        // })
+        // .then(() => {
+        //   this.barColors[this.maxIndex] = '#ff4d4d'
+        // })
         .finally(() => {
           this.chartdata = {
             labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
             datasets: [
               {
-                label: '전체',
-                backgroundColor: this.barColors,
+                label: '단위(억원)',
+                // backgroundColor: this.barColors,
+                backgroundColor: '#365673',
                 data: [
                   sumOf10.toFixed(2),
                   sumOf20.toFixed(2),
