@@ -50,33 +50,19 @@ export default {
       searchOption: 1,
       title: '연령별 매출',
       point: 0,
-      btnStyle1: {
-        backgroundColor: '#d9d9d9',
-        cursor: 'pointer'
-      },
-      btnStyle2: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      btnStyle3: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      btnStyle4: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
-      }
+      },
+      maxIndex: 0,
+      barColors: ['#365673', '#365673', '#365673', '#365673', '#365673', '#365673']
     }
   },
   computed: {
     percentMaker: function () {
       if (this.result == null) return
       let totalNum = Math.max.apply(null, this.data)
-      return '(' + totalNum + '원' + ')'
+      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
@@ -110,10 +96,6 @@ export default {
 
       this.searchOption = 1
       this.title = '연령별 매출'
-      this.btnStyle1.backgroundColor = '#d9d9d9'
-      this.btnStyle2.backgroundColor = 'white'
-      this.btnStyle3.backgroundColor = 'white'
-      this.btnStyle4.backgroundColor = 'white'
 
       if (this.key !== '') {
         this.getData()
@@ -122,10 +104,6 @@ export default {
     getData () {
       this.loadingStatus = true
       this.allowDiv.display = 'block'
-      this.btnStyle1.cursor = 'not-allowed'
-      this.btnStyle2.cursor = 'not-allowed'
-      this.btnStyle3.cursor = 'not-allowed'
-      this.btnStyle4.cursor = 'not-allowed'
 
       let sumOf10 = 0
       let sumOf20 = 0
@@ -135,19 +113,20 @@ export default {
       let sumOf60 = 0
 
       axios
-        .get('/sales/' + this.key)
+        // .get('/sales/' + this.key)
+        .get('/predict/findBusiness/127.050826/37.507118')
         .then(res => {
-          this.result = res.data
-          this.road = res.data[0].d
-          this.point = res.data.point
+          this.result = res.data['2018']
+          // this.road = res.data[0].d
+          // this.point = res.data.point
 
           for (let index = 0; index < this.result.length; index++) {
-            sumOf10 += Number(this.result[index].z)
-            sumOf20 += Number(this.result[index].aa)
-            sumOf30 += Number(this.result[index].ab)
-            sumOf40 += Number(this.result[index].ac)
-            sumOf50 += Number(this.result[index].ad)
-            sumOf60 += Number(this.result[index].ae)
+            sumOf10 += Number(this.result[index].agrde_10_selng_amt)
+            sumOf20 += Number(this.result[index].agrde_20_selng_amt)
+            sumOf30 += Number(this.result[index].agrde_30_selng_amt)
+            sumOf40 += Number(this.result[index].agrde_40_selng_amt)
+            sumOf50 += Number(this.result[index].agrde_50_selng_amt)
+            sumOf60 += Number(this.result[index].agrde_60_above_selng_amt)
           }
           this.data = [sumOf10, sumOf20, sumOf30, sumOf40, sumOf50, sumOf60]
           sumOf10 /= 100000000
@@ -157,12 +136,25 @@ export default {
           sumOf50 /= 100000000
           sumOf60 /= 100000000
         })
+        // .then(() => {
+        //   let maxData = this.data[0]
+        //   for (let index = 1; index < this.data.length; index++) {
+        //     if (maxData < this.data[index]) {
+        //       maxData = this.data[index]
+        //       this.maxIndex = index
+        //     }
+        //   }
+        // })
+        // .then(() => {
+        //   this.barColors[this.maxIndex] = '#ff4d4d'
+        // })
         .finally(() => {
           this.chartdata = {
             labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
             datasets: [
               {
-                label: '전체',
+                label: '단위(억원)',
+                // backgroundColor: this.barColors,
                 backgroundColor: '#365673',
                 data: [
                   sumOf10.toFixed(2),
@@ -202,10 +194,6 @@ export default {
 
           this.loadingStatus = false
           this.allowDiv.display = 'none'
-          this.btnStyle1.cursor = 'pointer'
-          this.btnStyle2.cursor = 'pointer'
-          this.btnStyle3.cursor = 'pointer'
-          this.btnStyle4.cursor = 'pointer'
         })
     }
   }

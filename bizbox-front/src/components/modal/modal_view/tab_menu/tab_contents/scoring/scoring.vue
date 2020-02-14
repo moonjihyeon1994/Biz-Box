@@ -33,14 +33,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/js/http-commons.js'
 
 export default {
   data () {
     return {
       sgCode: '',
       sgName: '',
-      dong: '진관동',
+      dong: '역삼동',
       // key: this.$store.state.modalsearch,
       sales_2018: {
         'q1': 0,
@@ -418,12 +418,12 @@ export default {
         let requestPopulationUrl = '/population/getPopulationByBusiness/' + vm.sgCode
         axios.get(requestPopulationUrl)
           .then(res => {
-            vm.populations.living = Number(res.data.data[0].total_co)
+            vm.populations.living = Number(res.data.data[0].total_mv_co)
             vm.score.집객력.주거인구 = Number((vm.populations.living * 5 / 4400).toFixed(2))
             vm.populations.working = Number(res.data.data[0].total_bz_co)
             vm.score.집객력.직장인구 = Number((vm.populations.working * 5 / 4500).toFixed(2))
-            // vm.populations.floating = Number()
-            // vm.score.집객력.유동인구 = Number((vm.populations.floating / 20000).toFixed(2))
+            vm.populations.floating = Number(res.data.data[0].total_co)
+            vm.score.집객력.유동인구 = Number((vm.populations.floating / 20000).toFixed(2))
           })
           .then(() => {
             if (vm.score.집객력.주거인구 > 5) {
@@ -506,7 +506,7 @@ export default {
                 // 구매력 > 평균 건당 결제금액
                 let avgPrice = Number((total2018 / vm.sales_2018.selng_co).toFixed(2))
                 vm.score.구매력.건당결제금액 = Number((avgPrice * 10 / 40000).toFixed(2))
-              })``
+              })
               .then(() => {
                 if (vm.score.성장성.매출증감률 > 10) {
                   vm.score.성장성.매출증감률 = 10
