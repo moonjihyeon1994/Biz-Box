@@ -23,9 +23,38 @@
       </div>
     </div>
     <div class="map" id="map"></div>
+    <v-btn class="addbt" v-on:click="add" icon>
+      현재 위치에 내 점포 추가하기
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
     <Detail v-if="showModal" @close="showModal = false">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
+    <div class="addstore" v-if="showAdd">
+      <div>
+        점포 상호명:
+        <br />
+        <input type="text" name="store_name" v-model="storeName" />
+      </div>
+      <div>
+        업종 대분류:
+        <br />
+        <input type="text" name="category_large" v-model="Clarge" />
+      </div>
+      <div>
+        업종 중분류:
+        <br />
+        <input type="text" name="category_middle" v-model="Cmiddle" />
+      </div>
+      <div>
+        업종 소분류:
+        <br />
+        <input type="text" name="category_small" v-model="Csmall" />
+      </div>
+      <div style="background-color:tomato;">
+        <button @click="storeAdd,add"  value="추가하기">add</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,6 +72,12 @@ import axi from 'axios'
 export default {
   data: () => {
     return {
+      storeName: '',
+      Clarge: '',
+      Cmiddle: '',
+      Csmall: '',
+      showAdd: false,
+      info: null,
       member_marker: null,
       showModal: false,
       points: [],
@@ -120,6 +155,7 @@ export default {
     let vm = this
     // 오버레이 생성--------------------------------------------------------
     this.customOverlay = new kakao.maps.CustomOverlay({})
+    this.info = new kakao.maps.CustomOverlay({})
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
       map: this.map
@@ -127,10 +163,11 @@ export default {
     })
     //console.log(this.$store.state)
     if (this.$store.state.auth.token) {
+     
       var imageSrc =
-        'https://cdn.icon-icons.com/icons2/1152/PNG/512/1486506254-market-open-shopping-commerce-shop-store_81447.png' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+        'https://lh3.googleusercontent.com/proxy/vkU8Txag3K3WxbyFvUjmGWNOjQVRjLJd1am1UBSg4XP1eQhasgiq087-PrX1SbEyoKHnIwtbqqT3GMypK9ectUZ9OseVUV8Sno-RN2obw-dJbYwreUa1nQPvTdnbt7efsMgt07DwFaCPhgEeHYMpknh4w9vu0gCrl3yUwAsLO2jOrzzJiihVp9UsSTWX4Ik1PjUqQwAIv0Zjp70AXTRuqzF5VgHSxN54N34BtfQik5FSTcUrvx-1lLdhSv5C3a7sG5ZVpR3-CX97NEAGKapfAbqk5PB0O7qw1U5nQDDGsmXQxeFEfwvV9Hc9rysv4vJdZq8x1YlSMCLHMg8n5fHgaOhJKQ' // https://image.flaticon.com/icons/svg/1322/1322263.svg
       // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-      var imageSize = new kakao.maps.Size(40, 40) // 마커이미지의 크기입니다
+      var imageSize = new kakao.maps.Size(30, 40) // 마커이미지의 크기입니다
       var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
       var markerImage = new kakao.maps.MarkerImage(
         imageSrc,
@@ -310,52 +347,32 @@ export default {
           let coords = ''
           vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
           let Marker = vm.marker
-          let InfoWindow = vm.infowindow
-          vm.geocoder.addressSearch(Name, function(result, status) {
-            // 정상적으로 검색이 완료되면
-            if (status === kakao.maps.services.Status.OK) {
-              coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
-              Marker.setPosition(coords)
-              InfoWindow.close()
-              var imageSrc =
-                'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-              // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-              var imageSize = new kakao.maps.Size(80, 80) // 마커이미지의 크기입니다
-              var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-              var markerImage = new kakao.maps.MarkerImage(
-                imageSrc,
-                imageSize,
-                imageOption
-              )
-              vm.marker.setImage(markerImage)
-              vm.marker.setPosition(coords)
-              if (vm.$store.state.mode === 2) {
-                vm.makeOverlay2(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 3) {
-                vm.makeOverlay3(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 4) {
-                vm.makeOverlay4(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 5) {
-                vm.makeOverlay5(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 6) {
-                vm.makeOverlay6(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 7) {
-                vm.makeOverlay7(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 8) {
-                vm.makeOverlay8(mouseEvent, name)
-              }
-              InfoWindow.setContent(Name)
-              InfoWindow.open(Map, Marker)
-              Map.setCenter(coords)
-            }
-          })
-          // }
+          coords = new kakao.maps.LatLng(
+            vm.ME.latLng.getLat(),
+            vm.ME.latLng.getLng()
+          ) // 결과값으로 받은 위치를 마커의 위치로 적용
+          Marker.setPosition(coords)
+          // InfoWindow.close()
+          var imageSrc =
+            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
+          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          var markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          )
+          var content =
+            '<div style="text-align: center;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+            Name +
+            '</div>'
+          vm.marker.setImage(markerImage)
+          vm.marker.setPosition(coords)
+          vm.info.setContent(content)
+          vm.info.setPosition(coords)
+          vm.info.setMap(Map)
+          Map.setCenter(coords)
           if (vm.$store.state.mode === 2) {
             vm.makeOverlay2(mouseEvent, name)
           }
@@ -381,30 +398,6 @@ export default {
       })
     }
   },
-  created() {
-    // console.log('새로고침')
-    let vm = this
-    // axi
-    //   .post(
-    //     'http://70.12.246.137:8080/user/info',
-    //     {
-    //       email: 'asdfasdfa',
-    //       pw: 'asdfasdfasdf'
-    //     },
-    //     {
-    //       headers: {
-    //         jwt: this.$store.state.auth.token
-    //       }
-    //     }
-    //   )
-    //   .then(res => {
-    //     // console.log('----')
-    //     // console.log(res)
-    //     res.data.data.forEach(element => {
-    //       this.$store.state.auth.mylist.push(element)
-    //     })
-    //   })
-  },
   computed: {
     ...mapGetters(['isLoggedIn'])
   },
@@ -413,6 +406,27 @@ export default {
     Detail
   },
   methods: {
+    storeAdd () {
+      axios.post(
+        '/user/addStore',
+        {
+          email: sessionStorage.getItem('login_user_email'),
+          store_name: this.storeName,
+          category_large: this.Clarge,
+          category_middle: this.Cmiddle,
+          category_small: this.Csmall,
+          lat: this.$store.state.Coords.lat,
+          lot: this.$store.state.Coords.lng
+        },
+        {
+          headers: {
+            jwt: this.$store.state.auth.token
+          }
+        }
+      ).then(res => {
+        console.log(res)
+      })
+    },
     getmystore() {
       console.log(this.$store.state.auth)
       let list = this.$store.state.auth.mylist
@@ -468,6 +482,9 @@ export default {
     setSerchkey(name) {
       // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
+    },
+    add() {
+      this.showAdd = !this.showAdd
     },
     changeModal() {
       //
@@ -1535,9 +1552,33 @@ button {
   height: 260px;
   z-index: 2;
   position: fixed;
-  top: 365px;
+  top: 400px;
   left: 50px;
   border-radius: 3px;
+}
+.addbt {
+  display: inline-block;
+  z-index: 2;
+  position: fixed;
+  width: 360px;
+  height: 40px;
+  top: 350px;
+  left: 50px;
+  border-radius: 3px;
+}
+.addstore {
+  display: inline-block;
+  z-index: 2;
+  position: fixed;
+  width: 360px;
+  height: 400px;
+  top: 100px;
+  left: 450px;
+  border-radius: 3px;
+  background-color: #fff;
+}
+.addinput {
+  color: tomato;
 }
 // element.style {
 //   background: white;
