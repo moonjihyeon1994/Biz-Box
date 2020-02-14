@@ -5,7 +5,7 @@
 }
 
 [class*="col-"] {
-  float: left;
+  display: inline-block;
 }
 
 /* 데스크탑 */
