@@ -33,9 +33,8 @@ public class JwtService {
 		builder.setHeaderParam("typ", "JWT");
 		
 		builder.setSubject("로그인토큰")
-				.setExpiration(new Date(System.currentTimeMillis()+1000*60*expireMin))
-				.claim("User", user);
-//				.claim("second", "더 담고 싶은거 있어?");
+				.setExpiration(new Date(System.currentTimeMillis()+1000*60*4*expireMin))
+				.claim("User", user.getEmail());
 				
 		builder.signWith(SignatureAlgorithm.HS256, salt.getBytes());
 //		builder.signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encode(salt.getBytes()));
