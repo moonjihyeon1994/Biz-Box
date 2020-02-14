@@ -27,7 +27,7 @@
       현재 위치에 내 점포 추가하기
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
-    <Detail v-if="showModal" @close="showModal = false">
+    <Detail v-if="showModal" @close="showModal = false; this.$store.state.opencontents = 3">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="addstore" v-if="showAdd">
@@ -207,8 +207,9 @@ export default {
       // 로그인하면 자신이 등록한 점포 위치 나옴
     }
 
-    kakao.maps.event.addListener(this.marker, 'click', function() {
+    kakao.maps.event.addListener(this.marker, 'click', function () {
       // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
+      // vm.eventBus(vm.$store.state.modalsearch)
       vm.changeModal()
     })
 
@@ -438,7 +439,6 @@ export default {
       return posi
     },
     eventbus(name) {
-      // var eventBus = new Vue()
       eventBus.$emit('clickmap', name)
     },
     myevent() {
@@ -487,13 +487,7 @@ export default {
       this.showAdd = !this.showAdd
     },
     changeModal() {
-      //
-      if (this.showModal === true) {
-        this.showModal = false
-      }
-      if (this.showModal === false) {
-        this.showModal = true
-      }
+      this.showModal = !this.showModal
     },
     ClickMove() {
       if (this.$store.state.mode === 0) {

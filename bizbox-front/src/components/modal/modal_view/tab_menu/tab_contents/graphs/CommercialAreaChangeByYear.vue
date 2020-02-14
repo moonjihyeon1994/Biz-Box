@@ -94,7 +94,7 @@ export default {
   mounted() {
     this.draw()
     eventBus.$on('clickmap', name => {
-      this.key = name
+      this.key = namezz
       this.draw()
     })
   },
