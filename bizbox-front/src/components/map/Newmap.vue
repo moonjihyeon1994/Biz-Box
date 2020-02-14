@@ -364,7 +364,7 @@ export default {
             imageOption
           )
           var content =
-            '<div style="text-align: center;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
             Name +
             '</div>'
           vm.marker.setImage(markerImage)
