@@ -2,9 +2,9 @@
   <div class="biz-container">
     <div>
       <start></start>
+      <News></News>
       <about></about>
       <biz-us></biz-us>
-      <News></News>
     </div>
     <HomeFooter></HomeFooter>
   </div>
@@ -28,4 +28,4 @@ export default {
 }
 </script>
 
-<style scoped src="./home.css"></style>
+<style scoped src="./Home.css"></style>
