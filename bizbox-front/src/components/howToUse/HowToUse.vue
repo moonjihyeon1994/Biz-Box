@@ -1,22 +1,34 @@
 <template>
   <div class="modal-container">
-    <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <Detail v-if="showModal" @close="showModal = false">
-    </Detail>
+    <button id="show-modal" @click="change">{{ this.comment }}</button>
+    <UseDetail v-if="showModal" @close="showModal = false">
+    </UseDetail>
   </div>
 </template>
 
 <script>
-import Detail from '@/components/howToUse/detail/Detail.vue'
+import UseDetail from '@/components/howToUse/detail/UseDetail.vue'
 import './howToUse.css'
 export default {
   data: () => {
     return {
-      showModal: false
+      showModal: true,
+      comment: "bizbox 사용방법 익히기"
     }
   },
   components: {
-    Detail
+    UseDetail,
+    temp
+  },
+  methods: {
+    change () {
+      this.showModal = !this.showModal
+      if (this.showModal) {
+        this.comment = "숨기기"
+      } else {
+        this.comment = 'bizbox 사용방법 익히기'
+      }
+    }
   }
 }
 </script>

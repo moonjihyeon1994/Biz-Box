@@ -55,8 +55,8 @@ export default {
   methods: {
     choice1: function (event) {
       this.selected = this.$store.state.mode
-      // if (this.selected === 1) { this.selected = 0; alert(this.selected) }
-      // else { this.selected = 1;  alert(this.selected)}
+      if (this.selected === 1) { this.selected = 0; alert(this.selected) }
+      else { this.selected = 1;  alert(this.selected)}
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: this.selected })
     },
