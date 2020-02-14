@@ -9,12 +9,14 @@ const state = {
   errors: [],
   mylist: [],
   loading: false,
-  dialog: false
+  dialog: false,
+  alarm: []
 }
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
+  getAlarm: state => state.alarm,
   isLoading: state => state.loading,
   isPopup: state => state.dialog,
   getlist: state => state.mylist
@@ -39,6 +41,7 @@ const mutations = {
     state.mylist = storelist
   },
   pushError: (state, error) => state.errors.push(error),
+  pushAlarm: (state, alarm) => state.alarm.push(alarm),
   clearErrors: state => (state.errors = [])
 }
 
@@ -68,6 +71,10 @@ const actions = {
     commit('pushError', error)
   },
 
+  pushAlarm ({ commit }, alarm) {
+    commit('pushAlarm', alarm)
+  },
+
   login: ({ commit, getters }, credentials) => {
     commit('clearErrors')
     if (getters.isLoggedIn) {
@@ -83,14 +90,13 @@ const actions = {
             commit('setUserEmail', res.data.data.email)
             commit('setStoreList', res.data.storelist)
             commit('setPopup', false)
-            alert('로그인 되었습니다')
+            commit('pushAlarm', '로그인 되었습니다')
             // console.log(sessionStorage)
           } else {
-            alert('로그인에 실패했습니다.')
+            commit('pushAlarm', '로그인에 실패했습니다.')
           }
         })
         .catch(err => {
-          alert('로그인에 실패했습니다.')
           if (!err.response) {
             commit('pushError', 'Network Error..')
           } else if (err.response.status === 400) {
@@ -114,7 +120,7 @@ const actions = {
           commit('setUserEmail', res.data.data.email)
           commit('setPopup', false)
           commit('setStoreList', res.data.storelist)
-          alert('로그인 되었습니다.')
+          commit('pushAlarm', '로그인 되었습니다')
           // console.log('sessionstorage')
           // console.log(sessionStorage)
         }
@@ -133,7 +139,7 @@ const actions = {
           // console.log('sessionstorage')
           // console.log(sessionStorage)
         } else {
-          alert('회원가입에 실패했습니다')
+          commit('pushAlarm', '회원가입을 실패하였습니다.')
         }
       })
   }

@@ -5,6 +5,7 @@ import Home from '@/components/home/Home.vue'
 // import Result from '@/components/result/Result.vue'
 // import ResultSearch from '@/components/result/ResultSearch.vue'
 import map from '@/components/bizmap/kakaomap/KakaoMap.vue'
+import MyPage from '@/components/mypage/MyPage.vue'
 import Modal from '@/components/modal/Modal.vue'
 import tap from '@/components/countstore/CountStores.vue'
 import result from '@/components/modal/result/Result.vue'
@@ -18,11 +19,11 @@ const routes = [
     name: 'home',
     component: Home
   },
-  // {
-  //   path: '/result2',
-  //   name: 'newResult',
-  //   component: ResultSearch
-  // },
+  {
+    path: '/mypage',
+    name: 'mypage',
+    component: MyPage
+  },
   {
     path: '/bizmap',
     name: 'bizmap',
