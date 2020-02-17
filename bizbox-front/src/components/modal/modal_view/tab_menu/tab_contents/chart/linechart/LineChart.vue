@@ -1,13 +1,12 @@
 <template>
   <div id='bz-container' :style='chartStyle'>
-    <line-chart id='chart' :chart-data="chartdata" :options="chartoptions">
-    </line-chart>
+    <line-chart id='chart' :chart-data="chartdata" :options="chartoptions"></line-chart>
   </div>
 </template>
 
 <script>
 import LineChart from '@/lib/LineChart'
-import axios from '@/js/http-commons'
+import axios from '@/js/http-commons.js'
 
 export default {
   components: {

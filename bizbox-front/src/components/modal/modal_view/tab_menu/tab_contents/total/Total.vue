@@ -20,7 +20,7 @@
 <script>
 import scoring from './scoring/scoring.vue'
 import Loading from '@/components/bizmap/loading/Loading.vue'
-import axios from 'axios'
+import axios from '@/js/http-commons.js'
 
 export default {
   components: {
@@ -70,9 +70,9 @@ export default {
     }
   },
   created () {
-    axios.get('/storecount/' + this.key + '/1000')
+    axios.get('/storecountByLarge/' + this.key + '/100')
       .then(res => {
-        console.log('success to get storeCount')
+        console.log(res)
         const JsonLarge = res.data.large
         let totalCount = 0
         if (JsonLarge.소매 !== undefined) {
@@ -106,9 +106,6 @@ export default {
       this.totalScore = score
       this.sgName = name
       this.loadingStatus = false
-    },
-    initList () {
-
     }
   }
 }

@@ -46,7 +46,7 @@ export default {
   watch: {
     selected () {
       if (this.type === 'large') {
-        this.$emit('large-event', this.selected, 'large')
+        this.$emit('large-event', this.selected)
       } else if (this.type === 'mid') {
         this.$emit('mid-event', this.selected, false)
       }
