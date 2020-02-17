@@ -22,12 +22,12 @@ for data in total_dict:
     qut = data['stdr_qu_cd']
     location = data['trdar_cd_nm']
     indu_M = data['svc_induty_cd_nm']
-    open_cnt = data['opbiz_rt']
+    open_cnt = data['opbiz_stor_co']
     store_cnt = data['stor_co']
     close_cnt = data['clsbiz_stor_co']
-    open_per = data['opbiz_rt']
-    close_per = data['clsbiz_rt']
-    sim_cnt = data['similr_induty_stor_co']
+    # open_per = data['opbiz_rt']
+    # close_per = data['clsbiz_rt']
+    # sim_cnt = data['similr_induty_stor_co']
     indu_L = indu_dict[indu_M]
     if not new_dict.get(location):
         new_dict[location] = dict()
@@ -40,20 +40,20 @@ for data in total_dict:
     if not new_dict[location].get(indu_M):
         new_dict[location][indu_M] = {
             'opcnt': [],
-            'opper': [],
+            # 'opper': [],
             'clcnt': [],
-            'clper': [],
+            # 'clper': [],
             'totcnt': [],
-            'simcnt': [],
+            # 'simcnt': [],
             'yearqut': []
         }
     when = year + '년 ' + qut + '분기'
     new_dict[location][indu_M]['opcnt'].insert(0, open_cnt)
-    new_dict[location][indu_M]['opper'].insert(0, open_per)
+    # new_dict[location][indu_M]['opper'].insert(0, open_per)
     new_dict[location][indu_M]['clcnt'].insert(0, close_cnt)
-    new_dict[location][indu_M]['clper'].insert(0, close_per)
+    # new_dict[location][indu_M]['clper'].insert(0, close_per)
     new_dict[location][indu_M]['totcnt'].insert(0, store_cnt)
-    new_dict[location][indu_M]['simcnt'].insert(0, sim_cnt)
+    # new_dict[location][indu_M]['simcnt'].insert(0, sim_cnt)
     new_dict[location][indu_M]['yearqut'].insert(0, when)
 
 with open('openclose.json', 'w', encoding='utf-8') as fp:
