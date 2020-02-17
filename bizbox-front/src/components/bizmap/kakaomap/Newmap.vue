@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Dong from '../../assets/json/New.json'
+import Dong from '@/assets/json/New.json'
 export default {
   data: () => {
     return {
