@@ -418,6 +418,7 @@ export default {
         let requestPopulationUrl = '/population/getPopulationByBusiness/' + vm.sgCode
         axios.get(requestPopulationUrl)
           .then(res => {
+            console.log(res.data.data[0])
             vm.populations.living = Number(res.data.data[0].total_mv_co)
             vm.score.집객력.주거인구 = Number((vm.populations.living * 5 / 4400).toFixed(2))
             vm.populations.working = Number(res.data.data[0].total_bz_co)
@@ -560,6 +561,7 @@ export default {
               })
               .then(() => {
                 vm.score.합계 = Number((vm.score.성장성.점수 + vm.score.안정성.점수 + vm.score.영업력.점수 + vm.score.구매력.점수 + vm.score.집객력.점수).toFixed(1))
+                // console.log("합계: " + vm.score)
                 vm.$emit('childs-event', vm.score.합계, vm.sgName)
               })
           })

@@ -28,7 +28,7 @@
 <script>
 import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
-import Spinner from '../../../../result/Spinner'
+import Spinner from '@/components/common/Spinner'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
@@ -36,7 +36,7 @@ export default {
     BarChart,
     Spinner
   },
-  data() {
+  data () {
     return {
       popflag: false,
       chartdata: null,
@@ -73,14 +73,14 @@ export default {
     }
   },
   computed: {
-    percentMaker: function() {
+    percentMaker: function () {
       if (this.result == null) return
       let preYear = this.result[4].g
       let thisYear = this.result[5].g * 2
       let percent = ((thisYear - preYear) / preYear) * 100
       return '(' + Math.round(percent * 100) / 100 + '%' + ')'
     },
-    maxAgeMaker: function() {
+    maxAgeMaker: function () {
       if (this.result == null) return
       let preYear = this.result[4].g
       let thisYear = this.result[5].g * 2
@@ -91,7 +91,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.draw()
     eventBus.$on('clickmap', name => {
       this.key = name
@@ -104,11 +104,11 @@ export default {
     // })
   },
   methods: {
-    popup() {
+    popup () {
       console.log('popup')
       this.popflag = !this.popflag
     },
-    draw() {
+    draw () {
       this.chartdata = null
       this.chartoptions = null
 
@@ -123,7 +123,7 @@ export default {
         this.getData()
       }
     },
-    getData() {
+    getData () {
       this.loadingStatus = true
       this.allowDiv.display = 'block'
       this.btnStyle1.cursor = 'not-allowed'

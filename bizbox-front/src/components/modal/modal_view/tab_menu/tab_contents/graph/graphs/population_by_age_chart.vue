@@ -30,7 +30,7 @@
 <script>
 import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
-import Spinner from '../../../../result/Spinner'
+import Spinner from '@/components/common/Spinner'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {

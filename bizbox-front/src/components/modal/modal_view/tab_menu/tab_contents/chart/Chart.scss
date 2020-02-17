@@ -1,7 +1,47 @@
 #bz-container {
-  display: block;
   position: relative;
-  border: 1px solid red;
-  height: 200px;
-  overflow: hidden;
+  width: 100%;
+  letter-spacing: 3px;
+
+  div {
+    position: relative;
+  }
+
+  > div {
+    margin-bottom: 10px;
+  }
+
+  .bz-each-title {
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-left: 15px;
+  }
+
+  #title {
+    font-size: 2em;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  #chart-box {
+    #chart-box-flex-container {
+      display: flex;
+      justify-content: space-around;
+
+      .select-box-wrapper {
+        display: inline-block;
+        width: 180px;
+        margin: 10px 20px;
+        
+        p {
+          text-align: center;
+          margin: 5px 0;
+          font-size: 1.1em;
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }
