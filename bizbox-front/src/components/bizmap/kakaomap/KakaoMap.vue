@@ -1,61 +1,53 @@
 <template>
   <div class="mapContainer">
-    <v-card>
-      <v-toolbar class="searchBox">
-        <v-text-field
-          Elevation="14"
-          hide-details
-          v-on:keyup.enter="serch"
-          v-model.trim="name"
-          single-line
-          clearable
-          label="Search..."
-        ></v-text-field>
-        <v-btn v-on:click="serch" icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-card>
-    <condition v-on:myevent="myevent"></condition>
-    <Loading :loading="loadingStatus"></Loading>
-    <div class="ssss" v-show="isonececlick">
-      <div class="info" id="graph-info">
-        <canvas class="chart" id="horizontalbarChart"></canvas>
+    <div class="flip-card" >
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <v-card>
+            <v-toolbar class="searchBox">
+              <v-text-field
+                Elevation="14"
+                hide-details
+                v-on:keyup.enter="serch"
+                v-model.trim="name"
+                single-line
+                clearable
+                label="Search..."
+              ></v-text-field>
+              <v-btn v-on:click="serch" icon>
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
+            </v-toolbar>
+          </v-card>
+          <condition v-on:myevent="myevent"></condition>
+          <div class="ssss" v-show="isonececlick">
+            <div class="info" id="graph-info">
+              <canvas class="chart" id="horizontalbarChart"></canvas>
+            </div>
+          </div>
+          <!-- <div class="map" id="map"></div> -->
+          <v-btn class="addbt" v-on:click="addMyStore" icon>
+            현재 위치에 내 점포 추가하기
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </div>
+        <div class="flip-card-back">
+          <div class="storeform">
+            <div class="add-form">
+              <input type="text" placeholder="상호명" v-model="storeName"/>
+              <input type="text" placeholder="대분류" v-model="Clarge"/>
+              <input type="text" placeholder="중분류" v-model="Cmiddle"/>
+              <input type="text" placeholder="소분류" v-model="Csmall"/>
+              <button @click="storeAdd">add</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="map" id="map"></div>
-    <v-btn class="addbt" v-on:click="add" icon>
-      현재 위치에 내 점포 추가하기
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn>
-    <Detail v-if="showModal" @close="showModal = false; unDetail();">
+    <Detail v-show="showModal" @close="showModal = falseun; Detail()">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
-    <div class="addstore" v-if="showAdd">
-      <div>
-        점포 상호명:
-        <br />
-        <input type="text" name="store_name" v-model="storeName" />
-      </div>
-      <div>
-        업종 대분류:
-        <br />
-        <input type="text" name="category_large" v-model="Clarge" />
-      </div>
-      <div>
-        업종 중분류:
-        <br />
-        <input type="text" name="category_middle" v-model="Cmiddle" />
-      </div>
-      <div>
-        업종 소분류:
-        <br />
-        <input type="text" name="category_small" v-model="Csmall" />
-      </div>
-      <div style="background-color:tomato;">
-        <button @click="storeAdd,add" value="추가하기">add</button>
-      </div>
-    </div>
+    <div class="map" id="map"></div>
   </div>
 </template>
 
@@ -70,16 +62,21 @@ import { eventBus } from '@/js/bus'
 import { mapGetters } from 'vuex'
 import axi from 'axios'
 import Loading from '@/components/bizmap/loading/Loading.vue'
+import './AddStore.scss'
+import markerimg from '@/assets/map-icon/marker.png'
 
 export default {
   data: () => {
     return {
       Color: '',
+      filpStyle: {
+        transform: 'rotateY(180deg)'
+      },
+      markerImg: markerimg,
       storeName: '',
       Clarge: '',
       Cmiddle: '',
       Csmall: '',
-      showAdd: false,
       info: null,
       member_marker: null,
       showModal: false,
@@ -130,7 +127,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -166,49 +163,7 @@ export default {
       //position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
     //console.log(this.$store.state)
-    if (this.$store.state.auth.token) {
-      var imageSrc =
-        'https://lh3.googleusercontent.com/proxy/vkU8Txag3K3WxbyFvUjmGWNOjQVRjLJd1am1UBSg4XP1eQhasgiq087-PrX1SbEyoKHnIwtbqqT3GMypK9ectUZ9OseVUV8Sno-RN2obw-dJbYwreUa1nQPvTdnbt7efsMgt07DwFaCPhgEeHYMpknh4w9vu0gCrl3yUwAsLO2jOrzzJiihVp9UsSTWX4Ik1PjUqQwAIv0Zjp70AXTRuqzF5VgHSxN54N34BtfQik5FSTcUrvx-1lLdhSv5C3a7sG5ZVpR3-CX97NEAGKapfAbqk5PB0O7qw1U5nQDDGsmXQxeFEfwvV9Hc9rysv4vJdZq8x1YlSMCLHMg8n5fHgaOhJKQ' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-      // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-      var imageSize = new kakao.maps.Size(30, 40) // 마커이미지의 크기입니다
-      var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-      var markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize,
-        imageOption
-      )
-      axi
-        .post(
-          'http://70.12.246.137:8080/user/info',
-          {
-            email: 'asdfasdfa',
-            pw: 'asdfasdfasdf'
-          },
-          {
-            headers: {
-              jwt: this.$store.state.auth.token
-            }
-          }
-        )
-        .then(res => {
-          // console.log('----')
-          // console.log(res)
-          res.data.data.forEach(element => {
-            this.$store.state.auth.mylist.push(element)
-          })
-        })
-        .then(() => {
-          let posi = this.getmystore()
-          for (let index = 0; index < posi.length; index++) {
-            this.member_marker = new kakao.maps.Marker({
-              map: this.map,
-              position: posi[index], // 최초 표시되는 마커의 위치
-              image: markerImage
-            }).setMap(this.map)
-          }
-        })
-      // 로그인하면 자신이 등록한 점포 위치 나옴
-    }
+    this.drawMarker()
 
     kakao.maps.event.addListener(this.marker, 'click', function() {
       // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
@@ -422,7 +377,48 @@ export default {
       this.map.setLevel(3, { anchor: this.ME.latLng })
       this.polygon.setOptions({ fillOpacity: 0 })
     },
-    storeAdd() {
+    drawMarker () {
+      if (this.$store.state.auth.token) {
+        var imageSrc = this.markerImg 
+        var imageSize = new kakao.maps.Size(40, 40) // 마커이미지의 크기입니다
+        var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        var markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imageOption
+        )
+        axi
+          .post(
+            'http://70.12.246.137:8080/user/info',
+            {
+              email: 'asdfasdfa',
+              pw: 'asdfasdfasdf'
+            },
+            {
+              headers: {
+                jwt: this.$store.state.auth.token
+              }
+            }
+          )
+          .then(res => {
+            res.data.data.forEach(element => {
+              this.$store.state.auth.mylist.push(element)
+            })
+          })
+          .then(() => {
+            let posi = this.getmystore()
+            for (let index = 0; index < posi.length; index++) {
+              this.member_marker = new kakao.maps.Marker({
+                map: this.map,
+                position: posi[index], // 최초 표시되는 마커의 위치
+                image: markerImage
+              }).setMap(this.map)
+            }
+          })
+      // 로그인하면 자신이 등록한 점포 위치 나옴
+      }
+    },
+    storeAdd () {
       axios
         .post(
           '/user/addStore',
@@ -443,9 +439,30 @@ export default {
         )
         .then(res => {
           console.log(res)
+        }).finally(() => {
+          this.addMyStore()
+          this.storeName = null
+          this.Clarge = null
+          this.Cmiddle = null
+          this.Csmall = null
+          this.drawMarker()
         })
     },
-    getmystore() {
+    addMyStore () {
+      if (!sessionStorage.getItem('login_user_email')) {
+        alert('로그인후 이용 가능합니다.')
+        return
+      }
+      let cardinner = document.getElementsByClassName('flip-card-inner')
+      if (cardinner[0].className.includes('firstflip')) {
+        cardinner[0].className = cardinner[0].className.replace(' firstflip', '')
+        cardinner[0].className += ' secondflip'
+      } else {
+        cardinner[0].className = cardinner[0].className.replace(' secondflip', '')
+        cardinner[0].className += ' firstflip'
+      }
+    },
+    getmystore () {
       console.log(this.$store.state.auth)
       let list = this.$store.state.auth.mylist
       let posi = []
@@ -455,10 +472,11 @@ export default {
       }
       return posi
     },
-    eventbus(name) {
+    eventbus (name) {
+      // var eventBus = new Vue()
       eventBus.$emit('clickmap', name)
     },
-    myevent() {
+    myevent () {
       this.saveMouseEvent(this.ME, 1)
       let name = this.$store.state.modalsearch
       if (this.$store.state.mode === 2) {
@@ -1486,7 +1504,7 @@ export default {
   }
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .map {
   position: absolute;
   top: 0;
@@ -1584,19 +1602,8 @@ button {
   width: 370px;
   height: 40px;
   top: 350px;
-  left: 50px;
+  left: 49px;
   border-radius: 3px;
-}
-.addstore {
-  display: inline-block;
-  z-index: 2;
-  position: fixed;
-  width: 360px;
-  height: 400px;
-  top: 100px;
-  left: 450px;
-  border-radius: 3px;
-  background-color: #fff;
 }
 .addinput {
   color: tomato;
