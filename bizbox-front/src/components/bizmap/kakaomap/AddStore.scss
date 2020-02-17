@@ -1,0 +1,118 @@
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card {
+  z-index: 2;
+  background-color: transparent;
+  position: fixed;
+  width: 460px;
+  height: 200px;
+  top: 0px;
+  left: 0px;
+  border: 0px solid #f1f1f1;
+  perspective: 1000px;
+  /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+// .flip-card:hover .flip-card-inner {
+//   transform: rotateY(180deg);
+// }
+
+.firstflip {
+  transform: rotateY(180deg);
+}
+.secondflip {
+  transform: rotateY(0deg);
+}
+
+/* Position the front and back side */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  /* Safari */
+  backface-visibility: hidden;
+  z-index: 10;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+  background-color: transparent;
+  color: black;
+}
+
+/* Style the back side */
+.flip-card-back {
+  background-color: transparent;
+  color: black;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+/* add form */
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+.storeform {
+  position: relative;
+  backface-visibility: hidden;
+  z-index: 1;
+  background: #FFFFFF;
+  border-radius: 3px;
+  max-width: 360px;
+  height: 290px;
+  margin: 100px auto 100px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.storeform input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 320px !important;
+  height: 45px;
+  border: 0;
+  margin: 0 0 10px;
+  padding: 15px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  font-size: 5px;
+}
+.storeform button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100% !important;
+  height: 30px !important;
+  padding: 0px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  border-radius: 3px;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.storeform button:hover,.form button:active,.form button:focus {
+  background: rgb(233, 114, 94);
+}
+.storeform .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.storeform .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
