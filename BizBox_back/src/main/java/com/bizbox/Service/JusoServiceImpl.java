@@ -341,7 +341,7 @@ public class JusoServiceImpl implements JusoService{
 	 * @throws IOException
 	 */
 	public JSONObject findAllStoreByLarge(String xy, String radius) throws IOException {
-		JSONArray itemsArray = jusoapi.findStore1(xy, radius);
+		JSONArray itemsArray = jusoapi.findStoreToJson(xy, radius);
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
 		for (int i = 0; i < itemsArray.size(); i++) {
 			JSONObject items = (JSONObject) itemsArray.get(i);
@@ -404,7 +404,7 @@ public class JusoServiceImpl implements JusoService{
 			}
 		}
 		
-		JSONArray itemsArray = jusoapi.findStore1(xy, radius);
+		JSONArray itemsArray = jusoapi.findStoreToJson(xy, radius);
 		for (int i = 0; i < itemsArray.size(); i++) {
 			JSONObject items = (JSONObject) itemsArray.get(i);
 			String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
@@ -420,6 +420,11 @@ public class JusoServiceImpl implements JusoService{
 		JSONObject jsonObject = new JSONObject();
 		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
 			String key = entry.getKey();
+			if(key.contains("학문")) {
+				key = "학문교육";
+			}else if(key.contains("관광")) {
+				key = "관광여가오락";
+			}
 			int value = entry.getValue();
 			jsonObject.put(key, value);
 		}
@@ -437,7 +442,7 @@ public class JusoServiceImpl implements JusoService{
 	 */
 	@Override
 	public JSONObject findStoreDetailByCategory(String xy, String range, String middle, String small) throws IOException {
-		JSONArray itemsArray = jusoapi.findStore1(xy, range);
+		JSONArray itemsArray = jusoapi.findStoreToJson(xy, range);
 		JSONObject object = new JSONObject();
 		JSONArray array = new JSONArray();
 		
