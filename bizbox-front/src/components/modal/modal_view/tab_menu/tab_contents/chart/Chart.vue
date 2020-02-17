@@ -55,11 +55,13 @@ export default {
           this.large = selected
           return
         }
+        this.isInit = true
+        this.large = selected
       }
       this.large = '전체'
       this.listR = []
     },
-    parentsMethodM (selected, str, state) {
+    parentsMethodM (selected, state) {
       this.isInit = state
       this.mid = selected
     }

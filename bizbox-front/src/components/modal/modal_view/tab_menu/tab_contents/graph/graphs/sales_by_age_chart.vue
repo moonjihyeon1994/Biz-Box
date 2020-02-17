@@ -15,8 +15,7 @@
       <span class="point-normal">소비가 가장 많아요.</span>
     </p>
     <div id="chart">
-      <div id="back" :style="allowDiv"></div>
-      <spinner :loading="loadingStatus"></spinner>
+      <loading :loading="loadingStatus" :transparent='true'></loading>
       <horizontal-bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
@@ -30,13 +29,13 @@
 <script>
 import HorizontalBarChart from '@/lib/HorizontalBarChart'
 import axios from '@/js/http-commons'
-import Spinner from '@/components/common/Spinner'
+import Loading from '@/components/common/loading/Loading'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
     HorizontalBarChart,
-    Spinner
+    Loading
   },
   data () {
     return {
@@ -51,9 +50,6 @@ export default {
       title: '연령별 매출',
       point: 0,
       loadingStatus: false,
-      allowDiv: {
-        display: 'none'
-      },
       maxIndex: 0,
       barColors: ['#365673', '#365673', '#365673', '#365673', '#365673', '#365673']
     }

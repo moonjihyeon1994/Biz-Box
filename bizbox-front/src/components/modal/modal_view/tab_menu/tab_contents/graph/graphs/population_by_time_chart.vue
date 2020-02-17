@@ -17,8 +17,7 @@
       <span class="point-normal">유동인구가 가장 많아요.</span>
     </p>
     <div id="chart">
-      <div id="back" :style="allowDiv"></div>
-      <spinner :loading="loadingStatus"></spinner>
+      <loading :loading="loadingStatus" :transparent='true'></loading>
       <line-chart
         :chart-data="chartdata"
         :options="chartoptions"
@@ -32,13 +31,13 @@
 <script>
 import LineChart from '@/lib/LineChart'
 import axios from '@/js/http-commons'
-import Spinner from '@/components/common/Spinner'
+import Loading from '@/components/common/loading/Loading'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
     LineChart,
-    Spinner
+    Loading
   },
   data () {
     return {
