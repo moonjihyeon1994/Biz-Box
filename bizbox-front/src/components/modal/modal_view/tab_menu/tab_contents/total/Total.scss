@@ -1,4 +1,4 @@
-#bz-container {
+.main-content {
   position: relative;
   width: 100%;
   letter-spacing: 3px;
@@ -25,7 +25,36 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   }
 
+  #bz-score-box {
+    font-weight: bold;
+    background-color: rgb(245, 245, 245);
+    // padding: 5px 10px;
+    border-radius: 5px;
+
+    #bz-score-box-pretext {
+      display: inline-block;
+      font-size: 1.25em;
+      left: 10px;
+      top: 5px;
+    }
+    
+    #bz-score-box-score {
+      text-align: center;
+      color: blue;
+      font-size: 3em;
+      top: 5px;
+    }
+
+    #bz-score-box-posttext {
+      font-size: 1.25em;
+      text-align: right;
+      bottom: 5px;
+      right: 10px;
+    }
+  }
+
   #chart-box {
+
     #chart-box-flex-container {
       display: flex;
       justify-content: space-around;
