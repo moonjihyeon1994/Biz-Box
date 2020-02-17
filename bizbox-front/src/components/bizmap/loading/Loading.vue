@@ -1,6 +1,6 @@
 <template>
   <div id="bz-loading-container" v-if="loading">
-    <div id="bz-blur-background"></div>
+    <div id="bz-blur-background" :style='bg'></div>
     <div class="lds">
       <div></div>
       <div></div>
@@ -11,10 +11,6 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
-  },
   props: {
     loading: {
       type: Boolean,
@@ -28,6 +24,14 @@ export default {
     if (this.transparent) {
       this.bg.backgroundColor = 'rgba(245, 245, 245)'
       this.bg.filter = 'none'
+    }
+  },
+  data () {
+    return {
+      bg: {
+        backgroundColor: 'rgba(255, 255, 255, 0.616)',
+        filter: 'blue(2px)'
+      }
     }
   }
 }

@@ -6,11 +6,11 @@
       <div id='chart-box-flex-container'>
         <div class='select-box-wrapper'>
           <p>대분류</p>
-          <select-box :list='listL' @large-event='parentsMethodL' />
+          <select-box :list='listL' @large-event='parentsMethodL' type='large' />
         </div>
         <div class='select-box-wrapper'>
           <p>중분류</p>
-          <select-box :list='listR' :init='isInit' @mid-event='parentsMethodM'/>
+          <select-box :list='listR' :init='isInit' @mid-event='parentsMethodM' type='mid'/>
         </div>
       </div>
 
@@ -28,6 +28,7 @@
 
 <script>
 import SelectBox from './selectbox/SelectBox'
+import LineChart from './linechart/LineChart'
 import ListJson from '@/assets/json/Select.json'
 
 export default {
@@ -58,7 +59,8 @@ export default {
       this.large = '전체'
       this.listR = []
     },
-    parentsMethodM (selected) {
+    parentsMethodM (selected, str, state) {
+      this.isInit = state
       this.mid = selected
     }
   }

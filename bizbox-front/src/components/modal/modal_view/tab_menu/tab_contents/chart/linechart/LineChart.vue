@@ -47,6 +47,9 @@ export default {
           year2016 = this.getData(arr2016, this.large, this.mid)
           year2017 = this.getData(arr2017, this.large, this.mid)
           year2018 = this.getData(arr2018, this.large, this.mid)
+          console.log(year2016)
+          console.log(year2017)
+          console.log(year2018)
         })
     },
     getData (arr, large, mid) {
@@ -60,48 +63,32 @@ export default {
       if (large === '전체') {
         for (let index = 0; index < arr.length; index++) {
           if (arr[index].stdr_qu_cd === '1') {
-            data.first += arr.thsmon_selng_amt
+            data.first += Number(arr[index].thsmon_selng_amt)
           } else if (arr[index].stdr_qu_cd === '2') {
-            data.second += arr.thsmon_selng_amt
+            data.second += Number(arr[index].thsmon_selng_amt)
           } else if (arr[index].stdr_qu_cd === '3') {
-            data.third += arr.thsmon_selng_amt
+            data.third += Number(arr[index].thsmon_selng_amt)
           } else {
-            data.fourth += arr.thsmon_selng_amt
+            data.fourth += Number(arr[index].thsmon_selng_amt)
           }
         }
       } else {
-        if (mid === '전체') {
-          for (let index = 0; index < arr.length; index++) {
-            if (arr[index].stdr_qu_cd === '1') {
-              data.first += arr.thsmon_selng_amt
-            } else if (arr[index].stdr_qu_cd === '2') {
-              data.second += arr.thsmon_selng_amt
-            } else if (arr[index].stdr_qu_cd === '3') {
-              data.third += arr.thsmon_selng_amt
-            } else {
-              data.fourth += arr.thsmon_selng_amt
-            }
-          }
-        } else {
-          for (let index = 0; index < arr.length; index++) {
-            if (arr[index].stdr_qu_cd === '1') {
-              data.first += arr.thsmon_selng_amt
-            } else if (arr[index].stdr_qu_cd === '2') {
-              data.second += arr.thsmon_selng_amt
-            } else if (arr[index].stdr_qu_cd === '3') {
-              data.third += arr.thsmon_selng_amt
-            } else {
-              data.fourth += arr.thsmon_selng_amt
-            }
+        for (let index = 0; index < arr.length; index++) {
+          if (arr[index].svc_induty_cd_nm === mid && arr[index].stdr_qu_cd === '1') {
+            data.first += Number(arr[index].thsmon_selng_amt)
+          } else if (arr[index].svc_induty_cd_nm === mid && arr[index].stdr_qu_cd === '2') {
+            data.second += Number(arr[index].thsmon_selng_amt)
+          } else if (arr[index].svc_induty_cd_nm === mid && arr[index].stdr_qu_cd === '3') {
+            data.third += Number(arr[index].thsmon_selng_amt)
+          } else if (arr[index].svc_induty_cd_nm === mid && arr[index].stdr_qu_cd === '4') {
+            data.fourth += Number(arr[index].thsmon_selng_amt)
           }
         }
       }
+      return data
     }
   },
   mounted () {
-    this.renderChart()
-  },
-  updated () {
     this.renderChart()
   }
 }
