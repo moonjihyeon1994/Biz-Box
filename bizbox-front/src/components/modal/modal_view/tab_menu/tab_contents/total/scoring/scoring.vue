@@ -40,8 +40,8 @@ export default {
     return {
       sgCode: '',
       sgName: '',
-      dong: '역삼동',
-      // key: this.$store.state.modalsearch,
+      dong: '진관동',
+      key: this.$store.state.modalsearch,
       sales_2018: {
         'q1': 0,
         'q2': 0,
@@ -309,7 +309,7 @@ export default {
   },
   created () {
     let vm = this
-    let requestSalesUrl = '/predict/findBusiness/127.050826/37.507118/'
+    let requestSalesUrl = '/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat + '/'
     axios.get(requestSalesUrl)
       .then(res => {
         let data2018 = res.data['2018']
@@ -441,7 +441,7 @@ export default {
             console.log('유동인구 : ', vm.score.집객력.유동인구)
           })
           .then(() => {
-            let resquestHistoryUrl = '/change/getHistory/' + vm.dong
+            let resquestHistoryUrl = '/change/getHistory/' + vm.key
             axios.get(resquestHistoryUrl)
               .then(res => {
                 let continuousYears = Number(res.data.cblist[5].g)
