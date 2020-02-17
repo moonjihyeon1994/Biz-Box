@@ -54,6 +54,23 @@
   }
 
   #chart-box {
-    border: 1px solid black;
+
+    #chart-box-flex-container {
+      display: flex;
+      justify-content: space-around;
+
+      .select-box-wrapper {
+        display: inline-block;
+        width: 180px;
+        margin: 10px 20px;
+        
+        p {
+          text-align: center;
+          margin: 5px 0;
+          font-size: 1.1em;
+          font-weight: bold;
+        }
+      }
+    }
   }
 }

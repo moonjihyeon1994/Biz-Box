@@ -2,11 +2,9 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        시간별 유동인구
-        <span class="icon-question" @click="popup">
-          <v-icon size=15>mdi-help-circle-outline</v-icon>
-          <span v-show="popflag" class="icon-popup-tri"/>
-        </span>
+        성별 매출
+        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
+        <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
@@ -14,34 +12,36 @@
     <p class="point-content-area">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">유동인구가 가장 많아요.</span>
+      <span class="point-normal">소비가 가장 많아요.</span>
     </p>
     <div id="chart">
       <div id="back" :style="allowDiv"></div>
       <spinner :loading="loadingStatus"></spinner>
-      <line-chart
+      <pie-chart
         :chart-data="chartdata"
         :options="chartoptions"
         width="500px"
         height="300px"
-      ></line-chart>
+      ></pie-chart>
     </div>
   </div>
 </template>
 
 <script>
-import LineChart from '@/lib/LineChart'
+import PieChart from '@/lib/PieChart'
 import axios from '@/js/http-commons'
-import Spinner from '../../../../result/Spinner'
+import Spinner from '@/components/common/Spinner'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    LineChart,
+    PieChart,
     Spinner
   },
   data () {
     return {
+      totalWoman: 0,
+      totalMan: 0,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -49,8 +49,10 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '연령별 유동인구',
+      title: '성별 매출',
       point: 0,
+      sumWoman: 0,
+      sumMan: 0,
       btnStyle1: {
         backgroundColor: '#d9d9d9',
         cursor: 'pointer'
@@ -67,9 +69,6 @@ export default {
         backgroundColor: 'white',
         cursor: 'pointer'
       },
-      chartStyle: {
-        display: 'contents'
-      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
@@ -79,23 +78,21 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
-      let totalNum = Math.max.apply(null, total)
-      return '(' + totalNum + '명' + ')'
+      let woman = this.sumWoman * 100000000
+      let man = this.sumMan * 100000000
+      if (woman >= man) {
+        return '(' + woman + '원)'
+      } else {
+        return '(' + man + '원)'
+      }
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let labels = ['24~06시', '06~11시', '11~14시', '14~17시', '17~21시', '21~24시']
-      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
-      let maxAge = -1
-      let idx = 0
-      for (let index = 0; index < total.length; index++) {
-        if (maxAge < total[index]) {
-          maxAge = total[index]
-          idx = index
-        }
+      if (this.sumWoman >= this.sumMan) {
+        return '여성'
+      } else {
+        return '남성'
       }
-      return labels[idx]
     }
   },
   mounted () {
@@ -113,12 +110,12 @@ export default {
       this.chartdata = null
       this.chartoptions = null
 
-      this.searchOption = 2
-      this.title = '시간별 유동인구'
+      this.searchOption = 4
+      this.title = '성별 매출'
       this.btnStyle1.backgroundColor = 'white'
-      this.btnStyle2.backgroundColor = '#d9d9d9'
+      this.btnStyle2.backgroundColor = 'white'
       this.btnStyle3.backgroundColor = 'white'
-      this.btnStyle4.backgroundColor = 'white'
+      this.btnStyle4.backgroundColor = '#d9d9d9'
 
       if (this.key !== '') {
         this.getData()
@@ -133,61 +130,36 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/population/getPopulationByTime/' + this.key)
+        .get('/sales/' + this.key)
         .then(res => {
-          this.result = res.data.pbt
-          this.road = this.result.f
-          this.point = res.data.point
+          this.result = res.data
+          this.road = res.data[0].d
+
+          for (let index = 0; index < this.result.length; index++) {
+            this.sumWoman += Number(this.result[index].y)
+            this.sumMan += Number(this.result[index].x)
+          }
+          this.totalWoman = this.sumWoman
+          this.totalMaN = this.sumMan
+
+          this.sumWoman /= 100000000
+          this.sumMan /= 100000000
         })
         .finally(() => {
           this.chartdata = {
-            labels: [
-              '24~06시',
-              '06~11시',
-              '11~14시',
-              '14~17시',
-              '17~21시',
-              '21~24시'
-            ],
+            labels: ['여성', '남성'],
             datasets: [
               {
-                label: '정보',
-                fill: false,
-                borderColor: 'red',
-                data: [
-                  this.result.j,
-                  this.result.k,
-                  this.result.l,
-                  this.result.m,
-                  this.result.n,
-                  this.result.o
-                ]
+                fill: true,
+                data: [this.sumWoman.toFixed(2), this.sumMan.toFixed(2)],
+                backgroundColor: ['#ff2483', '#1c8aff']
               }
             ]
           }
 
           this.chartoptions = {
             responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: false
-                  },
-                  gridLines: {
-                    display: true
-                  }
-                }
-              ],
-              xAxes: [
-                {
-                  gridLines: {
-                    display: true
-                  }
-                }
-              ]
-            }
+            maintainAspectRatio: true
           }
 
           this.loadingStatus = false
@@ -203,6 +175,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+[v-cloak] {
+    display: none;
+}
+
 #chart {
   position: relative;
   width: 500px;
@@ -218,16 +194,8 @@ export default {
   background-color: rgb(255, 255, 255);
 }
 
-#point {
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 500px;
-  height: 40px;
-  line-height: 40px;
-  top: 5px;
-  font-size: 24px;
-  margin-top: 10px;
-  background-color: white;
+#back:hover {
+  cursor: not-allowed;
 }
 
 #searchOptions {
@@ -248,10 +216,6 @@ export default {
       font-weight: bold;
     }
   }
-}
-
-#searchOptions button:hover{
-    background-color: #E38FE3;
 }
 
 #search input {

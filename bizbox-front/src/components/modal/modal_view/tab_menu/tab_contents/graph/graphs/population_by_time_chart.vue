@@ -2,9 +2,11 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        연령별 소비
-        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
-        <span v-show="popflag" class="icon-popup-tri"/></span>
+        시간별 유동인구
+        <span class="icon-question" @click="popup">
+          <v-icon size=15>mdi-help-circle-outline</v-icon>
+          <span v-show="popflag" class="icon-popup-tri"/>
+        </span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
@@ -12,35 +14,34 @@
     <p class="point-content-area">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">소비가 가장 많아요.</span>
+      <span class="point-normal">유동인구가 가장 많아요.</span>
     </p>
     <div id="chart">
       <div id="back" :style="allowDiv"></div>
       <spinner :loading="loadingStatus"></spinner>
-      <horizontal-bar-chart
+      <line-chart
         :chart-data="chartdata"
         :options="chartoptions"
         width="500px"
         height="300px"
-      ></horizontal-bar-chart>
+      ></line-chart>
     </div>
   </div>
 </template>
 
 <script>
-import HorizontalBarChart from '@/lib/HorizontalBarChart'
+import LineChart from '@/lib/LineChart'
 import axios from '@/js/http-commons'
-import Spinner from '../../../../result/Spinner'
+import Spinner from '@/components/common/Spinner'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    HorizontalBarChart,
+    LineChart,
     Spinner
   },
   data () {
     return {
-      data: null,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -48,7 +49,7 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '연령별 매출',
+      title: '연령별 유동인구',
       point: 0,
       btnStyle1: {
         backgroundColor: '#d9d9d9',
@@ -66,6 +67,9 @@ export default {
         backgroundColor: 'white',
         cursor: 'pointer'
       },
+      chartStyle: {
+        display: 'contents'
+      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
@@ -75,17 +79,19 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let totalNum = Math.max.apply(null, this.data)
-      return '(' + totalNum + '원' + ')'
+      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
+      let totalNum = Math.max.apply(null, total)
+      return '(' + totalNum + '명' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let labels = ['10대', '20대', '30대', '40대', '50대', '60대 이상']
+      let labels = ['24~06시', '06~11시', '11~14시', '14~17시', '17~21시', '21~24시']
+      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
       let maxAge = -1
       let idx = 0
-      for (let index = 0; index < this.data.length; index++) {
-        if (maxAge < this.data[index]) {
-          maxAge = this.data[index]
+      for (let index = 0; index < total.length; index++) {
+        if (maxAge < total[index]) {
+          maxAge = total[index]
           idx = index
         }
       }
@@ -101,17 +107,16 @@ export default {
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
       this.chartdata = null
       this.chartoptions = null
 
-      this.searchOption = 1
-      this.title = '연령별 매출'
-      this.btnStyle1.backgroundColor = '#d9d9d9'
-      this.btnStyle2.backgroundColor = 'white'
+      this.searchOption = 2
+      this.title = '시간별 유동인구'
+      this.btnStyle1.backgroundColor = 'white'
+      this.btnStyle2.backgroundColor = '#d9d9d9'
       this.btnStyle3.backgroundColor = 'white'
       this.btnStyle4.backgroundColor = 'white'
 
@@ -127,50 +132,35 @@ export default {
       this.btnStyle3.cursor = 'not-allowed'
       this.btnStyle4.cursor = 'not-allowed'
 
-      let sumOf10 = 0
-      let sumOf20 = 0
-      let sumOf30 = 0
-      let sumOf40 = 0
-      let sumOf50 = 0
-      let sumOf60 = 0
-
       axios
-        .get('/sales/' + this.key)
+        .get('/population/getPopulationByTime/' + this.key)
         .then(res => {
-          this.result = res.data
-          this.road = res.data[0].d
+          this.result = res.data.pbt
+          this.road = this.result.f
           this.point = res.data.point
-
-          for (let index = 0; index < this.result.length; index++) {
-            sumOf10 += Number(this.result[index].z)
-            sumOf20 += Number(this.result[index].aa)
-            sumOf30 += Number(this.result[index].ab)
-            sumOf40 += Number(this.result[index].ac)
-            sumOf50 += Number(this.result[index].ad)
-            sumOf60 += Number(this.result[index].ae)
-          }
-          this.data = [sumOf10, sumOf20, sumOf30, sumOf40, sumOf50, sumOf60]
-          sumOf10 /= 100000000
-          sumOf20 /= 100000000
-          sumOf30 /= 100000000
-          sumOf40 /= 100000000
-          sumOf50 /= 100000000
-          sumOf60 /= 100000000
         })
         .finally(() => {
           this.chartdata = {
-            labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+            labels: [
+              '24~06시',
+              '06~11시',
+              '11~14시',
+              '14~17시',
+              '17~21시',
+              '21~24시'
+            ],
             datasets: [
               {
-                label: '전체',
-                backgroundColor: '#365673',
+                label: '정보',
+                fill: false,
+                borderColor: 'red',
                 data: [
-                  sumOf10.toFixed(2),
-                  sumOf20.toFixed(2),
-                  sumOf30.toFixed(2),
-                  sumOf40.toFixed(2),
-                  sumOf50.toFixed(2),
-                  sumOf60.toFixed(2)
+                  this.result.j,
+                  this.result.k,
+                  this.result.l,
+                  this.result.m,
+                  this.result.n,
+                  this.result.o
                 ]
               }
             ]
@@ -183,7 +173,7 @@ export default {
               yAxes: [
                 {
                   ticks: {
-                    beginAtZero: true
+                    beginAtZero: false
                   },
                   gridLines: {
                     display: true
@@ -213,10 +203,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-[v-cloak] {
-    display: none;
-}
-
 #chart {
   position: relative;
   width: 500px;
@@ -232,8 +218,16 @@ export default {
   background-color: rgb(255, 255, 255);
 }
 
-#back:hover {
-  cursor: not-allowed;
+#point {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 500px;
+  height: 40px;
+  line-height: 40px;
+  top: 5px;
+  font-size: 24px;
+  margin-top: 10px;
+  background-color: white;
 }
 
 #searchOptions {
@@ -254,6 +248,10 @@ export default {
       font-weight: bold;
     }
   }
+}
+
+#searchOptions button:hover{
+    background-color: #E38FE3;
 }
 
 #search input {
