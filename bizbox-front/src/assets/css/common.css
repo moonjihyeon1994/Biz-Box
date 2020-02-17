@@ -1,8 +1,3 @@
-:root {
-    --nav-text-color: #fdc864;
-    --our-orange: #ecb744;
-}
-
 #app {
     text-align: center;
     color: #000000;
@@ -93,21 +88,6 @@ div.v-toolbar__content {
 
 
 /* Nav bar */
-i.v-icon.notranslate.mdi.mdi-menu.theme--light {
-    color: #ffffff;
-}
-
-i.v-icon.notranslate.mdi.mdi-account.theme--light {
-    color: #ffffff;
-}
-
-i.v-icon.notranslate.mdi.mdi-information-outline.theme--light {
-    color: #ffffff;
-}
-
-i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
-    color: #ffffff;
-}
 
 div.v-list-item__title {
     color: var(--nav-text-color);
