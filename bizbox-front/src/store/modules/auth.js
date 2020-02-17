@@ -7,15 +7,19 @@ const state = {
   username: null,
   email: null,
   errors: [],
+  mylist: [],
   loading: false,
-  dialog: false
+  dialog: false,
+  alarm: []
 }
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
+  getAlarm: state => state.alarm,
   isLoading: state => state.loading,
-  isPopup: state => state.dialog
+  isPopup: state => state.dialog,
+  getlist: state => state.mylist
 }
 
 const mutations = {
@@ -33,7 +37,11 @@ const mutations = {
     state.email = email
     sessionStorage.setItem('login_user_email', email)
   },
+  setStoreList: (state, storelist) => {
+    state.mylist = storelist
+  },
   pushError: (state, error) => state.errors.push(error),
+  pushAlarm: (state, alarm) => state.alarm.push(alarm),
   clearErrors: state => (state.errors = [])
 }
 
@@ -63,6 +71,10 @@ const actions = {
     commit('pushError', error)
   },
 
+  pushAlarm ({ commit }, alarm) {
+    commit('pushAlarm', alarm)
+  },
+
   login: ({ commit, getters }, credentials) => {
     commit('clearErrors')
     if (getters.isLoggedIn) {
@@ -76,15 +88,15 @@ const actions = {
             commit('setToken', res.headers['jwt-auth-token'])
             commit('setUsername', res.data.data.name)
             commit('setUserEmail', res.data.data.email)
+            commit('setStoreList', res.data.storelist)
             commit('setPopup', false)
-            alert('로그인 되었습니다')
+            commit('pushAlarm', '로그인 되었습니다')
             // console.log(sessionStorage)
           } else {
-            alert('로그인에 실패했습니다.')
+            commit('pushAlarm', '로그인에 실패했습니다.')
           }
         })
         .catch(err => {
-          alert('로그인에 실패했습니다.')
           if (!err.response) {
             commit('pushError', 'Network Error..')
           } else if (err.response.status === 400) {
@@ -102,11 +114,13 @@ const actions = {
     axios.get(getUrl)
       .then(res => {
         if (res.data.status) {
+          //console.log(res.data)
           commit('setToken', res.headers['jwt-auth-token'])
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
           commit('setPopup', false)
-          alert('로그인 되었습니다.')
+          commit('setStoreList', res.data.storelist)
+          commit('pushAlarm', '로그인 되었습니다')
           // console.log('sessionstorage')
           // console.log(sessionStorage)
         }
@@ -125,7 +139,7 @@ const actions = {
           // console.log('sessionstorage')
           // console.log(sessionStorage)
         } else {
-          alert('회원가입에 실패했습니다')
+          commit('pushAlarm', '회원가입을 실패하였습니다.')
         }
       })
   }

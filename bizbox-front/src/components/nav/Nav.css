@@ -1,11 +1,15 @@
 /* Nav bar */
 
-i.v-icon.notranslate.mdi.mdi-menu.theme--light {
-    color: #000000;
+i.v-icon.notranslate.navIcon.mdi.mdi-store.theme--light {
+    font-size: 40px;
+}
+
+i.v-icon.notranslate.navIcon.mdi.mdi-store.theme--light:hover {
+    color: orange;
+    cursor: pointer;
 }
 
 i.v-icon.notranslate.mdi.mdi-account.theme--light {
-    color: #000000;
     font-size: 40px;
 }
 
@@ -16,7 +20,6 @@ i.v-icon.notranslate.mdi.mdi-account.theme--light:hover {
 }
 
 i.v-icon.notranslate.navIcon.mdi.mdi-account-arrow-right.theme--light {
-    color: #000000;
     font-size: 40px;
 }
 
