@@ -360,6 +360,11 @@ public class JusoServiceImpl implements JusoService{
 			JSONObject jsonObject1 = new JSONObject();
 			String key = entry.getKey();
 			int value = entry.getValue();
+			if(key.contains("학문")) {
+				key = "학문교육";
+			}else if(key.contains("관광")) {
+				key = "관광여가오락";
+			}
 			jsonObject1.put(key, value);
 			array.add(jsonObject1);
 		}
@@ -396,6 +401,7 @@ public class JusoServiceImpl implements JusoService{
 		
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
 		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
 			String indsLclsNm = list.get(i).getCategory_large();
 			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
 				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
