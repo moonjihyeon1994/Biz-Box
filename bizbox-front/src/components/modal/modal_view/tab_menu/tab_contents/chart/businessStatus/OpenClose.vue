@@ -1,6 +1,7 @@
 <template>
   <div v-if="seen">
     <h2>해당 상권 내 검색 업종의 폐업률은 {{ businessStatus.clper }}입니다.</h2>
+    <h2>현재 해당 상권 경쟁 업체의 수는 {{ businessStatus.totend }}입니다.</h2>
   </div>
 </template>
 
@@ -12,10 +13,9 @@ export default {
     return {
       sgName: '', // emit
       seen: false,
-      openCloseData: '',
       subCategory: '', // emit
       businessStatus: {
-        totEnd: 0,
+        totend: 0,
         clsum: 0,
         clper: 0
       }
@@ -26,25 +26,20 @@ export default {
   },
   updated () {
     let vm = this
+    vm.seen = false
     if (vm.subCategory !== '전체') {
-      let requestOpenCloseUrl = '/' + vm.sgName
+      let requestOpenCloseUrl = '/' + vm.sgName + vm.subCategory
       axios.get(requestOpenCloseUrl)
         .then((res) => {
-          vm.openCloseData = res.data[vm.subCategory]
-          vm.businessStatus.clsum = 0
-        })
-        .then(() => {
-          vm.businessStatus.totEnd = Number(vm.openCloseData.totcnt[10])
-          for (let index = 0; index < vm.sopenCloseData.clcnt.length; index++) {
-            vm.businessStatus.clsum += Number(vm.sopenCloseData.clcnt[index])
-          }
-        })
-        .then(() => {
-          vm.businessStatus.clper = Number((vm.businessStatus.clsum * 100 / (vm.businessStatus.clsum + vm.businessStatus.totEnd)).toFixed(1))
+          vm.businessStatus.totend = res.data.totalEnd
+          vm.businessStatus.clsum = res.data.closeCnt
+          vm.businessStatus.clper = Number((Number(res.data.closeCnt) * 100 / (Number(res.data.closeCnt) + Number(res.data.totalEnd))).toFixed(1))
         })
         .then(() => {
           vm.seen = true
         })
+    } else {
+      vm.seen = false
     }
   }
 }
