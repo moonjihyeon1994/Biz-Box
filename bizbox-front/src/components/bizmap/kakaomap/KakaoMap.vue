@@ -1,6 +1,6 @@
 <template>
   <div class="mapContainer">
-    <div class="flip-card" >
+    <div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-card-front">
           <v-card>
@@ -34,17 +34,21 @@
         <div class="flip-card-back">
           <div class="storeform">
             <div class="add-form">
-              <input type="text" placeholder="상호명" v-model="storeName"/>
-              <input type="text" placeholder="대분류" v-model="Clarge"/>
-              <input type="text" placeholder="중분류" v-model="Cmiddle"/>
-              <input type="text" placeholder="소분류" v-model="Csmall"/>
+              <input type="text" placeholder="상호명" v-model="storeName" required />
+              <input type="text" placeholder="대분류" v-model="Clarge" required />
+              <input type="text" placeholder="중분류" v-model="Cmiddle" required />
+              <input type="text" placeholder="소분류" v-model="Csmall" required />
               <button @click="storeAdd">add</button>
+              <p class="message">
+                잘못 누르셨나요?
+                <a @click="addMyStore">되돌아가기</a>
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <Detail v-show="showModal" @close="showModal = falseun; Detail()">
+    <Detail v-show="showModal" @close="showModal = falseun; unDetail()">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="map" id="map"></div>
@@ -78,7 +82,7 @@ export default {
       Cmiddle: '',
       Csmall: '',
       info: null,
-      member_marker: null,
+      member_marker: [],
       showModal: false,
       points: [],
       polygon: null,
@@ -127,7 +131,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -358,7 +362,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters(['isLoggedIn']),
+    loginChange() {
+      return this.$store.state.auth.token
+    }
+  },
+  watch: {
+    loginChange() {
+      if (this.$store.state.auth.token) {
+        this.drawMarker()
+      }
+    }
   },
   components: {
     condition,
@@ -366,6 +380,10 @@ export default {
     Loading
   },
   methods: {
+    islogin(token) {
+      alert('login')
+      this.drawMarker()
+    },
     setColor(color) {
       this.Color = color
     },
@@ -377,9 +395,9 @@ export default {
       this.map.setLevel(3, { anchor: this.ME.latLng })
       this.polygon.setOptions({ fillOpacity: 0 })
     },
-    drawMarker () {
+    drawMarker() {
       if (this.$store.state.auth.token) {
-        var imageSrc = this.markerImg 
+        var imageSrc = this.markerImg
         var imageSize = new kakao.maps.Size(40, 40) // 마커이미지의 크기입니다
         var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
         var markerImage = new kakao.maps.MarkerImage(
@@ -408,17 +426,22 @@ export default {
           .then(() => {
             let posi = this.getmystore()
             for (let index = 0; index < posi.length; index++) {
-              this.member_marker = new kakao.maps.Marker({
+              let marker = new kakao.maps.Marker({
                 map: this.map,
                 position: posi[index], // 최초 표시되는 마커의 위치
                 image: markerImage
               }).setMap(this.map)
+              this.member_marker.push(marker)
             }
           })
-      // 로그인하면 자신이 등록한 점포 위치 나옴
+        // 로그인하면 자신이 등록한 점포 위치 나옴
       }
     },
-    storeAdd () {
+    storeAdd() {
+      if (!this.storeName || !this.Clarge || !this.Cmiddle || !this.Csmall) {
+        alert('항목을 빠짐없이 기입해주세요')
+        return
+      }
       axios
         .post(
           '/user/addStore',
@@ -439,7 +462,8 @@ export default {
         )
         .then(res => {
           console.log(res)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.addMyStore()
           this.storeName = null
           this.Clarge = null
@@ -448,21 +472,27 @@ export default {
           this.drawMarker()
         })
     },
-    addMyStore () {
+    addMyStore() {
       if (!sessionStorage.getItem('login_user_email')) {
         alert('로그인후 이용 가능합니다.')
         return
       }
       let cardinner = document.getElementsByClassName('flip-card-inner')
       if (cardinner[0].className.includes('firstflip')) {
-        cardinner[0].className = cardinner[0].className.replace(' firstflip', '')
+        cardinner[0].className = cardinner[0].className.replace(
+          ' firstflip',
+          ''
+        )
         cardinner[0].className += ' secondflip'
       } else {
-        cardinner[0].className = cardinner[0].className.replace(' secondflip', '')
+        cardinner[0].className = cardinner[0].className.replace(
+          ' secondflip',
+          ''
+        )
         cardinner[0].className += ' firstflip'
       }
     },
-    getmystore () {
+    getmystore() {
       console.log(this.$store.state.auth)
       let list = this.$store.state.auth.mylist
       let posi = []
@@ -472,11 +502,11 @@ export default {
       }
       return posi
     },
-    eventbus (name) {
+    eventbus(name) {
       // var eventBus = new Vue()
       eventBus.$emit('clickmap', name)
     },
-    myevent () {
+    myevent() {
       this.saveMouseEvent(this.ME, 1)
       let name = this.$store.state.modalsearch
       if (this.$store.state.mode === 2) {
