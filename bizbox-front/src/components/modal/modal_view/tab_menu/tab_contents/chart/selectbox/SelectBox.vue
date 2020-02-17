@@ -22,7 +22,8 @@ export default {
     }
   },
   props: {
-    list: []
+    list: [],
+    init: Boolean
   },
   methods: {
     toggleBox () {
@@ -39,6 +40,18 @@ export default {
         this.selected = this.list[num]
       }
       this.listStyle.display = 'none'
+    }
+  },
+  watch: {
+    selected () {
+      this.$emit('large-event', this.selected)
+      this.$emit('mid-event', this.selected)
+    }
+  },
+  updated () {
+    if (this.init) {
+      this.selected = '전체'
+      this.init = false
     }
   }
 }
