@@ -1,27 +1,34 @@
 <template>
   <div id='bz-container'>
-    <line-chart id='chart' :chart-data="chartdata" :options="chartoptions"
-      width='200px' height='100px'>
-    </line-chart>
+    <div id='title'>업종별 차트</div>
+
+    <div id='chart-box'>
+      <div id='chart-box-flex-container'>
+        <div class='select-box-wrapper'>
+          <p>대분류</p>
+          <select-box />
+        </div>
+        <div class='select-box-wrapper'>
+          <p>중분류</p>
+          <select-box />
+        </div>
+      </div>
+
+      <div class='bz-each-title'>매출 차트</div>
+
+      <div class='bz-each-title'>창업/폐업 현황</div>
+    </div>
   </div>
 </template>
 
 <script>
-import LineChart from '@/lib/LineChart'
+import SelectBox from './selectbox/SelectBox'
 
 export default {
   components: {
-    LineChart
-  },
-  data () {
-    return {
-      chartdata: null,
-      chartoptions: null
-    }
+    SelectBox
   }
 }
 </script>
 
-<style>
-
-</style>
+<style scoped src='./Chart.scss' lang='scss'></style>

@@ -1,0 +1,85 @@
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
+#bz-select-box {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: auto;
+  font-weight: bold;
+  font-size: 1.25em;
+  letter-spacing: 10px;
+
+  #bz-select-box-selected {
+    padding: 8px 16px;
+    background-color: rgb(15, 66, 95);
+    font-size: 1.2em;
+    color: $color1;
+    text-align: center;
+    border-radius: 5px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  #bz-select-box-list {
+    display: block;
+    position: absolute;
+    z-index: 10;
+    top: 55px;
+    width: 100%;
+    height: auto;
+    transition: all 0.3s ease;
+
+    ul {
+      margin: 0;
+      padding: 0;
+
+      li {
+        text-align: center;
+        padding: 8px 16px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        &:first-child {
+          border-radius: 5px 5px 0 0;
+        }
+  
+        &:last-child {
+          border-radius: 0 0 5px 5px;
+        }
+  
+        &:nth-child(2n) {
+          background-color: rgb(15, 66, 95);
+          color: $color1;
+          &:hover {
+            background-color: rgb(10, 62, 91)
+          }
+        }
+  
+        &:nth-child(2n+1) {
+          background-color: rgb(40, 102, 138);
+          color: rgb(240, 240, 240);
+          &:hover {
+            background-color: rgb(58, 123, 160);
+          }
+        }
+      }
+    }
+
+    &.before-animation {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    &.animation {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+  }
+
+}
