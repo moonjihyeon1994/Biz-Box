@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bizbox.mapper.storeMapper">
+	
+	<insert id="insertStore" parameterType="store">
+		insert into storelist (email, store_name, category_large, category_middle, category_small, lat, lot,  flag) 
+		values (#{email}, #{store_name}, #{category_large}, #{category_middle}, #{category_small}, #{lat}, #{lot}, true)
+	</insert>
+
+	<update id="closeStore" parameterType="store">
+		update storelist set flag = false, close_date = current_timestamp where email = #{email} and store_name = #{store_name}
+	</update>
+
+	<select id="getStore" parameterType="String" resultType="store">
+		select * from storelist where email = #{email}
+	</select>
+
+	<select id="getStoreByXY" parameterType="point" resultType="store">
+		<![CDATA[
+		SELECT *
+		FROM storelist 
+		WHERE #{distance} > any (SELECT ( 6371 * acos( cos( radians( #{lat} ) ) * cos( radians( lat) ) * cos( radians( lot ) - radians(#{lot}) ) + sin( radians(#{lat}) ) * sin( radians(lat) ) ) ) 
+		FROM storelist ) and flag = true 
+		]]>
+	</select>
+	
+</mapper>

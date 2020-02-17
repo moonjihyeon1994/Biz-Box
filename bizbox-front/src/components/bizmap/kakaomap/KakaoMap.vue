@@ -1,46 +1,88 @@
 <template>
   <div class="mapContainer">
-    <v-card>
-      <v-toolbar class="searchBox">
-        <v-text-field
-          Elevation="14"
-          hide-details
-          v-on:keyup.enter="serch"
-          v-model.trim="name"
-          single-line
-          clearable
-          label="Search..."
-        ></v-text-field>
-        <v-btn v-on:click="serch" icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-card>
-    <condition v-on:myevent="myevent"></condition>
-    <div class="ssss"  v-show="isonececlick">
-      <div class="info" id="graph-info">
-        <canvas class="chart" id="horizontalbarChart"></canvas>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <v-card>
+            <v-toolbar class="searchBox">
+              <v-text-field
+                Elevation="14"
+                hide-details
+                v-on:keyup.enter="serch"
+                v-model.trim="name"
+                single-line
+                clearable
+                label="Search..."
+              ></v-text-field>
+              <v-btn v-on:click="serch" icon>
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
+            </v-toolbar>
+          </v-card>
+          <condition v-on:myevent="myevent"></condition>
+          <div class="ssss" v-show="isonececlick">
+            <div class="info" id="graph-info">
+              <canvas class="chart" id="horizontalbarChart"></canvas>
+            </div>
+          </div>
+          <!-- <div class="map" id="map"></div> -->
+          <v-btn class="addbt" v-on:click="addMyStore" icon>
+            현재 위치에 내 점포 추가하기
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </div>
+        <div class="flip-card-back">
+          <div class="storeform">
+            <div class="add-form">
+              <input type="text" placeholder="상호명" v-model="storeName" required />
+              <input type="text" placeholder="대분류" v-model="Clarge" required />
+              <input type="text" placeholder="중분류" v-model="Cmiddle" required />
+              <input type="text" placeholder="소분류" v-model="Csmall" required />
+              <button @click="storeAdd">add</button>
+              <p class="message">
+                잘못 누르셨나요?
+                <a @click="addMyStore">되돌아가기</a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="map" id="map"></div>
-    <Detail v-if="showModal" @close="showModal = false">
+    <Detail v-show="showModal" @close="showModal = falseun; unDetail()">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
+    <div class="map" id="map"></div>
   </div>
 </template>
 
 <script>
 import Detail from '@/components/modal/modal_view/modal_view.vue'
-import '../modal/Modal.css'
-import Dong from '../../assets/json/newcolor.json'
-import color from '../../assets/json/color.json'
+import '@/components/modal/Modal.css'
+import Dong from '@/assets/json/newcolor.json'
+import color from '@/assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
-import axios from '../../js/http-commons'
-import { eventBus } from '../../js/bus'
+import axios from '@/js/http-commons'
+import { eventBus } from '@/js/bus'
+import { mapGetters } from 'vuex'
+import axi from 'axios'
+import Loading from '@/components/bizmap/loading/Loading.vue'
+import './AddStore.scss'
+import markerimg from '@/assets/map-icon/marker.png'
 
 export default {
   data: () => {
     return {
+      Color: '',
+      filpStyle: {
+        transform: 'rotateY(180deg)'
+      },
+      markerImg: markerimg,
+      storeName: '',
+      Clarge: '',
+      Cmiddle: '',
+      Csmall: '',
+      info: null,
+      member_marker: [],
       showModal: false,
       points: [],
       polygon: null,
@@ -68,6 +110,8 @@ export default {
       drawingOverlay: false, // 그려지고 있는 원의 반경을 표시할 커스텀오버레이
       customOverlay: false,
       wasDrawing: false,
+      isonececlick: false,
+      loadingStatus: false,
       circles: [],
       countResult: '',
       searchX: '',
@@ -75,7 +119,6 @@ export default {
       range: '',
       coords: '',
       ME: '',
-      isonececlick: false,
       CountInfo: {
         소매: '',
         학문교육: '',
@@ -88,7 +131,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
@@ -117,12 +160,19 @@ export default {
     let vm = this
     // 오버레이 생성--------------------------------------------------------
     this.customOverlay = new kakao.maps.CustomOverlay({})
+    this.info = new kakao.maps.CustomOverlay({})
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
-      map: this.map,
-      position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
+      map: this.map
+      //position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
-    kakao.maps.event.addListener(this.marker, 'click', function() {// 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
+    //console.log(this.$store.state)
+    this.drawMarker()
+
+    kakao.maps.event.addListener(this.marker, 'click', function() {
+      // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
+      // vm.eventBus(vm.$store.state.modalsearch)
+      vm.detail()
       vm.changeModal()
     })
 
@@ -140,9 +190,6 @@ export default {
     kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
     }) // 지도에 무브 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'rightclick', function(mouseEvent) {
-      vm.RightMouseClick(mouseEvent)
-    })
     axios
       .get('/population/getPopulationByTime/' + this.name)
       .then(res => {
@@ -221,7 +268,7 @@ export default {
         strokeColor: '#004c80', // 선색
         strokeOpacity: 0.4, // 선 투명도
         fillColor: color,
-        fillOpacity: 0.2
+        fillOpacity: 0.13
       })
 
       kakao.maps.event.addListener(polygon, 'mouseover', mouseEvent => {
@@ -259,54 +306,36 @@ export default {
           vm.saveMouseEvent(mouseEvent, 0)
           let Name = name
           let coords = ''
-          vm.setSerchkey(name)// 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          vm.setPolygon(polygon)
+          vm.setColor(color)
           let Marker = vm.marker
-          let InfoWindow = vm.infowindow
-          vm.geocoder.addressSearch(Name, function(result, status) {
-            // 정상적으로 검색이 완료되면
-            if (status === kakao.maps.services.Status.OK) {
-              coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
-              Marker.setPosition(coords)
-              InfoWindow.close()
-              var imageSrc =
-                'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-              // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-              var imageSize = new kakao.maps.Size(80, 80) // 마커이미지의 크기입니다
-              var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-              var markerImage = new kakao.maps.MarkerImage(
-                imageSrc,
-                imageSize,
-                imageOption
-              )
-              vm.marker.setImage(markerImage)
-              vm.marker.setPosition(coords)
-              if (vm.$store.state.mode === 2) {
-                vm.makeOverlay2(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 3) {
-                vm.makeOverlay3(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 4) {
-                vm.makeOverlay4(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 5) {
-                vm.makeOverlay5(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 6) {
-                vm.makeOverlay6(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 7) {
-                vm.makeOverlay7(mouseEvent, name)
-              }
-              if (vm.$store.state.mode === 8) {
-                vm.makeOverlay8(mouseEvent, name)
-              }
-              InfoWindow.setContent(Name)
-              InfoWindow.open(Map, Marker)
-              Map.setCenter(coords)
-            }
-          })
-          // }
+          coords = new kakao.maps.LatLng(
+            vm.ME.latLng.getLat(),
+            vm.ME.latLng.getLng()
+          ) // 결과값으로 받은 위치를 마커의 위치로 적용
+          Marker.setPosition(coords)
+          // InfoWindow.close()
+          var imageSrc =
+            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
+          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          var markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          )
+          var content =
+            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+            Name +
+            '</div>'
+          vm.marker.setImage(markerImage)
+          vm.marker.setPosition(coords)
+          vm.info.setContent(content)
+          vm.info.setPosition(coords)
+          vm.info.setMap(Map)
+          Map.setCenter(coords)
           if (vm.$store.state.mode === 2) {
             vm.makeOverlay2(mouseEvent, name)
           }
@@ -332,16 +361,152 @@ export default {
       })
     }
   },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
+    loginChange() {
+      return this.$store.state.auth.token
+    }
+  },
+  watch: {
+    loginChange() {
+      if (this.$store.state.auth.token) {
+        this.drawMarker()
+      }
+    }
+  },
   components: {
     condition,
-    Detail
+    Detail,
+    Loading
   },
   methods: {
-    eventbus (name) {
-      // var eventBus = new Vue()
-      eventBus.$emit("clickmap", name)
+    islogin(token) {
+      alert('login')
+      this.drawMarker()
     },
-    myevent () {
+    setColor(color) {
+      this.Color = color
+    },
+    unDetail() {
+      this.map.setLevel(6, { anchor: this.ME.latLng })
+      this.polygon.setOptions({ fillOpacity: 0.13 })
+    },
+    detail() {
+      this.map.setLevel(3, { anchor: this.ME.latLng })
+      this.polygon.setOptions({ fillOpacity: 0 })
+    },
+    drawMarker() {
+      if (this.$store.state.auth.token) {
+        var imageSrc = this.markerImg
+        var imageSize = new kakao.maps.Size(40, 40) // 마커이미지의 크기입니다
+        var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        var markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imageOption
+        )
+        axi
+          .post(
+            'http://70.12.246.137:8080/user/info',
+            {
+              email: 'asdfasdfa',
+              pw: 'asdfasdfasdf'
+            },
+            {
+              headers: {
+                jwt: this.$store.state.auth.token
+              }
+            }
+          )
+          .then(res => {
+            res.data.data.forEach(element => {
+              this.$store.state.auth.mylist.push(element)
+            })
+          })
+          .then(() => {
+            let posi = this.getmystore()
+            for (let index = 0; index < posi.length; index++) {
+              let marker = new kakao.maps.Marker({
+                map: this.map,
+                position: posi[index], // 최초 표시되는 마커의 위치
+                image: markerImage
+              }).setMap(this.map)
+              this.member_marker.push(marker)
+            }
+          })
+        // 로그인하면 자신이 등록한 점포 위치 나옴
+      }
+    },
+    storeAdd() {
+      if (!this.storeName || !this.Clarge || !this.Cmiddle || !this.Csmall) {
+        alert('항목을 빠짐없이 기입해주세요')
+        return
+      }
+      axios
+        .post(
+          '/user/addStore',
+          {
+            email: sessionStorage.getItem('login_user_email'),
+            store_name: this.storeName,
+            category_large: this.Clarge,
+            category_middle: this.Cmiddle,
+            category_small: this.Csmall,
+            lat: this.$store.state.Coords.lat,
+            lot: this.$store.state.Coords.lng
+          },
+          {
+            headers: {
+              jwt: this.$store.state.auth.token
+            }
+          }
+        )
+        .then(res => {
+          console.log(res)
+        })
+        .finally(() => {
+          this.addMyStore()
+          this.storeName = null
+          this.Clarge = null
+          this.Cmiddle = null
+          this.Csmall = null
+          this.drawMarker()
+        })
+    },
+    addMyStore() {
+      if (!sessionStorage.getItem('login_user_email')) {
+        alert('로그인후 이용 가능합니다.')
+        return
+      }
+      let cardinner = document.getElementsByClassName('flip-card-inner')
+      if (cardinner[0].className.includes('firstflip')) {
+        cardinner[0].className = cardinner[0].className.replace(
+          ' firstflip',
+          ''
+        )
+        cardinner[0].className += ' secondflip'
+      } else {
+        cardinner[0].className = cardinner[0].className.replace(
+          ' secondflip',
+          ''
+        )
+        cardinner[0].className += ' firstflip'
+      }
+    },
+    getmystore() {
+      console.log(this.$store.state.auth)
+      let list = this.$store.state.auth.mylist
+      let posi = []
+      for (let index = 0; index < list.length; index++) {
+        let position = new kakao.maps.LatLng(list[index].lat, list[index].lot)
+        posi.push(position)
+      }
+      return posi
+    },
+    eventbus(name) {
+      // var eventBus = new Vue()
+      eventBus.$emit('clickmap', name)
+    },
+    myevent() {
       this.saveMouseEvent(this.ME, 1)
       let name = this.$store.state.modalsearch
       if (this.$store.state.mode === 2) {
@@ -366,27 +531,31 @@ export default {
         this.makeOverlay8(this.ME, name)
       }
     },
-    saveMouseEvent(mouseEvent, flag) { // 마우스 커서의 위치를 저장하는 메서드
-      if (this.isonececlick === false && flag === 1) { // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
+    saveMouseEvent(mouseEvent, flag) {
+      // 마우스 커서의 위치를 저장하는 메서드
+      if (this.isonececlick === false && flag === 1) {
+        // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
         this.isonececlick = true
       }
       this.ME = mouseEvent
-      this.$store.state.Coords.lat = this.ME.latLng.getLat()// 모달에 전달할 xy 좌표
-      this.$store.state.Coords.lng = this.ME.latLng.getLng()//
+      this.$store.state.Coords.lat = this.ME.latLng.getLat() // 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.latLng.getLng() //
       console.log(null)
       console.log(this.$store.state.Coords.lat)
       console.log(this.$store.state.Coords.lng)
     },
-    setSerchkey(name) { // 마우스 커서위치의 동이름을 저장하는 메서드
+    setSerchkey(name) {
+      // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    changeModal() { // 
-      if (this.showModal === true) {
-        this.showModal = false
-      }
-      if (this.showModal === false) {
-        this.showModal = true
-      }
+    setPolygon(polygon) {
+      this.polygon = polygon
+    },
+    add() {
+      this.showAdd = !this.showAdd
+    },
+    changeModal() {
+      this.showModal = !this.showModal
     },
     ClickMove() {
       if (this.$store.state.mode === 0) {
@@ -448,11 +617,11 @@ export default {
         }
       })
     },
-    CircleMouseClick(mouseEvent) {
+    async CircleMouseClick(mouseEvent) {
       // 지도에 클릭 이벤트를 등록
 
       this.removeCircles()
-      if (this.$store.state.mode === 1) {
+      if (this.$store.state.mode === 1 && this.map.getLevel() < 4) {
         if (this.ChangeBusinessTable !== null) {
           // overay 삭제 매서드
           this.ChangeBusinessTable.setMap(null)
@@ -495,10 +664,43 @@ export default {
           }
         }
       }
+      if (this.drawingFlag) {
+        if (this.hashover) {
+          this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+          this.polyline = new kakao.maps.Polyline({
+            // 원의 반경을 표시할 선 객체를 생성합니다
+            path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+            strokeWeight: 1, // 선의 두께 입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+          })
+          this.circle = new kakao.maps.Circle({
+            // 원 객체를 생성합니다
+            center: this.centerPosition, // 원의 중심좌표입니다
+            radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+            strokeWeight: 0, // 선의 두께입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid', // 선의 스타일입니다
+            fillColor: '#00a0e9', // 채우기 색깔입니다
+            fillOpacity: 0.2 // 채우기 불투명도입니다
+          })
+          var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+          this.range = radius
+          await this.getDataCircle()
+
+          this.centerPosition = null // 중심 좌표를 초기화 합니다
+          this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+          this.drawingLine.setMap(null)
+          this.drawingOverlay.setMap(null)
+        }
+      }
     },
     CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
         // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
+        this.hashover = true
         var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
         var linePath = [this.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
         this.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
@@ -527,38 +729,6 @@ export default {
         }
       }
     },
-    async RightMouseClick(mouseEvent) {
-      if (this.drawingFlag) {
-        this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-        this.polyline = new kakao.maps.Polyline({
-          // 원의 반경을 표시할 선 객체를 생성합니다
-          path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
-          strokeWeight: 1, // 선의 두께 입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid' // 선의 스타일입니다
-        })
-        this.circle = new kakao.maps.Circle({
-          // 원 객체를 생성합니다
-          center: this.centerPosition, // 원의 중심좌표입니다
-          radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
-          strokeWeight: 0, // 선의 두께입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid', // 선의 스타일입니다
-          fillColor: '#00a0e9', // 채우기 색깔입니다
-          fillOpacity: 0.2 // 채우기 불투명도입니다
-        })
-        var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
-        this.range = radius
-        await this.getDataCircle()
-
-        this.centerPosition = null // 중심 좌표를 초기화 합니다
-        this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
-        this.drawingLine.setMap(null)
-        this.drawingOverlay.setMap(null)
-      }
-    },
     // 원 html 만들기
     getOverlay(html, rClickPosition) {
       let radiusOverlay = new kakao.maps.CustomOverlay({
@@ -571,6 +741,7 @@ export default {
       })
       return radiusOverlay
     },
+
     // ------------------------------------------------
     // 표 만들기 시간별 유동인구
     // ------------------------------------------------
@@ -584,6 +755,7 @@ export default {
       var para = document.getElementById('graph-info').appendChild(node)
       para.id = 'horizontalbarChart'
       para.style = 'height: 190px; width: 350px;'
+      alert('!!')
       // =======================
       await axios
         .get('/population/getPopulationByTime/' + this.name)
@@ -1285,6 +1457,7 @@ export default {
       return content
     }, // 범위내 상가정보 받아오는 매서드
     async getDataCircle() {
+      this.loadingStatus = true
       axios
         .get(
           '/storecountByxy/' +
@@ -1295,7 +1468,7 @@ export default {
             this.range
         )
         .then(res => {
-          var jsonlarge = res.data.large
+          var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
           this.CountInfo.숙박 = jsonlarge.숙박
@@ -1321,6 +1494,9 @@ export default {
             .finally(() => {
               let vm = this
               vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+              vm.$store.state.mode = 0
+              vm.loadingStatus = false
+              vm.hashover = false
               this.radiusObj = {
                 // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
                 polyline: vm.polyline,
@@ -1358,7 +1534,7 @@ export default {
   }
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .map {
   position: absolute;
   top: 0;
@@ -1409,7 +1585,7 @@ button {
   display: inline-block;
   z-index: 2;
   position: fixed;
-  width: 360px;
+  width: 370px;
   height: 180px;
   top: 100px;
   left: 50px;
@@ -1445,9 +1621,22 @@ button {
   height: 260px;
   z-index: 2;
   position: fixed;
-  top: 365px;
+  top: 400px;
   left: 50px;
   border-radius: 3px;
+}
+.addbt {
+  display: inline-block;
+  z-index: 2;
+  position: fixed;
+  width: 370px;
+  height: 40px;
+  top: 350px;
+  left: 49px;
+  border-radius: 3px;
+}
+.addinput {
+  color: tomato;
 }
 // element.style {
 //   background: white;
