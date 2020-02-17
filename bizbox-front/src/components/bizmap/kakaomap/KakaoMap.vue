@@ -343,7 +343,7 @@ export default {
         //if (vm.$store.state.mode === 0) {
         if (vm.$store.state.mode !== 1) {
           //  각 폴리곤에 마우스 클릭 이벤트 등록
-          if (vm.showModal){ vm.eventbus(name) }
+          vm.eventbus(name)
           vm.saveMouseEvent(mouseEvent, 0)
           let Name = name
           let coords = ''
@@ -707,6 +707,7 @@ export default {
       var para = document.getElementById('graph-info').appendChild(node)
       para.id = 'horizontalbarChart'
       para.style = 'height: 190px; width: 350px;'
+      alert('!!')
       // =======================
       await axios
         .get('/population/getPopulationByTime/' + this.name)
