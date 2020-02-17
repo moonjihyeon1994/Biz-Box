@@ -57,7 +57,6 @@ export default {
       this.selected = 1
       // alert('clicked : ' + this.selected)
       this.$store.dispatch('ChangeMode', { mode: 1 })
-      this.$emit('myevent')
     },
     choice2: function (event) {
       this.selected = 2

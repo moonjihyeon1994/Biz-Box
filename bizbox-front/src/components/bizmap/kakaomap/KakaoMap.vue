@@ -140,7 +140,7 @@ export default {
     let Message = ''
     this.message = Message
     var container = document.getElementById('map')
-
+    this.ME =  new kakao.maps.LatLng(37.505691, 127.0298106)
     var options = {
       center: new kakao.maps.LatLng(37.505691, 127.0298106),
       level: 6
@@ -381,7 +381,6 @@ export default {
   },
   methods: {
     islogin(token) {
-      alert('login')
       this.drawMarker()
     },
     setColor(color) {
@@ -531,7 +530,7 @@ export default {
         this.makeOverlay8(this.ME, name)
       }
     },
-    saveMouseEvent(mouseEvent, flag) {
+    saveMouseEvent (mouseEvent, flag) {
       // 마우스 커서의 위치를 저장하는 메서드
       if (this.isonececlick === false && flag === 1) {
         // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
@@ -544,20 +543,33 @@ export default {
       console.log(this.$store.state.Coords.lat)
       console.log(this.$store.state.Coords.lng)
     },
-    setSerchkey(name) {
+    saveMouseEvent2 (coords, flag) {
+      // 마우스 커서의 위치를 저장하는 메서드
+      if (this.isonececlick === false && flag === 1) {
+        // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
+        this.isonececlick = true
+      }
+      this.ME = coords
+      this.$store.state.Coords.lat = this.ME.getLat() // 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.getLng() //
+      console.log(null)
+      console.log(this.$store.state.Coords.lat)
+      console.log(this.$store.state.Coords.lng)
+    },
+    setSerchkey (name) {
       // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    setPolygon(polygon) {
+    setPolygon (polygon) {
       this.polygon = polygon
     },
-    add() {
+    add () {
       this.showAdd = !this.showAdd
     },
-    changeModal() {
+    changeModal () {
       this.showModal = !this.showModal
     },
-    ClickMove() {
+    ClickMove () {
       if (this.$store.state.mode === 0) {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         // vm.points = vm.centroid(points)
@@ -578,7 +590,7 @@ export default {
         })
       }
     },
-    centroid(points) {
+    centroid (points) {
       var i, j, len, p1, p2, f, area, x, y
       area = x = y = 0
       for (i = 0, len = points.length, j = len - 1; i < len; j = i++) {
@@ -599,21 +611,40 @@ export default {
       this.map.panTo(moveLatLon)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
-    serch(name) {
-      let Ifchange = this.ifchanege
+    serch (name) {
       let Name = this.name
-      let Map = this.map
+      // eslint-disable-next-line no-unused-vars
+      let vm = this
       let Marker = this.marker
-      let InfoWindow = this.infowindow
-      this.geocoder.addressSearch(this.name, function(result, status) {
+      this.geocoder.addressSearch(this.name, function (result, status) {
         // 정상적으로 검색이 완료되면
         if (status === kakao.maps.services.Status.OK) {
           var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
           Marker.setPosition(coords)
-          InfoWindow.close() // 전에 있던 인포위도우 클로즈
-          InfoWindow.setContent(Name) //  인포위도우 내용 세팅
-          InfoWindow.open(Map, Marker) // 마커위에 인포위도우 열림
-          Map.setCenter(coords) // 새로 세팅된 센터 값으로 맵 세팅
+          vm.map.setCenter(coords) // 새로 세팅된 센터 값으로 맵 세팅
+          vm.eventbus(Name)
+          vm.saveMouseEvent2(coords, 0)
+          vm.setSerchkey(Name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          // vm.setColor(color)
+          var imageSrc =
+            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
+          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          var markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          )
+          var content =
+            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+            Name +
+            '</div>'
+          Marker.setImage(markerImage)
+          Marker.setPosition(coords)
+          vm.info.setContent(content)
+          vm.info.setPosition(coords)
+          vm.info.setMap(vm.map)
         }
       })
     },
@@ -755,7 +786,7 @@ export default {
       var para = document.getElementById('graph-info').appendChild(node)
       para.id = 'horizontalbarChart'
       para.style = 'height: 190px; width: 350px;'
-      alert('!!')
+     
       // =======================
       await axios
         .get('/population/getPopulationByTime/' + this.name)
@@ -1468,6 +1499,7 @@ export default {
             this.range
         )
         .then(res => {
+          console.log(res)
           var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
