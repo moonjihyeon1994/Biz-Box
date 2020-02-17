@@ -179,7 +179,7 @@ public class JusoApi {
 	 * @throws IOException
 	 */
 	@Cacheable(cacheNames = "FindStore")
-	public JSONArray findStore1(String xy, String radius) throws IOException {
+	public JSONArray findStoreToJson(String xy, String radius) throws IOException {
 		int idx = 0;
 		JSONArray list = new JSONArray();
 		while(true) {
