@@ -10,7 +10,7 @@ const state = {
   mylist: [],
   loading: false,
   dialog: false,
-  alarm: []
+  alarm: null
 }
 
 const getters = {
@@ -41,8 +41,7 @@ const mutations = {
     state.mylist = storelist
   },
   pushError: (state, error) => state.errors.push(error),
-  pushAlarm: (state, alarm) => state.alarm.push(alarm),
-  clearErrors: state => (state.errors = [])
+  pushAlarm: (state, alarm) => state.alarm.push(alarm)
 }
 
 const actions = {
@@ -64,7 +63,9 @@ const actions = {
     sessionStorage.removeItem('jwt-auth-token')
     sessionStorage.removeItem('login_user_name')
     sessionStorage.removeItem('login_user_email')
+    state.alarm = '로그아웃 되었습니다'
     alert('로그아웃 되었습니다')
+    router.push('/')
   },
 
   pushError ({ commit }, error) {
@@ -76,7 +77,6 @@ const actions = {
   },
 
   login: ({ commit, getters }, credentials) => {
-    commit('clearErrors')
     if (getters.isLoggedIn) {
       router.push('/')
     } else {
@@ -90,10 +90,12 @@ const actions = {
             commit('setUserEmail', res.data.data.email)
             commit('setStoreList', res.data.storelist)
             commit('setPopup', false)
-            commit('pushAlarm', '로그인 되었습니다')
-            // console.log(sessionStorage)
+            state.alarm = '로그인 되었습니다'
+            alert('로그인 되었습니다')
           } else {
-            commit('pushAlarm', '로그인에 실패했습니다.')
+            console.log()
+            state.alarm = '로그인에 실패했습니다'
+            alert('아이디/비밀번호를 확인해주세요')
           }
         })
         .catch(err => {
@@ -120,9 +122,10 @@ const actions = {
           commit('setUserEmail', res.data.data.email)
           commit('setPopup', false)
           commit('setStoreList', res.data.storelist)
-          commit('pushAlarm', '로그인 되었습니다')
+          state.alarm = '로그인 되었습니다'
+          alert('로그인 되었습니다')
           // console.log('sessionstorage')
-          // console.log(sessionStorage)
+          // console.log(sessionStorage )
         }
       })
   },
@@ -136,10 +139,13 @@ const actions = {
           commit('setUsername', res.data.data.name)
           commit('setUserEmail', res.data.data.email)
           commit('setPopup', false)
+          state.alarm = '회원가입되었습니다'
+          alert('회원가입 되었습니다')
           // console.log('sessionstorage')
           // console.log(sessionStorage)
         } else {
-          commit('pushAlarm', '회원가입을 실패하였습니다.')
+          state.alarm = '회원가입을 실패하였습니다'
+          alert('회원가입에 실패하였습니다')
         }
       })
   }
