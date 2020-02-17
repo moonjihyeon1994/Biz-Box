@@ -2,7 +2,7 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        성별 매출
+        연령별 유동인구
         <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
         <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
@@ -12,36 +12,34 @@
     <p class="point-content-area">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">소비가 가장 많아요.</span>
+      <span class="point-normal">유동인구가 가장 많아요.</span>
     </p>
     <div id="chart">
       <div id="back" :style="allowDiv"></div>
       <spinner :loading="loadingStatus"></spinner>
-      <pie-chart
+      <bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
         width="500px"
         height="300px"
-      ></pie-chart>
+      ></bar-chart>
     </div>
   </div>
 </template>
 
 <script>
-import PieChart from '@/lib/PieChart'
+import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
-import Spinner from '../../../../result/Spinner'
+import Spinner from '@/components/common/Spinner'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    PieChart,
+    BarChart,
     Spinner
   },
   data () {
     return {
-      totalWoman: 0,
-      totalMan: 0,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -49,10 +47,8 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '성별 매출',
+      title: '연령별 유동인구',
       point: 0,
-      sumWoman: 0,
-      sumMan: 0,
       btnStyle1: {
         backgroundColor: '#d9d9d9',
         cursor: 'pointer'
@@ -69,6 +65,9 @@ export default {
         backgroundColor: 'white',
         cursor: 'pointer'
       },
+      chartStyle: {
+        display: 'contents'
+      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
@@ -78,21 +77,23 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let woman = this.sumWoman * 100000000
-      let man = this.sumMan * 100000000
-      if (woman >= man) {
-        return '(' + woman + '원)'
-      } else {
-        return '(' + man + '원)'
-      }
+      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
+      let totalNum = Math.max.apply(null, total)
+      return '(' + totalNum + '명' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      if (this.sumWoman >= this.sumMan) {
-        return '여성'
-      } else {
-        return '남성'
+      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
+      let maxAge = -1
+      let idx = 0
+      for (let index = 0; index < total.length; index++) {
+        if (maxAge < total[index]) {
+          maxAge = total[index]
+          idx = index
+        }
       }
+      if (idx === 5) return (idx + 1) * 10 + '대 이상'
+      return (idx + 1) * 10 + '대'
     }
   },
   mounted () {
@@ -110,12 +111,12 @@ export default {
       this.chartdata = null
       this.chartoptions = null
 
-      this.searchOption = 4
-      this.title = '성별 매출'
-      this.btnStyle1.backgroundColor = 'white'
+      this.searchOption = 1
+      this.title = '연령별 유동인구'
+      this.btnStyle1.backgroundColor = '#d9d9d9'
       this.btnStyle2.backgroundColor = 'white'
       this.btnStyle3.backgroundColor = 'white'
-      this.btnStyle4.backgroundColor = '#d9d9d9'
+      this.btnStyle4.backgroundColor = 'white'
 
       if (this.key !== '') {
         this.getData()
@@ -130,36 +131,77 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/sales/' + this.key)
+        .get('/population/getPopulationByLocation/' + this.key)
         .then(res => {
-          this.result = res.data
-          this.road = res.data[0].d
-
-          for (let index = 0; index < this.result.length; index++) {
-            this.sumWoman += Number(this.result[index].y)
-            this.sumMan += Number(this.result[index].x)
-          }
-          this.totalWoman = this.sumWoman
-          this.totalMaN = this.sumMan
-
-          this.sumWoman /= 100000000
-          this.sumMan /= 100000000
+          this.result = res.data.pbl
+          this.road = this.result.f
+          this.point = res.data.point
         })
         .finally(() => {
           this.chartdata = {
-            labels: ['여성', '남성'],
+            labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
             datasets: [
               {
-                fill: true,
-                data: [this.sumWoman.toFixed(2), this.sumMan.toFixed(2)],
-                backgroundColor: ['#ff2483', '#1c8aff']
+                label: '전체',
+                backgroundColor: '#365673',
+                data: [
+                  this.result.j,
+                  this.result.k,
+                  this.result.l,
+                  this.result.m,
+                  this.result.n,
+                  this.result.o
+                ]
+              },
+              {
+                label: '남자',
+                backgroundColor: '#74ddf7',
+                data: [
+                  this.result.p,
+                  this.result.q,
+                  this.result.r,
+                  this.result.s,
+                  this.result.t,
+                  this.result.u
+                ]
+              },
+              {
+                label: '여자',
+                backgroundColor: '#ff6390',
+                data: [
+                  this.result.v,
+                  this.result.w,
+                  this.result.x,
+                  this.result.y,
+                  this.result.z,
+                  this.result.aa
+                ]
               }
             ]
           }
 
           this.chartoptions = {
             responsive: true,
-            maintainAspectRatio: true
+            maintainAspectRatio: true,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  },
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ]
+            }
           }
 
           this.loadingStatus = false
@@ -175,10 +217,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-[v-cloak] {
-    display: none;
-}
-
 #chart {
   position: relative;
   width: 500px;
@@ -194,8 +232,16 @@ export default {
   background-color: rgb(255, 255, 255);
 }
 
-#back:hover {
-  cursor: not-allowed;
+#point {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 500px;
+  height: 40px;
+  line-height: 40px;
+  top: 5px;
+  font-size: 24px;
+  margin-top: 10px;
+  background-color: white;
 }
 
 #searchOptions {
@@ -216,6 +262,10 @@ export default {
       font-weight: bold;
     }
   }
+}
+
+#searchOptions button:hover {
+  background-color: #e38fe3;
 }
 
 #search input {

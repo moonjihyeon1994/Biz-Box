@@ -14,28 +14,18 @@
       <div class='bz-each-title'>상권 항목별 점수</div>
       <scoring @childs-event='parentsMethod'></scoring>
     </div>
-
-    <div id='chart-box'>
-      <div class='bz-each-title'>상권 매출 차트</div>
-      <select-box id='sel-box'></select-box>
-      <chart id='line-chart'></chart>
-    </div>
   </div>
 </template>
 
 <script>
 import scoring from './scoring/scoring.vue'
-import Chart from './chart/Chart.vue'
 import Loading from '@/components/bizmap/loading/Loading.vue'
-import SelectBox from './selectbox/SelectBox.vue'
 import axios from 'axios'
 
 export default {
   components: {
     scoring,
-    Chart,
-    Loading,
-    SelectBox
+    Loading
   },
   data () {
     return {
@@ -64,14 +54,8 @@ export default {
       ],
 
       // table header data
-      stores: {
-        '전체': '0',
-        '음식': '0',
-        '서비스': '0',
-        '소매': '0',
-        '숙박': '0',
-        '오락': '0'
-      },
+      large: [],
+      mid: [],
       population: {
         '주거': '',
         '직장': '',
@@ -81,12 +65,12 @@ export default {
       chartoptions: null,
       totalScore: null,
       sgName: '',
-      loadingStatus: true
+      loadingStatus: true,
+      list: ['음식', '카페', '주점']
     }
   },
   created () {
-    const storeCountUrl = '/storecount/' + this.key + '/1000'
-    axios.get(storeCountUrl)
+    axios.get('/storecount/' + this.key + '/1000')
       .then(res => {
         console.log('success to get storeCount')
         const JsonLarge = res.data.large
@@ -114,11 +98,17 @@ export default {
         this.stores.전체 = totalCount.toString()
       })
   },
+  mounted () {
+    this.initList()
+  },
   methods: {
     parentsMethod (score, name) {
       this.totalScore = score
       this.sgName = name
       this.loadingStatus = false
+    },
+    initList () {
+
     }
   }
 }

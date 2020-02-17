@@ -19,6 +19,7 @@ import '@/assets/css/responsive.css'
 import Nav from './nav/Nav'
 import TotalForm from './totalform/TotalForm'
 import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'app',
   components: {
