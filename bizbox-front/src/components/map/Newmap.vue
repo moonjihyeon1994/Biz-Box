@@ -27,7 +27,7 @@
       현재 위치에 내 점포 추가하기
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
-    <Detail v-if="showModal" @close="showModal = false; this.$store.state.opencontents = 3">
+    <Detail v-if="showModal" @close="showModal = false; unDetail();">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="addstore" v-if="showAdd">
@@ -72,6 +72,7 @@ import axi from 'axios'
 export default {
   data: () => {
     return {
+      Color : '',
       storeName: '',
       Clarge: '',
       Cmiddle: '',
@@ -210,6 +211,7 @@ export default {
     kakao.maps.event.addListener(this.marker, 'click', function () {
       // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
       // vm.eventBus(vm.$store.state.modalsearch)
+      vm.detail()
       vm.changeModal()
     })
 
@@ -347,6 +349,8 @@ export default {
           let Name = name
           let coords = ''
           vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          vm.setPolygon(polygon)
+          vm.setColor(color)
           let Marker = vm.marker
           coords = new kakao.maps.LatLng(
             vm.ME.latLng.getLat(),
@@ -407,6 +411,19 @@ export default {
     Detail
   },
   methods: {
+    setColor(color) {
+      this.Color = color
+    }, 
+    unDetail(){
+      this.map.setLevel(6,{anchor: this.ME.latLng}
+      );
+      this.polygon.setOptions({fillOpacity: 0.13})
+    },
+    detail(){
+      this.map.setLevel(3,{anchor: this.ME.latLng}
+      );
+      this.polygon.setOptions({fillOpacity: 0})
+    },
     storeAdd () {
       axios.post(
         '/user/addStore',
@@ -483,6 +500,9 @@ export default {
       // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
+    setPolygon(polygon){
+      this.polygon=polygon
+    },
     add() {
       this.showAdd = !this.showAdd
     },
@@ -553,7 +573,7 @@ export default {
       // 지도에 클릭 이벤트를 등록
 
       this.removeCircles()
-      if (this.$store.state.mode === 1) {
+      if (this.$store.state.mode === 1 && this.map.getLevel()<4) {
         if (this.ChangeBusinessTable !== null) {
           // overay 삭제 매서드
           this.ChangeBusinessTable.setMap(null)
@@ -596,6 +616,7 @@ export default {
           }
         }
       }
+      else if(this.$store.state.mode === 1  && this.map.getLevel() > 3){alert("원 검색을 하기위해서는 맵을 좀더 확대해 주세요")}
     },
     CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
