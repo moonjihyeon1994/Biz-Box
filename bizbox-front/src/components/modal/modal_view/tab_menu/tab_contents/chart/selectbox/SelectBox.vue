@@ -23,7 +23,8 @@ export default {
   },
   props: {
     list: [],
-    init: Boolean
+    init: Boolean,
+    type: String
   },
   methods: {
     toggleBox () {
@@ -44,8 +45,11 @@ export default {
   },
   watch: {
     selected () {
-      this.$emit('large-event', this.selected)
-      this.$emit('mid-event', this.selected)
+      if (this.type === 'large') {
+        this.$emit('large-event', this.selected, 'large')
+      } else if (this.type === 'mid') {
+        this.$emit('mid-event', this.selected, false)
+      }
     }
   },
   updated () {

@@ -10,7 +10,7 @@
     </div>
 
     <div id='each-point-box'>
-      <loading :loading='loadingStatus' :transparent='true'></loading>
+      <loading :loading='loadingStatus' transparent='true'></loading>
       <div class='bz-each-title'>상권 항목별 점수</div>
       <scoring @childs-event='parentsMethod'></scoring>
     </div>
