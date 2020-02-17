@@ -22,10 +22,6 @@
       <div class='bz-each-title'>창업/폐업 현황</div>
 
       <div class='bz-each-title'>원클릭 컨설팅</div>
-<<<<<<< HEAD
-=======
-
->>>>>>> frontend
     </div>
   </div>
 </template>
@@ -33,7 +29,6 @@
 <script>
 import SelectBox from './selectbox/SelectBox'
 import ListJson from '@/assets/json/Select.json'
-import LineChart from './linechart/LineChart'
 
 export default {
   components: {
