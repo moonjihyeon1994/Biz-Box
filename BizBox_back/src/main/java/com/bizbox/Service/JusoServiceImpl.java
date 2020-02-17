@@ -201,7 +201,7 @@ public class JusoServiceImpl implements JusoService{
 		java.util.List<String> names = new ArrayList<String>();
 		while (true) {
 			String str = jusoapi.findStore(xy, radius, String.valueOf(idx));
-			System.out.println(str);
+			
 			idx++;
 			try {
 				JSONParser jsonParse = new JSONParser();

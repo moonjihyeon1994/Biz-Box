@@ -17,6 +17,9 @@
       <div class='bz-each-title'>매출 차트</div>
 
       <div class='bz-each-title'>창업/폐업 현황</div>
+
+      <div class='bz-each-title'>원클릭 컨설팅</div>
+
     </div>
   </div>
 </template>
