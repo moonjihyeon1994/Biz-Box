@@ -13,6 +13,7 @@
     color: white;
     opacity: 0.7;
     height: 34px;
+    border-radius: 7px;
 }
 
 .btn-item:hover {
@@ -26,11 +27,11 @@
 .btn-item:nth-child(2) {
     background-color: orange;
 }
-
+.btn-set {
+    display: flex;
+}
 @media (min-width:700px) {
-    .btn-set {
-        display: flex;
-    }
+
     .btn-item {
         height: 64px;
     }
