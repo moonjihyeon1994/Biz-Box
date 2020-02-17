@@ -8,41 +8,20 @@
       default content
     -->
     </Detail>
-    <select-box :list='list'></select-box>
   </div>
 </template>
 
 <script>
 import Detail from '@/components/modal/modal_view/modal_view.vue'
-import SelectBox from '@/components/modal/modal_view/tab_menu/tab_contents/selectbox/SelectBox.vue'
 import './Modal.css'
 export default {
   data: () => {
     return {
-      showModal: false,
-      list: [
-        {
-          name: 'Sol',
-          data: 80
-        },
-        {
-          name: 'Terra',
-          data: 75
-        },
-        {
-          name: 'Kilian',
-          data: 30
-        },
-        {
-          name: 'Corel',
-          data: 45
-        }
-      ]
+      showModal: false
     }
   },
   components: {
-    Detail,
-    SelectBox
+    Detail
   }
 }
 </script>

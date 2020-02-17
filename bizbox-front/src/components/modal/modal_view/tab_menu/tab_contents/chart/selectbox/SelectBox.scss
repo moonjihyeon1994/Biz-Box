@@ -1,12 +1,20 @@
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
 #bz-select-box {
+  display: inline-block;
   position: relative;
   width: 100%;
   height: auto;
-  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.25em;
+  letter-spacing: 10px;
 
   #bz-select-box-selected {
     padding: 8px 16px;
-    background-color: rgb(214, 214, 214);
+    background-color: rgb(15, 66, 95);
+    font-size: 1.2em;
+    color: $color1;
     text-align: center;
     border-radius: 5px;
 
@@ -16,9 +24,11 @@
   }
 
   #bz-select-box-list {
-    position: relative;
-    bottom: -5px;
     display: block;
+    position: absolute;
+    z-index: 10;
+    top: 55px;
+    width: 100%;
     height: auto;
     transition: all 0.3s ease;
 
@@ -44,16 +54,18 @@
         }
   
         &:nth-child(2n) {
-          background-color: darkkhaki;
+          background-color: rgb(15, 66, 95);
+          color: $color1;
           &:hover {
-            background-color: rgb(214, 210, 153);
+            background-color: rgb(10, 62, 91)
           }
         }
   
         &:nth-child(2n+1) {
-          background-color: darkorchid;
+          background-color: rgb(40, 102, 138);
+          color: rgb(240, 240, 240);
           &:hover {
-            background-color: rgb(180, 88, 226);
+            background-color: rgb(58, 123, 160);
           }
         }
       }

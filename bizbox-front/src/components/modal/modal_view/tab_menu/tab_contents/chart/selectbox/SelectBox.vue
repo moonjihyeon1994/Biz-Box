@@ -4,7 +4,7 @@
     <div id='bz-select-box-list' :style='listStyle' v-animation>
       <ul>
         <li @click='selectItem(-1)'>전체</li>
-        <li v-for='(item, num) in list' :key='item.name' @click='selectItem(num)'>{{ item.name }}</li>
+        <li v-for='(item, num) in list' :key='item.num' @click='selectItem(num)'>{{ item }}</li>
       </ul>
     </div>
   </div>
@@ -36,7 +36,7 @@ export default {
       if (num === -1) {
         this.selected = '전체'
       } else {
-        this.selected = this.list[num].name
+        this.selected = this.list[num]
       }
       this.listStyle.display = 'none'
     }
@@ -44,4 +44,4 @@ export default {
 }
 </script>
 
-<style src='./SelectBox.scss' lang='scss'></style>
+<style scoped src='./SelectBox.scss' lang='scss'></style>

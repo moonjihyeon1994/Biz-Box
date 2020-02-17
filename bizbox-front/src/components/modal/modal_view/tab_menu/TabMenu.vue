@@ -7,6 +7,9 @@
       <button class="tablinks" @click="openContents($event, 'Graph')">
         그래프
       </button>
+      <button class='tablinks' @click="openContents($event, 'Chart')">
+        차트
+      </button>
     </div>
 
     <div id="Total" class="tabcontent">
@@ -16,16 +19,23 @@
     <div id="Graph" class="tabcontent">
       <graphItem />
     </div>
+
+    <div id="Chart" class="tabcontent">
+      <chart />
+    </div>
   </div>
 </template>
 
 <script>
-import graphItem from './tab_contents/graph.vue'
-import totalView from './tab_contents/total.vue'
+import graphItem from './tab_contents/graph/Graph.vue'
+import totalView from './tab_contents/total/Total.vue'
+import Chart from './tab_contents/chart/Chart'
+
 export default {
   components: {
     graphItem,
-    totalView
+    totalView,
+    Chart
   },
   mounted () {
     document.getElementById('defaultOpen').click()
