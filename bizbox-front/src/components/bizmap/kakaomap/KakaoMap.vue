@@ -17,7 +17,7 @@
       </v-toolbar>
     </v-card>
     <condition v-on:myevent="myevent"></condition>
-    <Loading :loading='loadingStatus'></Loading>
+    <Loading :loading="loadingStatus"></Loading>
     <div class="ssss" v-show="isonececlick">
       <div class="info" id="graph-info">
         <canvas class="chart" id="horizontalbarChart"></canvas>
@@ -53,7 +53,7 @@
         <input type="text" name="category_small" v-model="Csmall" />
       </div>
       <div style="background-color:tomato;">
-        <button @click="storeAdd,add"  value="추가하기">add</button>
+        <button @click="storeAdd,add" value="추가하기">add</button>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ import Loading from '@/components/bizmap/loading/Loading.vue'
 export default {
   data: () => {
     return {
-      Color : '',
+      Color: '',
       storeName: '',
       Clarge: '',
       Cmiddle: '',
@@ -167,7 +167,6 @@ export default {
     })
     //console.log(this.$store.state)
     if (this.$store.state.auth.token) {
-     
       var imageSrc =
         'https://lh3.googleusercontent.com/proxy/vkU8Txag3K3WxbyFvUjmGWNOjQVRjLJd1am1UBSg4XP1eQhasgiq087-PrX1SbEyoKHnIwtbqqT3GMypK9ectUZ9OseVUV8Sno-RN2obw-dJbYwreUa1nQPvTdnbt7efsMgt07DwFaCPhgEeHYMpknh4w9vu0gCrl3yUwAsLO2jOrzzJiihVp9UsSTWX4Ik1PjUqQwAIv0Zjp70AXTRuqzF5VgHSxN54N34BtfQik5FSTcUrvx-1lLdhSv5C3a7sG5ZVpR3-CX97NEAGKapfAbqk5PB0O7qw1U5nQDDGsmXQxeFEfwvV9Hc9rysv4vJdZq8x1YlSMCLHMg8n5fHgaOhJKQ' // https://image.flaticon.com/icons/svg/1322/1322263.svg
       // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
@@ -211,7 +210,7 @@ export default {
       // 로그인하면 자신이 등록한 점포 위치 나옴
     }
 
-    kakao.maps.event.addListener(this.marker, 'click', function () {
+    kakao.maps.event.addListener(this.marker, 'click', function() {
       // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
       // vm.eventBus(vm.$store.state.modalsearch)
       vm.detail()
@@ -225,11 +224,11 @@ export default {
     // -------------------------------------------------------------------------------------
 
     // 반경 그리는 이벤트 시작-------------------------------------------------------------------
-    kakao.maps.event.addListener(this.map, 'click', function (mouseEvent) {
+    kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
       vm.CircleMouseClick(mouseEvent)
       // vm.Controlllevel(vm.points)
     }) // 지도에 클릭 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'mousemove', function (mouseEvent) {
+    kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
     }) // 지도에 무브 이벤트를 등록
     axios
@@ -344,7 +343,7 @@ export default {
         //if (vm.$store.state.mode === 0) {
         if (vm.$store.state.mode !== 1) {
           //  각 폴리곤에 마우스 클릭 이벤트 등록
-          vm.eventbus(name)
+          if (vm.showModal){ vm.eventbus(name) }
           vm.saveMouseEvent(mouseEvent, 0)
           let Name = name
           let coords = ''
@@ -414,37 +413,37 @@ export default {
   methods: {
     setColor(color) {
       this.Color = color
-    }, 
-    unDetail(){
-      this.map.setLevel(6,{anchor: this.ME.latLng}
-      );
-      this.polygon.setOptions({fillOpacity: 0.13})
     },
-    detail(){
-      this.map.setLevel(3,{anchor: this.ME.latLng}
-      );
-      this.polygon.setOptions({fillOpacity: 0})
+    unDetail() {
+      this.map.setLevel(6, { anchor: this.ME.latLng })
+      this.polygon.setOptions({ fillOpacity: 0.13 })
     },
-    storeAdd () {
-      axios.post(
-        '/user/addStore',
-        {
-          email: sessionStorage.getItem('login_user_email'),
-          store_name: this.storeName,
-          category_large: this.Clarge,
-          category_middle: this.Cmiddle,
-          category_small: this.Csmall,
-          lat: this.$store.state.Coords.lat,
-          lot: this.$store.state.Coords.lng
-        },
-        {
-          headers: {
-            jwt: this.$store.state.auth.token
+    detail() {
+      this.map.setLevel(3, { anchor: this.ME.latLng })
+      this.polygon.setOptions({ fillOpacity: 0 })
+    },
+    storeAdd() {
+      axios
+        .post(
+          '/user/addStore',
+          {
+            email: sessionStorage.getItem('login_user_email'),
+            store_name: this.storeName,
+            category_large: this.Clarge,
+            category_middle: this.Cmiddle,
+            category_small: this.Csmall,
+            lat: this.$store.state.Coords.lat,
+            lot: this.$store.state.Coords.lng
+          },
+          {
+            headers: {
+              jwt: this.$store.state.auth.token
+            }
           }
-        }
-      ).then(res => {
-        console.log(res)
-      })
+        )
+        .then(res => {
+          console.log(res)
+        })
     },
     getmystore() {
       console.log(this.$store.state.auth)
@@ -501,8 +500,8 @@ export default {
       // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    setPolygon(polygon){
-      this.polygon=polygon
+    setPolygon(polygon) {
+      this.polygon = polygon
     },
     add() {
       this.showAdd = !this.showAdd
@@ -574,7 +573,7 @@ export default {
       // 지도에 클릭 이벤트를 등록
 
       this.removeCircles()
-      if (this.$store.state.mode === 1 && this.map.getLevel()<4) {
+      if (this.$store.state.mode === 1 && this.map.getLevel() < 4) {
         if (this.ChangeBusinessTable !== null) {
           // overay 삭제 매서드
           this.ChangeBusinessTable.setMap(null)
@@ -1408,7 +1407,7 @@ export default {
 
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    async getDataCircle () {
+    async getDataCircle() {
       this.loadingStatus = true
       axios
         .get(
