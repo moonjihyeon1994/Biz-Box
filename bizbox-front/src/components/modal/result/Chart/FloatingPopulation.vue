@@ -40,7 +40,7 @@
 import BarChart from '@/lib/BarChart'
 import LineChart from '@/lib/LineChart'
 import axios from '@/js/http-commons'
-import Spinner from '../Spinner.vue'
+import Spinner from '@/components/common/Spinner'
 
 export default {
   components: {

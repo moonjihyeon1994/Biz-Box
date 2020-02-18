@@ -36,6 +36,7 @@ public class JusoApi {
 	 */
 	@Cacheable(cacheNames = "DoroNameApi")
 	public String DoroNameApi(String name) throws IOException {
+		System.out.println("=============start : DoroNameApi=============== ");
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -67,6 +68,7 @@ public class JusoApi {
 	 */
 	@Cacheable(cacheNames = "XYtoLatLong")
 	public String XYtoLatLong(String num) throws IOException {
+		System.out.println("======================start : XYtoLatLong===============");
 		// 요청변수 설정
 		String[] nums = num.split(",");
 		String admCd = nums[0];
@@ -129,6 +131,7 @@ public class JusoApi {
 	 * @throws IOException
 	 */
 	public String findStore(String xy, String radius, String pageNo) throws IOException {
+		System.out.println("------start---findStore---------");
 		String[] cxcy = xy.split(",");
 
 		StringBuilder urlBuilder = new StringBuilder(
@@ -254,11 +257,13 @@ public class JusoApi {
 		String resultType = "json";
 		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
 		int radius = 0;
-		
+		int radiusincrease = 1; 
 		JSONObject data = new JSONObject();
 		while(true) {
-			radius += 100;
 			if(radius == 10000) break;
+			if(radius == 0) {radius = 100;}
+			else {radius +=radiusincrease*100; radiusincrease++;}
+			
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
 					+ "radius=" + radius 
 					+ "&ServiceKey=" + ServiceKey 

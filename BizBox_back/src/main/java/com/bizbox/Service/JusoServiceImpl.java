@@ -42,7 +42,7 @@ public class JusoServiceImpl implements JusoService{
 	 */
 	public String getAddressByName(String name) throws IOException {
 		String sb = jusoapi.DoroNameApi(name);
-		
+		System.out.println(sb);
 		int size = 0;
 		StringBuilder temp = new StringBuilder();
 		try {
@@ -199,6 +199,7 @@ public class JusoServiceImpl implements JusoService{
 		java.util.List<String> names = new ArrayList<String>();
 		while (true) {
 			String str = jusoapi.findStore(xy, radius, String.valueOf(idx));
+			
 			idx++;
 			try {
 				JSONParser jsonParse = new JSONParser();

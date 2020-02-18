@@ -11,6 +11,7 @@ import com.bizbox.apis.JusoApi;
 import com.bizbox.dao.ChangeBusinessDAO;
 import com.bizbox.utils.AddressUtil;
 import com.bizbox.vo.Changebusiness;
+import com.bizbox.vo.color;
 
 
 
@@ -181,6 +182,21 @@ public class ChangeBusinessServiceImpl implements ChangeBusinessService {
 
 		}
 		return cblist;
+	}
+
+	@Override
+	public JSONObject getColorlist() {
+		JSONObject jsonObject = new JSONObject();
+		List<color> colorlist = new LinkedList<color>();
+		colorlist=dao.getColor();
+		jsonObject.put("colorlist", colorlist);
+		return jsonObject;
+	}
+
+	@Override
+	public JSONObject getChangeHistorySubtoAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

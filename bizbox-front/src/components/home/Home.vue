@@ -2,9 +2,9 @@
   <div class="biz-container">
     <div>
       <start></start>
+      <News></News>
       <about></about>
       <biz-us></biz-us>
-      <News></News>
     </div>
     <HomeFooter></HomeFooter>
   </div>
