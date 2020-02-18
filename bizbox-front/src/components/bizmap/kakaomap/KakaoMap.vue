@@ -73,6 +73,7 @@ import markerimg from '@/assets/map-icon/marker.png'
 export default {
   data: () => {
     return {
+      Polylist: [],
       Color: '',
       filpStyle: {
         transform: 'rotateY(180deg)'
@@ -272,7 +273,8 @@ export default {
         let Name = name
         let position = mouseEvent.latLng
         polygon.setOptions({
-          fillColor: '#0a008f'
+          //fillColor: '#ffbf00',
+          fillOpacity: 0.5
         })
         customOverlay.setContent(
           '<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' +
@@ -290,7 +292,8 @@ export default {
       kakao.maps.event.addListener(polygon, 'mouseout', () => {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         polygon.setOptions({
-          fillColor: color
+          fillColor: color,
+          fillOpacity: 0.13
         })
         customOverlay.setMap(null)
       })
@@ -298,13 +301,14 @@ export default {
         //if (vm.$store.state.mode === 0) {
         if (vm.$store.state.mode !== 1) {
           //  각 폴리곤에 마우스 클릭 이벤트 등록
+          vm.unDetail()
+          vm.setPolygon(polygon)// 현재 선택된 폴리곤 기억
           vm.eventbus(name)
           vm.saveMouseEvent(mouseEvent.latLng, 0)
           let Name = name
           let coords = ''
           vm.setSerchkey(name) // 클릭된 영역의 동이름을 기억하는 메서드
-          vm.setPolygon(polygon)
-          vm.setColor(color)
+          vm.setColor(color)// 현재 선택된 폴리곤의 색 기억
           let Marker = vm.marker
           coords = new kakao.maps.LatLng(
             vm.ME.getLat(),
@@ -383,7 +387,7 @@ export default {
     },
     unDetail() {
       this.map.setLevel(6, { anchor: this.ME })
-      this.polygon.setOptions({ fillOpacity: 0.13 })
+      if(this.polygon != null){this.polygon.setOptions({ fillOpacity: 0.13 })}
     },
     detail() {
       this.map.setLevel(3, { anchor: this.ME })

@@ -110,3 +110,63 @@ button {
     font-size: 13px;
     list-style: none;
 }
+.namelist-inside{
+    max-height: 195px;
+    overflow-y: scroll;
+}
+.namelist-input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: calc(100%/4);
+    border: 0;
+    border: solid 0.5px  #e9e3e3;;
+    height: 15px;
+    margin: 0 0 10px;
+    padding: 15px;
+    /* text-align: center; */
+    box-sizing: border-box;
+    font-size: 14px;
+    border-radius: 3px; 
+}
+.namelist-bt{
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: rgb(185, 127, 73);
+    width: calc(100%/4);
+    height: 31px;
+    border-radius: 3px;    
+    padding: 0px;
+    color: #FFFFFF;
+    text-align: center;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+.namelist-bt:hover,.namelist-bt:active,.namelist-bt:focus {
+    background: rgb(173, 125, 80);
+}
+.namelist {
+    padding-left: 0px !important;
+}
+.namelist li:nth-child(2n-1){
+    border-radius: 3px;
+    font-size: large;
+}
+.namelist li:nth-child(2n){
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+.slidecontainer-text{
+    top: -3px !important;
+    left: 14px;
+    margin-bottom: 0px !important;
+}
+.list-distance-items{
+    width: 100%;
+    border-radius: 3px;
+}
