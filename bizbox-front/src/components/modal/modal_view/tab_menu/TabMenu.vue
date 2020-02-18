@@ -13,7 +13,7 @@
     </div>
 
     <div id="Total" class="tabcontent">
-      <totalView></totalView>
+      <totalView :clickEvent='clickEvent'></totalView>
     </div>
 
     <div id="Graph" class="tabcontent">
@@ -36,6 +36,9 @@ export default {
     graphItem,
     totalView,
     Chart
+  },
+  props: {
+    clickEvent: Boolean
   },
   mounted () {
     document.getElementById('defaultOpen').click()

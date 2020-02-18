@@ -68,7 +68,10 @@ export default {
         backgroundColor: 'white',
         cursor: 'pointer'
       },
-      loadingStatus: false
+      loadingStatus: false,
+      allowDiv: {
+        display: 'none'
+      }
     }
   },
   computed: {
