@@ -1,15 +1,9 @@
 <template>
   <div class="biz-container">
-    <div class="biz-item-1">
+    <div>
       <start></start>
       <about></about>
-    </div>
-    <div class="flex-item-1">
-      <div class="biz-container">
-        <TotalForm></TotalForm>
-      </div>
-    </div>
-    <div class="flex-item-1">
+      <biz-us></biz-us>
       <News></News>
     </div>
     <HomeFooter></HomeFooter>
@@ -21,7 +15,7 @@ import Start from './start/Start'
 import News from './news/News'
 import HomeFooter from './homefooter/HomeFooter'
 import About from './about/About'
-import TotalForm from '../totalform/TotalForm'
+import BizUs from './bizus/BizUs'
 
 export default {
   components: {
@@ -29,9 +23,9 @@ export default {
     News,
     HomeFooter,
     About,
-    TotalForm
+    BizUs
   }
 }
 </script>
 
-<style scoped src="./home.css"></style>
+<style scoped src="./Home.css"></style>

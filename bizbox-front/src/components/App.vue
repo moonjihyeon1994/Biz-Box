@@ -1,35 +1,38 @@
 <template>
   <v-app id="inspire">
-    <Nav :navColor="navColor"></Nav>
-    <div class="viewcontainer" v-scroll="onScroll">
+    <Nav></Nav>
+    <div class="viewcontainer">
       <router-view />
+      <v-overlay
+      v-if="isPopup"
+      >
+        <TotalForm></TotalForm>
+      </v-overlay>
     </div>
   </v-app>
 </template>
 
 <script>
 import '@/assets/css/reset.css'
-import '@/assets/css/common.css'
+import '@/assets/css/responsive.css'
+
 import Nav from './nav/Nav'
+import TotalForm from './totalform/TotalForm'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'app',
   components: {
-    Nav
+    Nav,
+    TotalForm
   },
-  data: () => ({
-    navColor: 'transparent'
-  }),
   methods: {
-    onScroll () {
-      if (document.documentElement.scrollTop === 0) {
-        this.navColor = 'transparent'
-      } else {
-        this.navColor = '#ffffff'
-      }
-    }
+    ...mapActions(['closeDialog'])
   },
   created () {
     this.$store.dispatch('initialLogin')
+  },
+  computed: {
+    ...mapGetters(['isPopup'])
   }
 }
 </script>

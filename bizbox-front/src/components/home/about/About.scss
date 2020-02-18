@@ -76,6 +76,7 @@ $color2: rgb(15, 66, 95);
 
     .bz-aboutTitle {
       left: 100px;
+      text-shadow: 5px 5px 5px rgba(0,0,0,0.2);
     }
 
     .bz-aboutTitle.before-enter {
@@ -126,6 +127,7 @@ $color2: rgb(15, 66, 95);
 
     .bz-aboutTitle {
       right: 100px;
+      text-shadow: 5px 5px 5px rgba(0,0,0,0.2);
     }
 
     .bz-aboutTitle.before-enter {
@@ -147,7 +149,7 @@ $color2: rgb(15, 66, 95);
       opacity: 0;
       transform: translateX(100px);
       transition: all 1.5s ease-in-out;
-      transition-delay: 0.5s;
+      transition-delay: 0.2s;
     }
     
     .bz-aboutText.enter {
@@ -204,6 +206,7 @@ $color2: rgb(15, 66, 95);
 
     .bz-aboutTitle {
       left: 100px;
+      text-shadow: 5px 5px 5px rgba(0,0,0,0.2);
     }
 
     .bz-aboutTitle.before-enter {

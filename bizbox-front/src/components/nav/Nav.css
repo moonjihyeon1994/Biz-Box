@@ -1,19 +1,40 @@
 /* Nav bar */
+
 i.v-icon.notranslate.mdi.mdi-menu.theme--light {
-    color: #ffffff;
+    color: #000000;
 }
 
 i.v-icon.notranslate.mdi.mdi-account.theme--light {
-    color: #ffffff;
+    color: #000000;
+    font-size: 40px;
 }
 
-i.v-icon.notranslate.mdi.mdi-information-outline.theme--light {
-    color: #ffffff;
+i.v-icon.notranslate.mdi.mdi-account.theme--light:hover {
+    color: orange;
+    cursor: pointer;
+    
 }
 
-i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
-    color: #ffffff;
+i.v-icon.notranslate.navIcon.mdi.mdi-account-arrow-right.theme--light {
+    color: #000000;
+    font-size: 40px;
 }
+
+i.v-icon.notranslate.navIcon.mdi.mdi-account-arrow-right.theme--light:hover {
+    color: orange;
+    cursor: pointer;
+}
+
+i.v-icon.notranslate.v-icon--link.mdi.mdi-alpha-b-box.theme--light {
+    font-size: 40px;
+}
+
+
+i.v-icon.notranslate.v-icon--link.mdi.mdi-alpha-b-box.theme--light:hover {
+    color: orange;
+    cursor: pointer;
+}
+
 
 div.v-list-item__title {
     color: var(--nav-text-color);
@@ -24,13 +45,73 @@ div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
     color: var(--nav-text-color);
 }
 
+div.v-list.v-sheet.v-sheet--tile.theme--light {
+    background-color: transparent;
+}
 
 div.v-toolbar__title span {
     color: var(--nav-text-color);
+    font-size: 40px;
 }
 
-@media (max-width:700px) {
-    div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
-        display: none;
+/* Login Modal */
+:root {
+    --modal-duration: 1s;
+    --modal-color: #428bca;
+}
+
+.modal-close {
+    display: none;
+}
+
+.modal-open {
+    display: flex;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: auto;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    margin: 10% auto;
+    width: 300px;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+    animation-name: modalopen;
+    animation-duration: var(--modal-duration);
+}
+
+.close {
+    color: #ccc;
+    float: right;
+    font-size: 30px;
+    color: #fff;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@keyframes modalopen {
+    from {
+        opacity: 0;
     }
+    to {
+        opacity: 1;
+    }
+}
+
+.login {
+    cursor: pointer;
+}
+
+.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+    margin-right: 0px;
 }

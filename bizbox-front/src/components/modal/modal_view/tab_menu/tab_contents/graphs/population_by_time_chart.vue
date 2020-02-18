@@ -199,12 +199,6 @@ export default {
 
 <style scoped lang="scss">
 #chart {
-  width: 500px;
-  height: 300px;
-  overflow: hidden;
-}
-
-#chart1 {
   position: relative;
   width: 500px;
   height: 300px;

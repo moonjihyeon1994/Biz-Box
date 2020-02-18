@@ -13,12 +13,14 @@
       <SignupForm></SignupForm>
     </v-tab-item>
   </v-tabs-items>
+  <button class="closeButton" @click="closeDialog">닫기</button>
 </div>
 </template>
 
 <script>
 import LoginForm from './loginform/LoginForm'
 import SignupForm from './signupform/SignupForm'
+import { mapActions } from 'vuex'
 export default {
   data: () => {
     return {
@@ -31,6 +33,9 @@ export default {
   components: {
     LoginForm,
     SignupForm
+  },
+  methods: {
+    ...mapActions(['popupDialog', 'closeDialog'])
   }
 }
 </script>
