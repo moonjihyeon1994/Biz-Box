@@ -39,7 +39,6 @@ export default {
       lightcolor: {
         backgroundColor: '#14bdfb'
       },
-
       result: {
         score: '90점',
         prospect: '상권 좋음'
@@ -72,12 +71,10 @@ export default {
       list: ['음식', '카페', '주점']
     }
   },
-  created () {
+  mounted () {
     axios.get('/storecountByLarge/' + this.key + '/100')
       .then(res => {
         const JsonLarge = res.data
-        console.log('=============================================================================')
-        console.log(JsonLarge)
         let totalCount = 0
         if (JsonLarge.소매 !== undefined) {
           this.stores.소매 = JsonLarge.소매
@@ -102,14 +99,10 @@ export default {
         this.stores.전체 = totalCount.toString()
       })
   },
-  mounted () {
-    this.initList()
-  },
   methods: {
     parentsMethod (score, name) {
       this.totalScore = score
       this.sgName = name
-      this.loadingStatus = false
     },
     loadingMethod (status) {
       this.loadingStatus = status

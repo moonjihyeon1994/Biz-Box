@@ -30,7 +30,7 @@ export default {
     return {
       bg: {
         backgroundColor: 'rgba(255, 255, 255, 0.616)',
-        filter: 'blue(2px)'
+        filter: 'blur(2px)'
       }
     }
   }
