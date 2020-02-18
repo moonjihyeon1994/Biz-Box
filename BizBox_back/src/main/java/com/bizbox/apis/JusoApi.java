@@ -253,11 +253,12 @@ public class JusoApi {
 	public JSONObject findBusiness(String cx,String cy) throws IOException {
 		String resultType = "json";
 		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
-		int radius = 50;
+		int radius = 0;
 		
 		JSONObject data = new JSONObject();
 		while(true) {
-			radius += radius;
+			radius += 100;
+			if(radius == 10000) break;
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
 					+ "radius=" + radius 
 					+ "&ServiceKey=" + ServiceKey 
@@ -276,7 +277,6 @@ public class JusoApi {
 				sb.append(tempStr);
 			}
 			br.close();
-			
 			try {
 				JSONParser jsonParse = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
