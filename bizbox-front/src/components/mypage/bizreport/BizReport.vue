@@ -1,8 +1,6 @@
 <template>
   <div class="biz-report">
     <div class="biz-info">
-      <h3>INFO (가게에 대한 정보)</h3>
-      개업일: {{ content.open }}
       <bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
@@ -21,7 +19,7 @@ import BarChart from '@/lib/BarChart'
 export default {
   data () {
     return {
-      gheight: 300,
+      gheight: 200,
       chartdata: null,
       chartoptions: null,
       labels: [
