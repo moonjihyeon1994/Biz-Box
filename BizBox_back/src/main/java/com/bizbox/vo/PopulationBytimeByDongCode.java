@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PopulationBytimeByDongCode {
-String a;
-String b;
-String c;
-String d;
-
+	private String a;
+	private String b;
+	private String c;
+	private String d;
 }

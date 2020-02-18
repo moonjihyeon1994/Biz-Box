@@ -8,7 +8,6 @@ import com.bizbox.vo.PopulationByTime;
 import com.bizbox.vo.PopulationBytimeByDongCode;
 
 public interface PopulationByDAO {
-	
 	PopulationByTime populationByTime(String address) throws Exception;
 	PopulationByLocation populationByLocation(String address) throws Exception;
 	List<PopulationByDong> populationByDong(String address) throws Exception;

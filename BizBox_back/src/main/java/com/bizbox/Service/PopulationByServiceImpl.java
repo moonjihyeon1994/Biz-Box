@@ -52,13 +52,11 @@ public class PopulationByServiceImpl implements PopulationByService{
 
 	@Override
 	public PopulationByLocation getByDongCode(String dongcode) {
-		// TODO Auto-generated method stub
 		return dao.getByDongCode(dongcode);
 	}
 
 	@Override
 	public List<PopulationBytimeByDongCode> getTimeByDongCode(String dongcode) {
-		// TODO Auto-generated method stub
 		return dao.populationByTimeByDongCode(dongcode);
 	}
 

@@ -64,11 +64,7 @@ public class PopulationByController {
 			JSONObject jsonObject = new JSONObject();
 			String RemovedAddress = util.RemoveNumber(address);
 			String predoroname = jusoService.getAddressByName(RemovedAddress).split(",")[11];// 도로명
-			System.out.println(predoroname);
 			adlist = jusoService.getAddressSetByName(RemovedAddress);
-			for (String string : adlist) {
-				System.out.println(string);
-			}
 
 			pbt = service.populationByTime(address);
 			if (pbt == null) {
@@ -79,19 +75,15 @@ public class PopulationByController {
 					}
 				}
 				if (pbt == null) {// 끝까지 정보 없으면 address테이블에서 동코드 가져옴
-					System.out.println("테이블에 정보가 없어 address테이블에서 동코드를 가져옵니다.....!");
-
 					List<PopulationBytimeByDongCode> list = new LinkedList<PopulationBytimeByDongCode>();
 					predoroname = jusoService.getAddressByName(address).split(",")[5];
 					String realname = predoroname;
-					System.out.println(predoroname);
 					String dongcode = service.getDongCodeList(predoroname);
 					while (dongcode == null && predoroname.length() > 0) {
 						predoroname = predoroname.substring(0, predoroname.length() - 2);
 						dongcode = service.getDongCodeList(predoroname);
 					}
 					dongcode = dongcode.substring(0, dongcode.length() - 2);
-					System.out.println(dongcode);
 					list = service.getTimeByDongCode(dongcode);
 					double j = 0, k = 0, l = 0, m = 0, n = 0, o = 0;
 					String J = null, K = null, L = null, M = null, N = null, O = null, P = null;
@@ -115,7 +107,6 @@ public class PopulationByController {
 					}
 					pbt = new PopulationByTime("", "", "", "", "", realname, "", "", "", J, K, L, M, N, O, "", "", "",
 							"", "", "", "");
-					System.out.println(list.get(0).getA());
 					jsonObject.put("pbt", pbt);
 					jsonObject.put("point", Point);
 					return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
@@ -155,10 +146,8 @@ public class PopulationByController {
 					}
 				}
 				if (pbl == null) {// 끝까지 정보 없으면 address테이블에서 동코드 가져옴
-					System.out.println("테이블에 정보가 없어 address테이블에서 동코드를 가져옵니다.....!");
 					predoroname = jusoService.getAddressByName(address).split(",")[5];
 					String realname = predoroname;
-					System.out.println(predoroname);
 					String dongcode = service.getDongCodeList(predoroname);
 
 					while (dongcode == null && predoroname.length() > 0) {
@@ -166,10 +155,8 @@ public class PopulationByController {
 						dongcode = service.getDongCodeList(predoroname);
 					}
 					dongcode = dongcode.substring(0, dongcode.length() - 2);
-					System.out.println(dongcode);
 					pbl = service.getByDongCode(dongcode);
 					pbl.setF(realname);
-					System.out.println(pbl.getA());
 					jsonObject.put("pbl", pbl);
 					jsonObject.put("point", Point);
 					return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
@@ -182,7 +169,6 @@ public class PopulationByController {
 			
 			
 		} catch (Exception e) {
-			System.out.println("No Data");
 			return new ResponseEntity<Object>("error", HttpStatus.BAD_REQUEST);
 		}
 	}

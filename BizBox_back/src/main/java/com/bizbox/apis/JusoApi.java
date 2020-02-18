@@ -103,7 +103,6 @@ public class JusoApi {
 			entX = (String) xyObject.get("entX");
 			entY = (String) xyObject.get("entY");
 		} catch (Exception e) {
-			System.out.println("xy좌표 찾기 오류");
 			e.printStackTrace();
 		}
 		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5", "+ellps=GRS80", "+units=m",
@@ -254,11 +253,11 @@ public class JusoApi {
 	public JSONObject findBusiness(String cx,String cy) throws IOException {
 		String resultType = "json";
 		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
-		int radius = 0;
+		int radius = 50;
 		
 		JSONObject data = new JSONObject();
 		while(true) {
-			radius += 50;
+			radius += radius;
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
 					+ "radius=" + radius 
 					+ "&ServiceKey=" + ServiceKey 
@@ -287,7 +286,6 @@ public class JusoApi {
 					continue;
 				JSONObject body = (JSONObject) jsonObj.get("body");
 				JSONArray itemsArray = (JSONArray) body.get("items");
-				System.out.println(itemsArray.toString());
 				data = (JSONObject) itemsArray.get(0);
 				if (resultCode.equals("00"))
 					break;

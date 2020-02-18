@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PopulationByTime {
-		
 		private String a;
 		private String b;
 		private String c;
@@ -31,5 +30,4 @@ public class PopulationByTime {
 		private String t;
 		private String u;
 		private String v;
-
 }

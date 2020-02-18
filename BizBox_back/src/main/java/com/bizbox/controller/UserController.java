@@ -76,7 +76,6 @@ public class UserController {
 		try {
 			if(userService.loginUser(user)) {
 				User loginuser = userService.checkUser(user);
-				System.out.println(loginuser.toString());
 				String token = jwtService.create(loginuser);
 				
 				List<Store> list = storeService.getStore(user.getEmail());

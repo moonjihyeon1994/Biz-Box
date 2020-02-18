@@ -48,16 +48,11 @@ public class SalesServiceImpl implements SalesService {
 					"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"));
 		}
 		String standard=list.get(0).getD();
-		System.out.println(standard);
 		for(int i=list.size()-1; i>=0; i--) {
 			if(!list.get(i).getD().equals(standard)) {
 				list.remove(i);
 			}
 		}
-		System.out.println(list.size());
-//		for (SalesInformation string : list) {
-//			System.out.println(string.getF());
-//		}
 		return list;
 	}
 

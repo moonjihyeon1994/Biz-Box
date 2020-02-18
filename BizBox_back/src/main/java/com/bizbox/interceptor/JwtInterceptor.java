@@ -25,7 +25,6 @@ public class JwtInterceptor implements HandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println(request.getMethod()+" : "+request.getServletPath());
 		if(request.getMethod().equals("OPTIONS")) {
 			return true;
 		}else {

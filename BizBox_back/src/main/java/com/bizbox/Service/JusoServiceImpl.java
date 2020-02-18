@@ -120,10 +120,8 @@ public class JusoServiceImpl implements JusoService{
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("해당주소가 존재하지않습니다.");
 			e.printStackTrace();
 		}
-		System.out.println(size);
 		return temp.toString();
 	}
 	
@@ -146,7 +144,7 @@ public class JusoServiceImpl implements JusoService{
 				addresslist.add(ad);
 			}
 		} catch (Exception e) {
-			System.out.println("해당주소가 존재하지않습니다.");
+			e.printStackTrace();
 		}
 		Set Address = new HashSet<String>();
 		AddressUtil util = new AddressUtil();
@@ -176,7 +174,7 @@ public class JusoServiceImpl implements JusoService{
 				donglist.add(sp);
 			}
 		} catch (Exception e) {
-			System.out.println("해당주소가 존재하지않습니다.");
+			e.printStackTrace();
 		}
 		Set Dong = new HashSet<String>();
 		for (int i = 0; i < donglist.size(); i++) {
@@ -401,7 +399,6 @@ public class JusoServiceImpl implements JusoService{
 		
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
 		for (int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i));
 			String indsLclsNm = list.get(i).getCategory_large();
 			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
 				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
@@ -414,7 +411,6 @@ public class JusoServiceImpl implements JusoService{
 		for (int i = 0; i < itemsArray.size(); i++) {
 			JSONObject items = (JSONObject) itemsArray.get(i);
 			String indsLclsNm = (String) items.get("indsLclsNm"); // 대분류
-//			indsLclsNm = indsLclsNm.replace("/", "");
 			
 			if (LNm.containsKey(indsLclsNm)) { // 대분류 당 갯수
 				LNm.put(indsLclsNm, LNm.get(indsLclsNm) + 1);
@@ -486,8 +482,6 @@ public class JusoServiceImpl implements JusoService{
 				array.add(data);
 			}
 		}
-		
-		
 		
 		if(small.equals("전체")) { //소분류 전체를 보여줄때
 			for (int i = 0; i < itemsArray.size(); i++) {
