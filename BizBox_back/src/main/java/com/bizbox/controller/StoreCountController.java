@@ -62,7 +62,7 @@ public class StoreCountController {
 			String xy = jusoApi.XYtoLatLong(num);
 			JSONObject total = jusoService.findAllStoreByLarge(xy, range);
 			
-			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
+			return new ResponseEntity<Object>(total,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
