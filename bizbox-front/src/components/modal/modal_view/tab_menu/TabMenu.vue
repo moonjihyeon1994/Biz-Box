@@ -42,6 +42,9 @@ export default {
   },
   methods: {
     openContents (evt, cityName) {
+      if (cityName === 'Graph') {
+        this.$store.state.opencontents = 0
+      } else if (cityName === 'Total') { this.$store.state.opencontents = 1 }
       let i, tabcontent, tablinks
       // Get all elements with class="tabcontent" and hide them
       tabcontent = document.getElementsByClassName('tabcontent')

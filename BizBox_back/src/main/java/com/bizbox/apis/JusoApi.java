@@ -258,10 +258,12 @@ public class JusoApi {
 		String resultType = "json";
 		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
 		int radius = 0;
-		
+		int radiusincrease = 1; 
 		JSONObject data = new JSONObject();
 		while(true) {
-			radius += 50;
+			if(radius == 0) {radius = 100;}
+			else {radius +=radiusincrease*100; radiusincrease++;}
+			
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
 					+ "radius=" + radius 
 					+ "&ServiceKey=" + ServiceKey 
