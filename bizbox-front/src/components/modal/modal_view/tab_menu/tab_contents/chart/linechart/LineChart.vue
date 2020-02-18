@@ -41,9 +41,6 @@ export default {
           year2016 = this.getData(arr2016, this.large, this.mid)
           year2017 = this.getData(arr2017, this.large, this.mid)
           year2018 = this.getData(arr2018, this.large, this.mid)
-          console.log(year2016)
-          console.log(year2017)
-          console.log(year2018)
 
           this.chartdata = {
             labels: [
@@ -61,21 +58,21 @@ export default {
             ],
             datasets: [
               {
-                label: '매출',
+                label: '매출(억)',
                 fill: false,
                 borderColor: 'red',
                 data: [
-                  year2016.first,
-                  year2016.second,
-                  year2016.third,
-                  year2016.fourth,
-                  year2017.first,
-                  year2017.second,
-                  year2017.third,
-                  year2017.fourth,
-                  year2018.first,
-                  year2018.second,
-                  year2018.third
+                  Number(year2016.first) / 10000000,
+                  Number(year2016.second) / 10000000,
+                  Number(year2016.third) / 10000000,
+                  Number(year2016.fourth) / 10000000,
+                  Number(year2017.first) / 10000000,
+                  Number(year2017.second) / 10000000,
+                  Number(year2017.third) / 10000000,
+                  Number(year2017.fourth) / 10000000,
+                  Number(year2018.first) / 10000000,
+                  Number(year2018.second) / 10000000,
+                  Number(year2018.third) / 10000000
                 ]
               }
             ]

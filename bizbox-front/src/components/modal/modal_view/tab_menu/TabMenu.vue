@@ -8,7 +8,7 @@
         그래프
       </button>
       <button class='tablinks' @click="openContents($event, 'Chart')">
-        차트
+        원설팅
       </button>
     </div>
 

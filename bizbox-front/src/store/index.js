@@ -18,7 +18,9 @@ const store = new Vuex.Store({
       lat: 37.505691, lng: 127.0298106
     },
     isShowModal: false,
-    opencontents: 3
+    opencontents: 3,
+    sgName: '',
+    subCategory: ''
   },
   actions: {
     'ChangeCenter': (store, payload) => {
