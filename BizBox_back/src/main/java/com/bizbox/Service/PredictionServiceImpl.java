@@ -22,6 +22,8 @@ public class PredictionServiceImpl implements PredictionService {
 	public JSONObject findAllPrediction(String cx, String cy) throws Exception {
 		JSONObject jsondata = api.findBusiness(cx, cy);
 		String address = (String) jsondata.get("mainTrarNm");
+
+		System.out.println(address);
 		
 		JSONObject data = new JSONObject();
 		
