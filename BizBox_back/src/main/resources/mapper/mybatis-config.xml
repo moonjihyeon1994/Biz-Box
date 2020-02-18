@@ -18,6 +18,8 @@
   	<typeAlias type="com.bizbox.vo.Store"  alias="store"/>
   	<typeAlias type="com.bizbox.vo.Point"  alias="point"/>
   	<typeAlias type="com.bizbox.vo.PopulationByBusiness"  alias="pb"/>
+  	<typeAlias type="com.bizbox.vo.OpenClose"  alias="oc"/>
+  	<typeAlias type="com.bizbox.vo.AddressCategory"  alias="ac"/>
   </typeAliases>
   
   <mappers>
@@ -29,5 +31,6 @@
    <mapper resource="mapper/predictionMapper.xml"/>
    <mapper resource="mapper/storeMapper.xml"/>
    <mapper resource="mapper/populationByBusinessMapper.xml"/>
+   <mapper resource="mapper/openCLoseMapper.xml"/>
   </mappers>
 </configuration>
