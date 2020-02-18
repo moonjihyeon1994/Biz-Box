@@ -1,6 +1,6 @@
 <template>
   <div class="mapContainer">
-    <Loading :loading='loadingStatus'></Loading>
+    <Loading :loading="loadingStatus"></Loading>
     <div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-card-front">
@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <Detail v-show="showModal" @close="showModal = false; unDetail()" :clickEvent='showModal'>
+    <Detail v-show="showModal" @close="showModal = false; unDetail()" :clickEvent="showModal">
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="map" id="map"></div>
@@ -301,19 +301,20 @@ export default {
         //if (vm.$store.state.mode === 0) {
         if (vm.$store.state.mode !== 1) {
           //  각 폴리곤에 마우스 클릭 이벤트 등록
+          // polygon.setOptions({
+          //   //fillColor: color,
+          //   fillOpacity: 0.5
+          // })
           vm.unDetail()
-          vm.setPolygon(polygon)// 현재 선택된 폴리곤 기억
+          vm.setPolygon(polygon) // 현재 선택된 폴리곤 기억
           vm.eventbus(name)
           vm.saveMouseEvent(mouseEvent.latLng, 0)
           let Name = name
           let coords = ''
           vm.setSerchkey(name) // 클릭된 영역의 동이름을 기억하는 메서드
-          vm.setColor(color)// 현재 선택된 폴리곤의 색 기억
+          vm.setColor(color) // 현재 선택된 폴리곤의 색 기억
           let Marker = vm.marker
-          coords = new kakao.maps.LatLng(
-            vm.ME.getLat(),
-            vm.ME.getLng()
-          ) // 결과값으로 받은 위치를 마커의 위치로 적용
+          coords = new kakao.maps.LatLng(vm.ME.getLat(), vm.ME.getLng()) // 결과값으로 받은 위치를 마커의 위치로 적용
           Marker.setPosition(coords)
           var imageSrc =
             'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
@@ -387,7 +388,9 @@ export default {
     },
     unDetail() {
       this.map.setLevel(6, { anchor: this.ME })
-      if(this.polygon != null){this.polygon.setOptions({ fillOpacity: 0.13 })}
+      if (this.polygon != null) {
+        this.polygon.setOptions({ fillOpacity: 0.13 })
+      }
     },
     detail() {
       this.map.setLevel(3, { anchor: this.ME })
