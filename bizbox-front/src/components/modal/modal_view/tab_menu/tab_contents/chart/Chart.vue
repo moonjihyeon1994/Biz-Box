@@ -21,6 +21,7 @@
       </div>
 
       <div class='bz-each-title'>창업/폐업 현황</div>
+      <OpenCloseTable></OpenCloseTable>
 
       <div class='bz-each-title'>원클릭 컨설팅</div>
     </div>
@@ -29,6 +30,7 @@
 
 <script>
 import SelectBox from './selectbox/SelectBox'
+import OpenCloseTable from './businessStatus/OpenClose.vue'
 import LineChart from './linechart/LineChart'
 import ListJson from '@/assets/json/Select.json'
 import Loading from '@/components/common/loading/Loading'
@@ -37,7 +39,8 @@ export default {
   components: {
     SelectBox,
     LineChart,
-    Loading
+    Loading,
+    OpenCloseTable
   },
   data () {
     return {
