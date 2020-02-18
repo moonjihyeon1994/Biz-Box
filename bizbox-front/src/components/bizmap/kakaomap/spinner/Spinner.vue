@@ -1,6 +1,7 @@
 <template>
   <div class="lds" v-if="loading">
-      <div></div>
+      <div>
+      </div>
       <div></div>
       <div></div>
   </div>
@@ -19,14 +20,13 @@ export default {
 
 <style>
 .lds {
-    z-index: 3;
+    z-index: 4;
     display: inline-block;
     position: relative;
     width: 64px;
     height: 64px;
-    line-height: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 110px;
+    left: 0;
 }
 
 .lds div {
