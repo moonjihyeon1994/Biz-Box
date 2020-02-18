@@ -67,7 +67,10 @@ export default {
       chartStyle: {
         display: 'contents'
       },
-      loadingStatus: false
+      loadingStatus: false,
+      allowDiv: {
+        display: 'none'
+      }
     }
   },
   computed: {

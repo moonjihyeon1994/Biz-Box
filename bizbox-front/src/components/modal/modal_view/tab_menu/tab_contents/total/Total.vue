@@ -12,7 +12,7 @@
     <div id='each-point-box'>
       <loading :loading='loadingStatus' transparent='true'></loading>
       <div class='bz-each-title'>상권 항목별 점수</div>
-      <scoring @childs-event='parentsMethod'></scoring>
+      <scoring @childs-event='parentsMethod' :clickEvent='clickEvent' @childs-loading-event='loadingMethod'></scoring>
     </div>
   </div>
 </template>
@@ -26,6 +26,9 @@ export default {
   components: {
     scoring,
     Loading
+  },
+  props: {
+    clickEvent: Boolean
   },
   data () {
     return {
@@ -107,6 +110,9 @@ export default {
       this.totalScore = score
       this.sgName = name
       this.loadingStatus = false
+    },
+    loadingMethod (status) {
+      this.loadingStatus = status
     }
   }
 }

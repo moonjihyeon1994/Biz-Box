@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <Detail v-show="showModal" @close="showModal = falseun; unDetail()">
+    <Detail v-show="showModal" @close="showModal = false; unDetail()" :clickEvent='showModal'>
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="map" id="map"></div>
@@ -130,7 +130,8 @@ export default {
         부동산: '',
         의료: '',
         관광여가오락: ''
-      }
+      },
+      isClicked: false
     }
   },
   mounted() {
@@ -308,7 +309,7 @@ export default {
           vm.saveMouseEvent(mouseEvent, 0)
           let Name = name
           let coords = ''
-          vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          vm.setSerchkey(name) // 클릭된 영역의 동이름을 기억하는 메서드
           vm.setPolygon(polygon)
           vm.setColor(color)
           let Marker = vm.marker

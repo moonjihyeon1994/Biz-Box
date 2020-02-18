@@ -50,6 +50,9 @@ export default {
       title: '연령별 매출',
       point: 0,
       loadingStatus: false,
+      allowDiv: {
+        display: 'none'
+      },
       maxIndex: 0,
       barColors: ['#365673', '#365673', '#365673', '#365673', '#365673', '#365673']
     }

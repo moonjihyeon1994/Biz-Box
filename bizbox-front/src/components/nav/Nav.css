@@ -132,3 +132,15 @@ div.v-toolbar__title span {
 .v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
     margin-right: 0px;
 }
+
+.logo {
+    background-image: url('../../assets/icons/logo/bizhover.png');
+    height: 55px;
+    width: 55px;
+    background-size: cover;
+}
+
+.logo:hover {
+    background-image: url('../../assets/icons/logo/bizdail.png');
+    cursor: pointer;
+}
