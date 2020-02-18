@@ -353,9 +353,7 @@ public class JusoServiceImpl implements JusoService{
 		}
 		
 		JSONObject jsonObject = new JSONObject();
-		JSONArray array = new JSONArray();
 		for (Map.Entry<String, Integer> entry : LNm.entrySet()) {
-			JSONObject jsonObject1 = new JSONObject();
 			String key = entry.getKey();
 			int value = entry.getValue();
 			if(key.contains("학문")) {
@@ -363,10 +361,8 @@ public class JusoServiceImpl implements JusoService{
 			}else if(key.contains("관광")) {
 				key = "관광여가오락";
 			}
-			jsonObject1.put(key, value);
-			array.add(jsonObject1);
+			jsonObject.put(key, value);
 		}
-		jsonObject.put("large", array);
 		return jsonObject;
 	}
 	
