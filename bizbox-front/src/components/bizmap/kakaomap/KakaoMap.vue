@@ -497,7 +497,9 @@ export default {
       return posi
     },
     eventbus(name) {
+      alert(name)
       if (this.showModal) { eventBus.$emit('clickmap', name) }
+      eventBus.$emit('clickmap', name) 
     },
     myevent() {
       this.saveMouseEvent(this.ME, 1)
@@ -546,7 +548,9 @@ export default {
     },
     setSerchkey(name) {
       // 마우스 커서위치의 동이름을 저장하는 메서드
+      alert(name)
       this.$store.state.modalsearch = name
+      alert("this.$store.state.modalsearch:"+name)
     },
     setPolygon(polygon) {
       this.polygon = polygon
