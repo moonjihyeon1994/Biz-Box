@@ -1,5 +1,6 @@
 <template>
   <div class="mapContainer">
+    <Loading :loading='loadingStatus'></Loading>
     <div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-card-front">
@@ -48,7 +49,7 @@
         </div>
       </div>
     </div>
-    <Detail v-show="showModal" @close="showModal = falseun; unDetail()">
+    <Detail v-show="showModal" @close="showModal = false; unDetail()" :clickEvent='showModal'>
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="map" id="map"></div>
@@ -103,6 +104,7 @@ export default {
       circle: null,
       polyline: null,
       radiusObj: null,
+      hashover: false,
       drawingFlag: false, // 원이 그려지고 있는 상태를
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
@@ -128,7 +130,8 @@ export default {
         부동산: '',
         의료: '',
         관광여가오락: ''
-      }
+      },
+      isClicked: false
     }
   },
   mounted() {
@@ -299,7 +302,7 @@ export default {
           vm.saveMouseEvent(mouseEvent.latLng, 0)
           let Name = name
           let coords = ''
-          vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          vm.setSerchkey(name) // 클릭된 영역의 동이름을 기억하는 메서드
           vm.setPolygon(polygon)
           vm.setColor(color)
           let Marker = vm.marker
@@ -652,9 +655,8 @@ export default {
     },
     async CircleMouseClick(mouseEvent) {
       // 지도에 클릭 이벤트를 등록
-
       this.removeCircles()
-      if (this.$store.state.mode === 1 && this.map.getLevel() < 4) {
+      if (this.$store.state.mode === 1 && this.map.getLevel() < 5) {
         if (this.ChangeBusinessTable !== null) {
           // overay 삭제 매서드
           this.ChangeBusinessTable.setMap(null)
@@ -696,6 +698,8 @@ export default {
             })
           }
         }
+      } else if (this.$store.state.mode === 1 && this.map.getLevel() >= 5) {
+        alert('맵을 확대하고 이용해주세요')
       }
       if (this.drawingFlag) {
         if (this.hashover) {
@@ -1393,9 +1397,9 @@ export default {
         })
     },
     async getBoxHTML() {
-      let a = this.CountInfo.소매
-      if (a === undefined) {
-        a = 0
+      let 소매 = this.CountInfo.소매
+      if (소매 === undefined) {
+        소매 = 0
       }
       let 학문교육 = this.CountInfo.학문교육
       if (학문교육 === undefined) {
@@ -1436,7 +1440,7 @@ export default {
       content +=
         '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/store.5c0694f4.png">' +
         '<span style="width:100%;">' +
-        a
+        소매
       content += '</span></div>'
       content += '    <div style="width:80px;height:93px;">'
       content +=
@@ -1527,7 +1531,6 @@ export default {
             .finally(() => {
               let vm = this
               vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
-              vm.$store.state.mode = 0
               vm.loadingStatus = false
               vm.hashover = false
               this.radiusObj = {

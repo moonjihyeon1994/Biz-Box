@@ -1,7 +1,7 @@
 <template>
   <nav>
     <v-app-bar app color="transparent" flat>
-      <v-icon @click="goHome">mdi-alpha-b-box</v-icon>
+      <div class="logo" @click="goHome"></div>
       <v-spacer />
       <!-- Logout -->
       <v-list dense>
