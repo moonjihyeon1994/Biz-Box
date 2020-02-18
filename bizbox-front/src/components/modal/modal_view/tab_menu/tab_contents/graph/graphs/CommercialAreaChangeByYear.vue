@@ -104,7 +104,6 @@ export default {
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
