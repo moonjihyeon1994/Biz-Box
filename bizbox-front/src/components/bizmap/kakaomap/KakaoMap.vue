@@ -132,7 +132,6 @@ export default {
     }
   },
   mounted() {
-    console.log(Dong)
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
     let name = '멀티캠퍼스'
@@ -140,7 +139,6 @@ export default {
     let Message = ''
     this.message = Message
     var container = document.getElementById('map')
-    this.ME =  new kakao.maps.LatLng(37.505691, 127.0298106)
     var options = {
       center: new kakao.maps.LatLng(37.505691, 127.0298106),
       level: 6
@@ -166,12 +164,10 @@ export default {
       map: this.map
       //position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
-    //console.log(this.$store.state)
     this.drawMarker()
 
     kakao.maps.event.addListener(this.marker, 'click', function() {
       // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
-      // vm.eventBus(vm.$store.state.modalsearch)
       vm.detail()
       vm.changeModal()
     })
@@ -192,9 +188,7 @@ export default {
     }) // 지도에 무브 이벤트를 등록
     axios
       .get('/population/getPopulationByTime/' + this.name)
-      .then(res => {
-        console.log(res)
-      })
+      .then(res => {})
       .finally(() => {})
     // for (var i = 0, len = data.length; i < len; i++) {
     //   var nname = data[i].properties.ADM_DR_NM
@@ -212,7 +206,6 @@ export default {
     // a.href = URL.createObjectURL(file)
     // a.download = 'cc.txt'
     // a.click()
-    console.log(data)
     for (var i = 0, len = data.length; i < len; i++) {
       // 동의 경계면 좌표를 받아서 다각형 생성 함수에 전달
       this.coordinates = data[i].geometry.coordinates
@@ -303,7 +296,7 @@ export default {
         if (vm.$store.state.mode !== 1) {
           //  각 폴리곤에 마우스 클릭 이벤트 등록
           vm.eventbus(name)
-          vm.saveMouseEvent(mouseEvent, 0)
+          vm.saveMouseEvent(mouseEvent.latLng, 0)
           let Name = name
           let coords = ''
           vm.setSerchkey(name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
@@ -311,11 +304,10 @@ export default {
           vm.setColor(color)
           let Marker = vm.marker
           coords = new kakao.maps.LatLng(
-            vm.ME.latLng.getLat(),
-            vm.ME.latLng.getLng()
+            vm.ME.getLat(),
+            vm.ME.getLng()
           ) // 결과값으로 받은 위치를 마커의 위치로 적용
           Marker.setPosition(coords)
-          // InfoWindow.close()
           var imageSrc =
             'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
           // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
@@ -337,25 +329,25 @@ export default {
           vm.info.setMap(Map)
           Map.setCenter(coords)
           if (vm.$store.state.mode === 2) {
-            vm.makeOverlay2(mouseEvent, name)
+            vm.makeOverlay2(name)
           }
           if (vm.$store.state.mode === 3) {
-            vm.makeOverlay3(mouseEvent, name)
+            vm.makeOverlay3(name)
           }
           if (vm.$store.state.mode === 4) {
-            vm.makeOverlay4(mouseEvent, name)
+            vm.makeOverlay4(name)
           }
           if (vm.$store.state.mode === 5) {
-            vm.makeOverlay5(mouseEvent, name)
+            vm.makeOverlay5(name)
           }
           if (vm.$store.state.mode === 6) {
-            vm.makeOverlay6(mouseEvent, name)
+            vm.makeOverlay6(name)
           }
           if (vm.$store.state.mode === 7) {
-            vm.makeOverlay7(mouseEvent, name)
+            vm.makeOverlay7(name)
           }
           if (vm.$store.state.mode === 8) {
-            vm.makeOverlay8(mouseEvent, name)
+            vm.makeOverlay8(name)
           }
         }
       })
@@ -387,11 +379,11 @@ export default {
       this.Color = color
     },
     unDetail() {
-      this.map.setLevel(6, { anchor: this.ME.latLng })
+      this.map.setLevel(6, { anchor: this.ME })
       this.polygon.setOptions({ fillOpacity: 0.13 })
     },
     detail() {
-      this.map.setLevel(3, { anchor: this.ME.latLng })
+      this.map.setLevel(3, { anchor: this.ME })
       this.polygon.setOptions({ fillOpacity: 0 })
     },
     drawMarker() {
@@ -459,9 +451,7 @@ export default {
             }
           }
         )
-        .then(res => {
-          console.log(res)
-        })
+        .then(res => {})
         .finally(() => {
           this.addMyStore()
           this.storeName = null
@@ -492,7 +482,6 @@ export default {
       }
     },
     getmystore() {
-      console.log(this.$store.state.auth)
       let list = this.$store.state.auth.mylist
       let posi = []
       for (let index = 0; index < list.length; index++) {
@@ -502,48 +491,44 @@ export default {
       return posi
     },
     eventbus(name) {
-      // var eventBus = new Vue()
       eventBus.$emit('clickmap', name)
     },
     myevent() {
       this.saveMouseEvent(this.ME, 1)
       let name = this.$store.state.modalsearch
       if (this.$store.state.mode === 2) {
-        this.makeOverlay2(this.ME, name)
+        this.makeOverlay2(name)
       }
       if (this.$store.state.mode === 3) {
-        this.makeOverlay3(this.ME, name)
+        this.makeOverlay3(name)
       }
       if (this.$store.state.mode === 4) {
-        this.makeOverlay4(this.ME, name)
+        this.makeOverlay4(name)
       }
       if (this.$store.state.mode === 5) {
-        this.makeOverlay5(this.ME, name)
+        this.makeOverlay5(name)
       }
       if (this.$store.state.mode === 6) {
-        this.makeOverlay6(this.ME, name)
+        this.makeOverlay6(name)
       }
       if (this.$store.state.mode === 7) {
-        this.makeOverlay7(this.ME, name)
+        this.makeOverlay7(name)
       }
       if (this.$store.state.mode === 8) {
-        this.makeOverlay8(this.ME, name)
+        this.makeOverlay8(name)
       }
     },
-    saveMouseEvent (mouseEvent, flag) {
+    saveMouseEvent(mouseEvent, flag) {
       // 마우스 커서의 위치를 저장하는 메서드
       if (this.isonececlick === false && flag === 1) {
         // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
         this.isonececlick = true
       }
       this.ME = mouseEvent
-      this.$store.state.Coords.lat = this.ME.latLng.getLat() // 모달에 전달할 xy 좌표
-      this.$store.state.Coords.lng = this.ME.latLng.getLng() //
-      console.log(null)
-      console.log(this.$store.state.Coords.lat)
-      console.log(this.$store.state.Coords.lng)
+      this.$store.state.Coords.lat = this.ME.getLat() // 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.getLng() //
     },
-    saveMouseEvent2 (coords, flag) {
+    saveMouseEvent2(coords, flag) {
       // 마우스 커서의 위치를 저장하는 메서드
       if (this.isonececlick === false && flag === 1) {
         // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
@@ -552,24 +537,21 @@ export default {
       this.ME = coords
       this.$store.state.Coords.lat = this.ME.getLat() // 모달에 전달할 xy 좌표
       this.$store.state.Coords.lng = this.ME.getLng() //
-      console.log(null)
-      console.log(this.$store.state.Coords.lat)
-      console.log(this.$store.state.Coords.lng)
     },
-    setSerchkey (name) {
+    setSerchkey(name) {
       // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    setPolygon (polygon) {
+    setPolygon(polygon) {
       this.polygon = polygon
     },
-    add () {
+    add() {
       this.showAdd = !this.showAdd
     },
-    changeModal () {
+    changeModal() {
       this.showModal = !this.showModal
     },
-    ClickMove () {
+    ClickMove() {
       if (this.$store.state.mode === 0) {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         // vm.points = vm.centroid(points)
@@ -579,7 +561,6 @@ export default {
         this.geocoder.addressSearch(Name, function(result, status) {
           // 정상적으로 검색이 완료되면
           if (status === kakao.maps.services.Status.OK) {
-            console.log(Name)
             var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
             Marker.setPosition(coords)
             InfoWindow.close()
@@ -590,7 +571,7 @@ export default {
         })
       }
     },
-    centroid (points) {
+    centroid(points) {
       var i, j, len, p1, p2, f, area, x, y
       area = x = y = 0
       for (i = 0, len = points.length, j = len - 1; i < len; j = i++) {
@@ -611,12 +592,12 @@ export default {
       this.map.panTo(moveLatLon)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
-    serch (name) {
+    serch(name) {
       let Name = this.name
       // eslint-disable-next-line no-unused-vars
       let vm = this
       let Marker = this.marker
-      this.geocoder.addressSearch(this.name, function (result, status) {
+      this.geocoder.addressSearch(this.name, function(result, status) {
         // 정상적으로 검색이 완료되면
         if (status === kakao.maps.services.Status.OK) {
           var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
@@ -645,6 +626,27 @@ export default {
           vm.info.setContent(content)
           vm.info.setPosition(coords)
           vm.info.setMap(vm.map)
+        }
+        if (vm.$store.state.mode === 2) {
+          vm.makeOverlay2(Name)
+        }
+        if (vm.$store.state.mode === 3) {
+          vm.makeOverlay3(Name)
+        }
+        if (vm.$store.state.mode === 4) {
+          vm.makeOverlay4(Name)
+        }
+        if (vm.$store.state.mode === 5) {
+          vm.makeOverlay5(Name)
+        }
+        if (vm.$store.state.mode === 6) {
+          vm.makeOverlay6(Name)
+        }
+        if (vm.$store.state.mode === 7) {
+          vm.makeOverlay7(Name)
+        }
+        if (vm.$store.state.mode === 8) {
+          vm.makeOverlay8(Name)
         }
       })
     },
@@ -776,7 +778,7 @@ export default {
     // ------------------------------------------------
     // 표 만들기 시간별 유동인구
     // ------------------------------------------------
-    async makeOverlay2(mouseEvent, Name) {
+    async makeOverlay2(Name) {
       this.name = Name
       if (this.name == null) return
       // === 요소 삭제했다가 추가 ==
@@ -786,7 +788,7 @@ export default {
       var para = document.getElementById('graph-info').appendChild(node)
       para.id = 'horizontalbarChart'
       para.style = 'height: 190px; width: 350px;'
-     
+
       // =======================
       await axios
         .get('/population/getPopulationByTime/' + this.name)
@@ -855,7 +857,7 @@ export default {
     // ------------------------------------------------
     // 표 만들기 상권 변화 지수
     // ------------------------------------------------
-    async makeOverlay3(mouseEvent, Name) {
+    async makeOverlay3(Name) {
       this.name = Name
       // === 요소 삭제했다가 추가 ==
       var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
@@ -936,7 +938,7 @@ export default {
     // -----------------------------------------------
     // 연령별 매출 정보
     // ------------------------------------------------
-    async makeOverlay4(mouseEvent, Name) {
+    async makeOverlay4(Name) {
       this.name = Name
       // === 요소 삭제했다가 추가 ==
       var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
@@ -1029,7 +1031,7 @@ export default {
     // ------------------------------------------------
     // 표 만들기 연령별 유동인구
     // ------------------------------------------------
-    async makeOverlay5(mouseEvent, Name) {
+    async makeOverlay5(Name) {
       this.name = Name
       // === 요소 삭제했다가 추가 ==
       var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
@@ -1122,7 +1124,7 @@ export default {
     // ------------------------------------------------
     // 표 만들기 요일별 유동인구
     // ------------------------------------------------
-    async makeOverlay6(mouseEvent, Name) {
+    async makeOverlay6(Name) {
       this.name = Name
       // === 요소 삭제했다가 추가 ==
       var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
@@ -1201,7 +1203,7 @@ export default {
     // ------------------------------------------------
     // 표 만들기 시간별 매출정보
     // ------------------------------------------------
-    async makeOverlay7(mouseEvent, Name) {
+    async makeOverlay7(Name) {
       this.name = Name
       // === 요소 삭제했다가 추가 ==
       var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
@@ -1300,7 +1302,7 @@ export default {
     // ------------------------------------------------
     // 표 만들기 요일별 매출 정보
     // ------------------------------------------------
-    async makeOverlay8(mouseEvent, Name) {
+    async makeOverlay8(Name) {
       this.name = Name
       // === 요소 삭제했다가 추가 ==
       var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
@@ -1499,7 +1501,6 @@ export default {
             this.range
         )
         .then(res => {
-          console.log(res)
           var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
