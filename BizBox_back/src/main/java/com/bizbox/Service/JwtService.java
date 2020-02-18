@@ -37,7 +37,6 @@ public class JwtService {
 				.claim("User", user.getEmail());
 				
 		builder.signWith(SignatureAlgorithm.HS256, salt.getBytes());
-//		builder.signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encode(salt.getBytes()));
 		final String jwt = builder.compact();
 		log.debug("토큰발생: {}", jwt);
 		return jwt;

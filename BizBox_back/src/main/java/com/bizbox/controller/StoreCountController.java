@@ -71,12 +71,11 @@ public class StoreCountController {
 	
 	@PutMapping("/storeDetailByCategory/{Category}")
 	public ResponseEntity<Object> storeDetailByCategory(@RequestBody Category category){
-		System.out.println(category.toString());
 		try {
 			String num = jusoService.getAddressByName(category.getAddress());
 			String xy = jusoApi.XYtoLatLong(num);
 			JSONObject total = jusoService.findStoreDetailByCategory(xy, category.getRange(), category.getMiddle(), category.getSmall());
-			System.out.println(total);
+
 			return new ResponseEntity<Object>(total.toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

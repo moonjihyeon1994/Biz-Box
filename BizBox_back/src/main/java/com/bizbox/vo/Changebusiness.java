@@ -8,17 +8,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Changebusiness {
-	
-	String a;
-	String b;
-	String c;
-	String d;
-	String e;
-	String f;
-	String g;
-	String h;
-	String i;
-	String j;
+	private String a;
+	private String b;
+	private String c;
+	private String d;
+	private String e;
+	private String f;
+	private String g;
+	private String h;
+	private String i;
+	private String j;
 	public Changebusiness(String a) {
 		this.a = a;
 	}

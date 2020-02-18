@@ -30,7 +30,6 @@ public class SalesController {
 	@GetMapping("/{address}")
 	public ResponseEntity<Object> getSalesInfo(@PathVariable String address){
 		try {
-			//String reladdress=service.salesInfosub2(address)
 			List<SalesInformation> list =service.salesInfosub(address);
 			return new ResponseEntity<Object>(list, HttpStatus.OK);
 		} catch (Exception e) {
