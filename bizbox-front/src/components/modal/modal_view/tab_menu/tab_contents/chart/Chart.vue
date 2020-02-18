@@ -15,8 +15,9 @@
       </div>
 
       <div class='bz-each-title'>매출 차트</div>
-      <div>
-        <line-chart chartWidth='500px' chartHeight='200px' :large='large' :mid='mid' />
+      <div id='chart-wrapper'>
+        <loading :loading='loadingStatus' :transparent='true'/>
+        <line-chart chartWidth='500px' chartHeight='300px' :large='large' :mid='mid' @loadingEvent='chartLoading'/>
       </div>
 
       <div class='bz-each-title'>창업/폐업 현황</div>
@@ -30,11 +31,13 @@
 import SelectBox from './selectbox/SelectBox'
 import LineChart from './linechart/LineChart'
 import ListJson from '@/assets/json/Select.json'
+import Loading from '@/components/common/loading/Loading'
 
 export default {
   components: {
     SelectBox,
-    LineChart
+    LineChart,
+    Loading
   },
   data () {
     return {
@@ -42,7 +45,8 @@ export default {
       listR: [],
       isInit: false,
       large: '전체',
-      mid: '전체'
+      mid: '전체',
+      loadingStatus: false
     }
   },
   methods: {
@@ -64,6 +68,9 @@ export default {
     parentsMethodM (selected, state) {
       this.isInit = state
       this.mid = selected
+    },
+    chartLoading (status) {
+      this.loadingStatus = status
     }
   }
 }
