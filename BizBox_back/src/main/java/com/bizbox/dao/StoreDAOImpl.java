@@ -37,4 +37,14 @@ public class StoreDAOImpl implements StoreDAO {
 	public List<Store> getStoreByXY(Point point) throws SQLException {
 		return session.selectList(namespace+"getStoreByXY", point);
 	}
+
+	@Override
+	public List<Store> getAllStore() throws SQLException {
+		return session.selectList(namespace+"getAllStore");
+	}
+
+	@Override
+	public String getDistanceByXY(Point point) throws SQLException {
+		return session.selectOne(namespace+"getDistanceByXY", point);
+	}
 }

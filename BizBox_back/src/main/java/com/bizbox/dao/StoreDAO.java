@@ -11,4 +11,6 @@ public interface StoreDAO {
 	int closeStore(Store store) throws SQLException;
 	List<Store> getStore(String email) throws SQLException;
 	List<Store> getStoreByXY(Point point) throws SQLException;
+	List<Store> getAllStore() throws SQLException;
+	String getDistanceByXY(Point point) throws SQLException;
 }
