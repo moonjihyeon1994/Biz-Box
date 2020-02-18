@@ -40,8 +40,7 @@ export default {
     return {
       sgCode: '',
       sgName: '',
-      dong: '역삼동',
-      // key: this.$store.state.modalsearch,
+      key: this.$store.state.modalsearch,
       sales_2018: {
         'q1': 0,
         'q2': 0,
@@ -309,15 +308,20 @@ export default {
   },
   created () {
     let vm = this
-    let requestSalesUrl = '/predict/findBusiness/127.050826/37.507118/'
+    let requestSalesUrl = '/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat + '/'
     axios.get(requestSalesUrl)
       .then(res => {
+        console.log('lng: ' + this.$store.state.Coords.lng)
+        console.log('lat: ' + this.$store.state.Coords.lat)
+        console.log(res.data)
         let data2018 = res.data['2018']
         let data2017 = res.data['2017']
         let data2016 = res.data['2016']
 
         vm.sgCode = data2018[0].trdar_cd
         vm.sgName = data2018[0].trdar_cd_nm
+        console.log('vm.sgCode: ' + vm.sgCode)
+        console.log('vm.sgName: ' + vm.sgName)
 
         // 집객력 > 주거인구, 직장인구
         for (let index = 0; index < data2018.length; index++) {
@@ -441,7 +445,7 @@ export default {
             console.log('유동인구 : ', vm.score.집객력.유동인구)
           })
           .then(() => {
-            let resquestHistoryUrl = '/change/getHistory/' + vm.dong
+            let resquestHistoryUrl = '/change/getHistory/' + vm.key
             axios.get(resquestHistoryUrl)
               .then(res => {
                 let continuousYears = Number(res.data.cblist[5].g)

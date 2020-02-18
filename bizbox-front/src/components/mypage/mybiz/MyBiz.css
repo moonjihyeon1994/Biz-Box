@@ -1,9 +1,0 @@
-.mybiz { 
-    margin: 0 5%;
-}
-
-@media (min-width:700px) {
-    .mypage {
-        margin: 0 10%;
-    }
-}

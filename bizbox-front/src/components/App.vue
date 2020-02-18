@@ -23,6 +23,11 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'app',
+  data () {
+    return {
+      snack: true
+    }
+  },
   components: {
     Nav,
     TotalForm

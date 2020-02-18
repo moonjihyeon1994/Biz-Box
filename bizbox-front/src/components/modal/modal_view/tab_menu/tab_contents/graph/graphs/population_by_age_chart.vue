@@ -15,8 +15,7 @@
       <span class="point-normal">유동인구가 가장 많아요.</span>
     </p>
     <div id="chart">
-      <div id="back" :style="allowDiv"></div>
-      <spinner :loading="loadingStatus"></spinner>
+      <loading :loading="loadingStatus" :transparent='true'></loading>
       <bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
@@ -30,13 +29,13 @@
 <script>
 import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
-import Spinner from '@/components/common/Spinner'
+import Loading from '@/components/common/loading/Loading'
 import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
     BarChart,
-    Spinner
+    Loading
   },
   data () {
     return {
@@ -68,10 +67,7 @@ export default {
       chartStyle: {
         display: 'contents'
       },
-      loadingStatus: false,
-      allowDiv: {
-        display: 'none'
-      }
+      loadingStatus: false
     }
   },
   computed: {

@@ -1,12 +1,27 @@
-.mypage {
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
+.margin-hor {
     margin: 0 5%
 }
 
-@media (min-width:700px) {
-    .mypage {
-        margin: 0 10%;
+.mt {
+    margin-top: 56px;
+}
+
+.inner-item {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+@media (min-width: 700px) {
+    .margin-hor {
+        margin: 0 10%
+    }
+    .mt {
+        margin-top: 64px;
+    }
+    .inner-item {
+        margin: 0 5%
     }
 }
