@@ -1,0 +1,79 @@
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
+.foot-container {
+    color: #ffffff;
+    background-color: $color2;
+    justify-content: space-around;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.7);
+}
+
+.foot-item {
+    margin-top: 10px;
+    padding: 5px 20px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.foot-button {
+    width: 80%;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    background-color: $color1;
+    border-radius: 5px;
+    margin: 10px;
+    letter-spacing: 3px;
+}
+
+a.foot-button {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a.foot-button:hover {
+    background-color: hotpink;
+}
+
+.member-list {
+    display: flex;
+}
+
+h1.foot-title {
+    color: $color1;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.member {
+    flex: 1;
+    display: flex;
+}
+
+.member-name {
+    flex: 1;
+    align-self: center;
+}
+
+.member-role {
+    flex: 1;
+    font-size: medium;
+    align-self: center;
+    margin-left: 10px;
+}
+
+@media screen and (min-width: 768px) {
+    .foot-container {
+        display: flex;
+        color: #ffffff;
+        justify-content: space-around;
+        padding: 15px;
+    }
+    .foot-item {
+        flex: 1;
+    }
+}

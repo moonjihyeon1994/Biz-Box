@@ -1,13 +1,11 @@
 <template>
   <transition name="modal">
     <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container" >
           <button class="close-button" @click="$emit('close')"><v-icon>mdi-close-circle-outline</v-icon></button>
-          <TabMenu />
+          <TabMenu :clickEvent='clickEvent'/>
           <hr />
         </div>
-      </div>
     </div>
   </transition>
 </template>
@@ -17,27 +15,8 @@ export default {
   components: {
     TabMenu
   },
-  mounted () {
-    this.handleResize()
-  },
-  created () {
-    window.addEventListener('resize', this.handleResize)
-    this.handleResize()
-  },
-  destroyed () {
-    window.removeEventListener('resize', this.handleResize)
-  },
-  methods: {
-    handleResize () {
-      const boderHeight = 120
-      let modalcontainer = document.getElementsByClassName('modal-container')
-      let newHeight = window.innerHeight - boderHeight - 50 + 'px'
-      try {
-        modalcontainer[1].style.height = newHeight
-      } catch (e) {
-        // console.log(e)
-      }
-    }
+  props: {
+    clickEvent: Boolean
   }
 }
 </script>

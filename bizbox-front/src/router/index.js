@@ -4,10 +4,12 @@ import Home from '@/components/home/Home.vue'
 // import About from '@/components/about/About.vue'
 // import Result from '@/components/result/Result.vue'
 // import ResultSearch from '@/components/result/ResultSearch.vue'
-import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'
+import map from '@/components/bizmap/kakaomap/KakaoMap.vue'
+import MyPage from '@/components/mypage/MyPage.vue'
 import Modal from '@/components/modal/Modal.vue'
 import tap from '@/components/countstore/CountStores.vue'
 import result from '@/components/modal/result/Result.vue'
+import loading from '@/components/bizmap/loading/Loading.vue'
 
 Vue.use(VueRouter)
 
@@ -17,15 +19,15 @@ const routes = [
     name: 'home',
     component: Home
   },
-  // {
-  //   path: '/result2',
-  //   name: 'newResult',
-  //   component: ResultSearch
-  // },
+  {
+    path: '/mypage',
+    name: 'mypage',
+    component: MyPage
+  },
   {
     path: '/bizmap',
     name: 'bizmap',
-    component: Map
+    component: map
   },
   {
     path: '/modal',
@@ -41,6 +43,11 @@ const routes = [
     path: '/result',
     name: 'result',
     component: result
+  },
+  {
+    path: '/loading',
+    name: 'loading',
+    component: loading
   }
 ]
 

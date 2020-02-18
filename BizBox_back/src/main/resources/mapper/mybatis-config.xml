@@ -14,6 +14,7 @@
   	<typeAlias type="com.bizbox.vo.PopulationBytimeByDongCode"  alias="ptdc"/>
   	<typeAlias type="com.bizbox.vo.Password"  alias="password"/>
   	<typeAlias type="com.bizbox.vo.User"  alias="user"/>
+  	<typeAlias type="com.bizbox.vo.color"  alias="color"/>
   	<typeAlias type="com.bizbox.vo.Prediction"  alias="prediction"/>
   	<typeAlias type="com.bizbox.vo.Store"  alias="store"/>
   	<typeAlias type="com.bizbox.vo.Point"  alias="point"/>

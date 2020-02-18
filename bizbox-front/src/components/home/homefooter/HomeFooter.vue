@@ -46,14 +46,14 @@ export default {
       ],
       memberList: [
         { name: '음영현', role: '풀스택 개발자', imgUrl: '../../../assets/images/member/eyh.jpg' },
-        { name: '오승완', role: '유일무이한 디자이너', imgUrl: '../../../assets/images/member/osw.jpg' },
-        { name: '문지현', role: '학습괴물', imgUrl: '../../../assets/images/member/mjh.jpg' },
-        { name: '양희철', role: '간식계의 도라에몽', imgUrl: '../../../assets/images/member/yhc.jpg' },
+        { name: '오승완', role: '21세기 김정호', imgUrl: '../../../assets/images/member/osw.jpg' },
+        { name: '문지현', role: '학습 괴물', imgUrl: '../../../assets/images/member/mjh.jpg' },
+        { name: '양희철', role: '데이터 귀공자', imgUrl: '../../../assets/images/member/yhc.jpg' },
         { name: '문요한', role: '프론트엔드의 종점', imgUrl: '../../../assets/images/member/myh.jpg' },
-        { name: '김재현', role: '팀원 1', imgUrl: '../../../assets/images/member/kjh.jpg' }
+        { name: '김재현', role: '그림 그리는 개발자', imgUrl: '../../../assets/images/member/kjh.jpg' }
       ]
     }
   }
 }
 </script>
-<style scoped src="./HomeFooter.css"></style>
+<style scoped src="./HomeFooter.scss" lang='scss'></style>

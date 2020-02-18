@@ -43,7 +43,7 @@ import HorizontalBarChart from '@/lib/HorizontalBarChart'
 import PieChart from '@/lib/PieChart'
 import LineChart from '@/lib/LineChart'
 import axios from '@/js/http-commons'
-import Spinner from '../Spinner'
+import Spinner from '@/components/common/Spinner'
 
 export default {
   components: {

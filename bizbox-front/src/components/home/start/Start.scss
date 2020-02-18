@@ -150,7 +150,7 @@ $color2: rgb(15, 66, 95);
     }
 
     #bz-styleTextSub {
-      font-size: 1.5em;
+      font-size: 2em;
       left: 20px;
     }
 
@@ -159,6 +159,35 @@ $color2: rgb(15, 66, 95);
 
       #bz-startBox-start {
         width: 50%;
+      }
+    }
+  }
+
+  /*  작은 스마트폰 */
+  @media only screen  and (max-width: 400px) {
+    #bz-styleText {
+      font-size: 3em;
+      left: 30px;
+    }
+
+    #bz-styleTextSub {
+      font-size: 1em;
+      top: 200px;
+      left: 10px;
+    }
+
+    #bz-startBox {
+      width: 75%;
+      height: 170px;
+      top: 320px;
+      
+      #bz-startBox-text {
+        font-size: 1.3em;
+      }
+
+      #bz-startBox-start {
+        font-size: 1.2em;
+        width: 80%;
       }
     }
   }
