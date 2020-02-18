@@ -1,6 +1,9 @@
 #bz-container {
   display: block;
-  position: relative;
-  border: 1px solid red;
+  position: absolute !important;
   overflow: hidden;
+
+  #chart {
+    position: relative;
+  }
 }

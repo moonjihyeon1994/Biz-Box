@@ -557,6 +557,7 @@ export default {
     },
     changeModal() {
       this.showModal = !this.showModal
+      eventBus.$emit('clickDetail')
     },
     ClickMove() {
       if (this.$store.state.mode === 0) {

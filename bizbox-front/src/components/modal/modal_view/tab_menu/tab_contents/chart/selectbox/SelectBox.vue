@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { eventBus } from '@/js/bus'
+
 export default {
   data () {
     return {
@@ -49,6 +51,7 @@ export default {
         this.$emit('large-event', this.selected)
       } else if (this.type === 'mid') {
         this.$emit('mid-event', this.selected, false)
+        eventBus.$emit('cateSelected')
       }
     }
   },
