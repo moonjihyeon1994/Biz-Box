@@ -4,9 +4,7 @@ import Home from '@/components/home/Home.vue'
 // import About from '@/components/about/About.vue'
 // import Result from '@/components/result/Result.vue'
 // import ResultSearch from '@/components/result/ResultSearch.vue'
-import map from '@/components/map/Newmap.vue'
 import Map from '@/components/bizmap/kakaomap/KakaoMap.vue'
-import BizMap from '@/components/bizmap/BizMap'
 import Modal from '@/components/modal/Modal.vue'
 import tap from '@/components/countstore/CountStores.vue'
 import result from '@/components/modal/result/Result.vue'
@@ -25,19 +23,9 @@ const routes = [
   //   component: ResultSearch
   // },
   {
-    path: '/map',
-    name: 'newResult',
-    component: map
-  },
-  {
-    path: '/eummap',
-    name: 'mapcd .',
-    component: Map
-  },
-  {
     path: '/bizmap',
     name: 'bizmap',
-    component: BizMap
+    component: Map
   },
   {
     path: '/modal',
