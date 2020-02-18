@@ -33,4 +33,15 @@ public class PredictionController {
 			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/predict_business/{cx}/{cy}/{business}")
+	public ResponseEntity<Object> businessAnalysis(@PathVariable String cx, @PathVariable String cy, @PathVariable String business){
+		try {
+			JSONObject data = service.findBusinessAnalysis(cx, cy, business);
+			return new ResponseEntity<Object>(data,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>("error", HttpStatus.NOT_FOUND);
+		}
+	}
 }

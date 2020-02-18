@@ -105,7 +105,6 @@ public class JusoApi {
 			entX = (String) xyObject.get("entX");
 			entY = (String) xyObject.get("entY");
 		} catch (Exception e) {
-			System.out.println("xy좌표 찾기 오류");
 			e.printStackTrace();
 		}
 		String[] proj4_w = new String[] { "+proj=tmerc", "+lat_0=38", "+lon_0=127.5", "+ellps=GRS80", "+units=m",
@@ -182,7 +181,7 @@ public class JusoApi {
 	 * @throws IOException
 	 */
 	@Cacheable(cacheNames = "FindStore")
-	public JSONArray findStore1(String xy, String radius) throws IOException {
+	public JSONArray findStoreToJson(String xy, String radius) throws IOException {
 		int idx = 0;
 		JSONArray list = new JSONArray();
 		while(true) {
@@ -258,10 +257,13 @@ public class JusoApi {
 		String resultType = "json";
 		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
 		int radius = 0;
-		
+		int radiusincrease = 1; 
 		JSONObject data = new JSONObject();
 		while(true) {
-			radius += 50;
+			if(radius == 10000) break;
+			if(radius == 0) {radius = 100;}
+			else {radius +=radiusincrease*100; radiusincrease++;}
+			
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
 					+ "radius=" + radius 
 					+ "&ServiceKey=" + ServiceKey 
@@ -280,7 +282,6 @@ public class JusoApi {
 				sb.append(tempStr);
 			}
 			br.close();
-			
 			try {
 				JSONParser jsonParse = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParse.parse(sb.toString());
@@ -290,7 +291,6 @@ public class JusoApi {
 					continue;
 				JSONObject body = (JSONObject) jsonObj.get("body");
 				JSONArray itemsArray = (JSONArray) body.get("items");
-				System.out.println(itemsArray.toString());
 				data = (JSONObject) itemsArray.get(0);
 				if (resultCode.equals("00"))
 					break;

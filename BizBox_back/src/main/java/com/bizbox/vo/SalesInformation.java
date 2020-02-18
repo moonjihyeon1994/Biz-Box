@@ -81,5 +81,4 @@ public class SalesInformation {
 	private String AF;
 	private String AG;
 	private String AH;
-	
 }

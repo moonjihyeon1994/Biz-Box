@@ -1,8 +1,3 @@
-:root {
-    --nav-text-color: #fdc864;
-    --our-orange: #ecb744;
-}
-
 #app {
     text-align: center;
     color: #000000;
@@ -22,10 +17,6 @@ h3 {
 
 h4 {
     font-size: 19px;
-}
-
-span {
-    font-size: 17px
 }
 
 /* Only for routerview container */
@@ -65,6 +56,7 @@ div.v-input__control {
     flex: 1;
     justify-content: center;
     align-items: center;
+    align-self: center;
 }
 
 p {
@@ -76,10 +68,17 @@ p {
     margin: 8px
 }
 
+.res-margin {
+    margin-top: 56px;
+}
+
 @media (min-width:700px) {
     .container {
         display: -webkit-flex;
         display: flex;
+    }
+    .res-margin {
+        margin-top: 64px;
     }
 }
 div.v-toolbar__content {
@@ -89,21 +88,6 @@ div.v-toolbar__content {
 
 
 /* Nav bar */
-i.v-icon.notranslate.mdi.mdi-menu.theme--light {
-    color: #ffffff;
-}
-
-i.v-icon.notranslate.mdi.mdi-account.theme--light {
-    color: #ffffff;
-}
-
-i.v-icon.notranslate.mdi.mdi-information-outline.theme--light {
-    color: #ffffff;
-}
-
-i.v-icon.notranslate.mdi.mdi-card-search-outline.theme--light {
-    color: #ffffff;
-}
 
 div.v-list-item__title {
     color: var(--nav-text-color);
@@ -118,9 +102,11 @@ div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
 div.v-toolbar__title span {
     color: var(--nav-text-color);
 }
-
+/* 
 @media (max-width:700px) {
     div.v-list.v-sheet.v-sheet--tile.theme--light.v-list--dense {
         display: none;
     }
 }
+ */
+

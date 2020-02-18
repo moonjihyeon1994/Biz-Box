@@ -1,31 +1,58 @@
 <template>
   <div class="mapContainer">
-    <v-card>
-      <v-toolbar class="searchBox">
-        <v-text-field
-          Elevation="14"
-          hide-details
-          v-on:keyup.enter="serch"
-          v-model.trim="name"
-          single-line
-          clearable
-          label="Search..."
-        ></v-text-field>
-        <v-btn v-on:click="serch" icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-card>
-    <condition></condition>
-    <Loading :loading='loadingStatus'></Loading>
-    <div class="map" id="map"></div>
-    <!-- use the modal component, pass in the prop -->
-    <Detail v-if="showModal" @close="showModal = false">
-      <!--
-      you can use custom content here to overwrite
-      default content
-      -->
+    <Loading :loading="loadingStatus"></Loading>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <v-card>
+            <v-toolbar class="searchBox">
+              <v-text-field
+                Elevation="14"
+                hide-details
+                v-on:keyup.enter="serch"
+                v-model.trim="name"
+                single-line
+                clearable
+                label="Search..."
+              ></v-text-field>
+              <v-btn v-on:click="serch" icon>
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
+            </v-toolbar>
+          </v-card>
+          <condition v-on:myevent="myevent"></condition>
+          <div class="ssss" v-show="isonececlick">
+            <div class="info" id="graph-info">
+              <canvas class="chart" id="horizontalbarChart"></canvas>
+            </div>
+          </div>
+          <!-- <div class="map" id="map"></div> -->
+          <v-btn class="addbt" v-on:click="addMyStore" icon>
+            현재 위치에 내 점포 추가하기
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </div>
+        <div class="flip-card-back">
+          <div class="storeform">
+            <div class="add-form">
+              <input type="text" placeholder="상호명" v-model="storeName" required />
+              <input type="text" placeholder="대분류" v-model="Clarge" required />
+              <input type="text" placeholder="중분류" v-model="Cmiddle" required />
+              <input type="text" placeholder="소분류" v-model="Csmall" required />
+              <button @click="storeAdd">add</button>
+              <p class="message">
+                잘못 누르셨나요?
+                <a @click="addMyStore">되돌아가기</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Detail v-show="showModal" @close="showModal = false; unDetail()" :clickEvent="showModal">
+      <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
+    <div class="map" id="map"></div>
   </div>
 </template>
 
@@ -36,18 +63,35 @@ import Dong from '@/assets/json/newcolor.json'
 import color from '@/assets/json/color.json'
 import condition from '@/components/bizmap/kakaomap/SearchCondition.vue'
 import axios from '@/js/http-commons'
+import { eventBus } from '@/js/bus'
+import { mapGetters } from 'vuex'
+import axi from 'axios'
 import Loading from '@/components/bizmap/loading/Loading.vue'
+import './AddStore.scss'
+import markerimg from '@/assets/map-icon/marker.png'
 
 export default {
   data: () => {
     return {
+      Polylist: [],
+      Color: '',
+      filpStyle: {
+        transform: 'rotateY(180deg)'
+      },
+      markerImg: markerimg,
+      storeName: '',
+      Clarge: '',
+      Cmiddle: '',
+      Csmall: '',
+      info: null,
+      member_marker: [],
       showModal: false,
       points: [],
       polygon: null,
       geocoder: null,
       html: null,
       map: null,
-      name: null,
+      name: '역삼동',
       clusterer: null,
       marker: null,
       infowindow: null,
@@ -61,7 +105,9 @@ export default {
       circle: null,
       polyline: null,
       radiusObj: null,
+      hashover: false,
       drawingFlag: false, // 원이 그려지고 있는 상태를
+      hashover: false,
       centerPosition: false, // 원의 중심좌표
       drawingCircle: false, // 그려지고 있는 원을 표시할 원 객체
       drawingLine: false, // 그려지고 있는 원의 반지름을 표시할 선 객체
@@ -75,6 +121,7 @@ export default {
       searchX: '',
       searchY: '',
       range: '',
+      coords: '',
       ME: '',
       CountInfo: {
         소매: '',
@@ -85,11 +132,11 @@ export default {
         부동산: '',
         의료: '',
         관광여가오락: ''
-      }
+      },
+      isClicked: false
     }
   },
-  mounted () {
-    console.log(Dong)
+  mounted() {
     let data = Dong // 좌표 저장할 배열
     let coordinates = [] // 행정 구 이름
     let name = '멀티캠퍼스'
@@ -97,7 +144,6 @@ export default {
     let Message = ''
     this.message = Message
     var container = document.getElementById('map')
-
     var options = {
       center: new kakao.maps.LatLng(37.505691, 127.0298106),
       level: 6
@@ -117,13 +163,17 @@ export default {
     let vm = this
     // 오버레이 생성--------------------------------------------------------
     this.customOverlay = new kakao.maps.CustomOverlay({})
+    this.info = new kakao.maps.CustomOverlay({})
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
-      map: this.map,
-      position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
+      map: this.map
+      //position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
-    kakao.maps.event.addListener(this.marker, 'click', function () {
-      // 마커에 마우스클릭 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+    this.drawMarker()
+
+    kakao.maps.event.addListener(this.marker, 'click', function() {
+      // 마커(자세히 보기) 클릭 시 모달창 이벤트 호출
+      vm.detail()
       vm.changeModal()
     })
 
@@ -134,32 +184,17 @@ export default {
     // -------------------------------------------------------------------------------------
 
     // 반경 그리는 이벤트 시작-------------------------------------------------------------------
-    kakao.maps.event.addListener(this.map, 'click', function (mouseEvent) {
+    kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
       vm.CircleMouseClick(mouseEvent)
       // vm.Controlllevel(vm.points)
     }) // 지도에 클릭 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'mousemove', function (mouseEvent) {
+    kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
     }) // 지도에 무브 이벤트를 등록
-    kakao.maps.event.addListener(this.map, 'rightclick', function (mouseEvent) {
-      vm.RightMouseClick(mouseEvent)
-    })
-    // -------------------------------------------------------------------------------------
-
-    // --폴리곤 생성---------------------------------------------------------------------------------------
-    // console.log(data)
-    // console.log(data[1].properties)
-    // data[1].properties.color='red'
-    // console.log(data[1].properties)
-    // console.log(color)
-
     axios
       .get('/population/getPopulationByTime/' + this.name)
-      .then(res => {
-        console.log(res)
-      })
+      .then(res => {})
       .finally(() => {})
-
     // for (var i = 0, len = data.length; i < len; i++) {
     //   var nname = data[i].properties.ADM_DR_NM
     //   console.log(nname)
@@ -176,7 +211,6 @@ export default {
     // a.href = URL.createObjectURL(file)
     // a.download = 'cc.txt'
     // a.click()
-    console.log(data)
     for (var i = 0, len = data.length; i < len; i++) {
       // 동의 경계면 좌표를 받아서 다각형 생성 함수에 전달
       this.coordinates = data[i].geometry.coordinates
@@ -204,7 +238,7 @@ export default {
       )
     }
 
-    function displayArea (
+    function displayArea(
       polygon,
       Mmap,
       coordinates,
@@ -232,7 +266,7 @@ export default {
         strokeColor: '#004c80', // 선색
         strokeOpacity: 0.4, // 선 투명도
         fillColor: color,
-        fillOpacity: 0.2
+        fillOpacity: 0.13
       })
 
       kakao.maps.event.addListener(polygon, 'mouseover', mouseEvent => {
@@ -240,7 +274,8 @@ export default {
         let Name = name
         let position = mouseEvent.latLng
         polygon.setOptions({
-          fillColor: '#0a008f'
+          //fillColor: '#ffbf00',
+          fillOpacity: 0.5
         })
         customOverlay.setContent(
           '<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' +
@@ -258,88 +293,81 @@ export default {
       kakao.maps.event.addListener(polygon, 'mouseout', () => {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         polygon.setOptions({
-          fillColor: color
+          fillColor: color,
+          fillOpacity: 0.13
         })
         customOverlay.setMap(null)
       })
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
-        // if (vm.$store.state.mode === 0) {
-        if (vm.$store.state.mode != 1) {
-          //  각 폴리곤에 마우스 클릭 이벤트 등록
-          vm.saveMouseEvent(mouseEvent)
+        //if (vm.$store.state.mode === 0) {
+        if (vm.$store.state.mode !== 1) {
+          vm.unDetail()
+          vm.setPolygon(polygon) // 현재 선택된 폴리곤 기억
+          vm.eventbus(name)
+          vm.saveMouseEvent(mouseEvent.latLng, 0)
           let Name = name
           let coords = ''
-          vm.setSerchkey(name)
+          vm.setSerchkey(name) // 클릭된 영역의 동이름을 기억하는 메서드
+          vm.setColor(color) // 현재 선택된 폴리곤의 색 기억
           let Marker = vm.marker
-          let InfoWindow = vm.infowindow
-          vm.geocoder.addressSearch(Name, function (result, status) {
-            // 정상적으로 검색이 완료되면
-            if (status === kakao.maps.services.Status.OK) {
-              coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
-              Marker.setPosition(coords)
-              InfoWindow.close()
-              var imageSrc =
-                'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-              // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-              var imageSize = new kakao.maps.Size(80, 80) // 마커이미지의 크기입니다
-              var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-              var markerImage = new kakao.maps.MarkerImage(
-                imageSrc,
-                imageSize,
-                imageOption
-              )
-              vm.marker.setImage(markerImage)
-              vm.marker.setPosition(coords)
-              if (vm.$store.state.mode === 2) {
-                vm.makeOverlay2(mouseEvent, name, coords)
-              }
-              if (vm.$store.state.mode === 3) {
-                vm.makeOverlay3(mouseEvent, name, coords)
-              }
-              if (vm.$store.state.mode === 4) {
-                vm.makeOverlay4(mouseEvent, name, coords)
-              }
-              if (vm.$store.state.mode === 5) {
-                vm.makeOverlay5(mouseEvent, name, coords)
-              }
-              if (vm.$store.state.mode === 6) {
-                vm.makeOverlay6(mouseEvent, name, coords)
-              }
-              if (vm.$store.state.mode === 7) {
-                vm.makeOverlay7(mouseEvent, name, coords)
-              }
-              if (vm.$store.state.mode === 8) {
-                vm.makeOverlay8(mouseEvent, name, coords)
-              }
-              InfoWindow.setContent(Name)
-              InfoWindow.open(Map, Marker)
-              Map.setCenter(coords)
-            }
-          })
-          // }
+          coords = new kakao.maps.LatLng(vm.ME.getLat(), vm.ME.getLng()) // 결과값으로 받은 위치를 마커의 위치로 적용
+          Marker.setPosition(coords)
+          var imageSrc =
+            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
+          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          var markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          )
+          var content =
+            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+            Name +
+            '</div>'
+          vm.marker.setImage(markerImage)
+          vm.marker.setPosition(coords)
+          vm.info.setContent(content)
+          vm.info.setPosition(coords)
+          vm.info.setMap(Map)
+          Map.setCenter(coords)
           if (vm.$store.state.mode === 2) {
-            vm.makeOverlay2(mouseEvent, name, coords)
+            vm.makeOverlay2(name)
           }
           if (vm.$store.state.mode === 3) {
-            vm.makeOverlay3(mouseEvent, name, coords)
+            vm.makeOverlay3(name)
           }
           if (vm.$store.state.mode === 4) {
-            vm.makeOverlay4(mouseEvent, name, coords)
+            vm.makeOverlay4(name)
           }
           if (vm.$store.state.mode === 5) {
-            vm.makeOverlay5(mouseEvent, name, coords)
+            vm.makeOverlay5(name)
           }
           if (vm.$store.state.mode === 6) {
-            vm.makeOverlay6(mouseEvent, name, coords)
+            vm.makeOverlay6(name)
           }
           if (vm.$store.state.mode === 7) {
-            vm.makeOverlay7(mouseEvent, name, coords)
+            vm.makeOverlay7(name)
           }
           if (vm.$store.state.mode === 8) {
-            vm.makeOverlay8(mouseEvent, name, coords)
+            vm.makeOverlay8(name)
           }
         }
       })
+    }
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
+    loginChange() {
+      return this.$store.state.auth.token
+    }
+  },
+  watch: {
+    loginChange() {
+      if (this.$store.state.auth.token) {
+        this.drawMarker()
+      }
     }
   },
   components: {
@@ -348,34 +376,199 @@ export default {
     Loading
   },
   methods: {
-    saveMouseEvent (mouseEvent) {
-      if (this.isonececlick === false) {
+    islogin(token) {
+      this.drawMarker()
+    },
+    setColor(color) {
+      this.Color = color
+    },
+    unDetail() {
+      this.map.setLevel(6, { anchor: this.ME })
+      this.showModal = false
+      if (this.polygon != null) {
+        this.polygon.setOptions({ fillOpacity: 0.13 })
+      }
+    },
+    detail() {
+      this.map.setLevel(3, { anchor: this.ME })
+      this.polygon.setOptions({ fillOpacity: 0 })
+    },
+    drawMarker() {
+      if (this.$store.state.auth.token) {
+        var imageSrc = this.markerImg
+        var imageSize = new kakao.maps.Size(40, 40) // 마커이미지의 크기입니다
+        var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        var markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imageOption
+        )
+        axi
+          .post(
+            'http://70.12.246.137:8080/user/info',
+            {
+              email: 'asdfasdfa',
+              pw: 'asdfasdfasdf'
+            },
+            {
+              headers: {
+                jwt: this.$store.state.auth.token
+              }
+            }
+          )
+          .then(res => {
+            res.data.data.forEach(element => {
+              this.$store.state.auth.mylist.push(element)
+            })
+          })
+          .then(() => {
+            let posi = this.getmystore()
+            for (let index = 0; index < posi.length; index++) {
+              let marker = new kakao.maps.Marker({
+                map: this.map,
+                position: posi[index], // 최초 표시되는 마커의 위치
+                image: markerImage
+              }).setMap(this.map)
+              this.member_marker.push(marker)
+            }
+          })
+        // 로그인하면 자신이 등록한 점포 위치 나옴
+      }
+    },
+    storeAdd() {
+      if (!this.storeName || !this.Clarge || !this.Cmiddle || !this.Csmall) {
+        alert('항목을 빠짐없이 기입해주세요')
+        return
+      }
+      axios
+        .post(
+          '/user/addStore',
+          {
+            email: sessionStorage.getItem('login_user_email'),
+            store_name: this.storeName,
+            category_large: this.Clarge,
+            category_middle: this.Cmiddle,
+            category_small: this.Csmall,
+            lat: this.$store.state.Coords.lat,
+            lot: this.$store.state.Coords.lng
+          },
+          {
+            headers: {
+              jwt: this.$store.state.auth.token
+            }
+          }
+        )
+        .then(res => {})
+        .finally(() => {
+          this.addMyStore()
+          this.storeName = null
+          this.Clarge = null
+          this.Cmiddle = null
+          this.Csmall = null
+          this.drawMarker()
+        })
+    },
+    addMyStore() {
+      if (!sessionStorage.getItem('login_user_email')) {
+        alert('로그인후 이용 가능합니다.')
+        return
+      }
+      let cardinner = document.getElementsByClassName('flip-card-inner')
+      if (cardinner[0].className.includes('firstflip')) {
+        cardinner[0].className = cardinner[0].className.replace(
+          ' firstflip',
+          ''
+        )
+        cardinner[0].className += ' secondflip'
+      } else {
+        cardinner[0].className = cardinner[0].className.replace(
+          ' secondflip',
+          ''
+        )
+        cardinner[0].className += ' firstflip'
+      }
+    },
+    getmystore() {
+      let list = this.$store.state.auth.mylist
+      let posi = []
+      for (let index = 0; index < list.length; index++) {
+        let position = new kakao.maps.LatLng(list[index].lat, list[index].lot)
+        posi.push(position)
+      }
+      return posi
+    },
+    eventbus(name) {
+      if (this.showModal) { eventBus.$emit('clickmap', name) }
+    },
+    myevent() {
+      this.saveMouseEvent(this.ME, 1)
+      let name = this.$store.state.modalsearch
+      if (this.$store.state.mode === 2) {
+        this.makeOverlay2(name)
+      }
+      if (this.$store.state.mode === 3) {
+        this.makeOverlay3(name)
+      }
+      if (this.$store.state.mode === 4) {
+        this.makeOverlay4(name)
+      }
+      if (this.$store.state.mode === 5) {
+        this.makeOverlay5(name)
+      }
+      if (this.$store.state.mode === 6) {
+        this.makeOverlay6(name)
+      }
+      if (this.$store.state.mode === 7) {
+        this.makeOverlay7(name)
+      }
+      if (this.$store.state.mode === 8) {
+        this.makeOverlay8(name)
+      }
+    },
+    saveMouseEvent(mouseEvent, flag) {
+      // 마우스 커서의 위치를 저장하는 메서드
+      if (this.isonececlick === false && flag === 1) {
+        // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
         this.isonececlick = true
       }
       this.ME = mouseEvent
+      this.$store.state.Coords.lat = this.ME.getLat() // 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.getLng() //
     },
-    setSerchkey (name) {
+    saveMouseEvent2(coords, flag) {
+      // 마우스 커서의 위치를 저장하는 메서드
+      if (this.isonececlick === false && flag === 1) {
+        // 최초 페이지 로드후 클릭이 일어났지는지 유무를 확인하는 변수
+        this.isonececlick = true
+      }
+      this.ME = coords
+      this.$store.state.Coords.lat = this.ME.getLat() // 모달에 전달할 xy 좌표
+      this.$store.state.Coords.lng = this.ME.getLng() //
+    },
+    setSerchkey(name) {
+      // 마우스 커서위치의 동이름을 저장하는 메서드
       this.$store.state.modalsearch = name
     },
-    changeModal () {
-      if (this.showModal === true) {
-        this.showModal = false
-      }
-      if (this.showModal === false) {
-        this.showModal = true
-      }
+    setPolygon(polygon) {
+      this.polygon = polygon
     },
-    ClickMove () {
+    add() {
+      this.showAdd = !this.showAdd
+    },
+    changeModal() {
+      this.showModal = !this.showModal
+      eventBus.$emit('clickDetail')
+    },
+    ClickMove() {
       if (this.$store.state.mode === 0) {
         //  각 폴리곤에 마우스 아웃 이벤트 등록
         // vm.points = vm.centroid(points)
         let Name = name
         let Marker = this.marker
         let InfoWindow = this.infowindow
-        this.geocoder.addressSearch(Name, function (result, status) {
+        this.geocoder.addressSearch(Name, function(result, status) {
           // 정상적으로 검색이 완료되면
           if (status === kakao.maps.services.Status.OK) {
-            console.log(Name)
             var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
             Marker.setPosition(coords)
             InfoWindow.close()
@@ -386,7 +579,7 @@ export default {
         })
       }
     },
-    centroid (points) {
+    centroid(points) {
       var i, j, len, p1, p2, f, area, x, y
       area = x = y = 0
       for (i = 0, len = points.length, j = len - 1; i < len; j = i++) {
@@ -401,35 +594,74 @@ export default {
 
       return new kakao.maps.LatLng(x / area, y / area)
     },
-    panTo () {
+    panTo() {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
       this.map.panTo(moveLatLon)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
-    serch (name) {
-      let Ifchange = this.ifchanege
+    serch(name) {
       let Name = this.name
-      let Map = this.map
+      // eslint-disable-next-line no-unused-vars
+      let vm = this
       let Marker = this.marker
-      let InfoWindow = this.infowindow
-      this.geocoder.addressSearch(this.name, function (result, status) {
+      this.geocoder.addressSearch(this.name, function(result, status) {
         // 정상적으로 검색이 완료되면
         if (status === kakao.maps.services.Status.OK) {
           var coords = new kakao.maps.LatLng(result[0].y, result[0].x) // 결과값으로 받은 위치를 마커의 위치로 적용
           Marker.setPosition(coords)
-          InfoWindow.close() // 전에 있던 인포위도우 클로즈
-          InfoWindow.setContent(Name) //  인포위도우 내용 세팅
-          InfoWindow.open(Map, Marker) // 마커위에 인포위도우 열림
-          Map.setCenter(coords) // 새로 세팅된 센터 값으로 맵 세팅
+          vm.map.setCenter(coords) // 새로 세팅된 센터 값으로 맵 세팅
+          vm.eventbus(Name)
+          vm.saveMouseEvent2(coords, 0)
+          vm.setSerchkey(Name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
+          // vm.setColor(color)
+          var imageSrc =
+            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
+          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          var markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          )
+          var content =
+            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+            Name +
+            '</div>'
+          Marker.setImage(markerImage)
+          Marker.setPosition(coords)
+          vm.info.setContent(content)
+          vm.info.setPosition(coords)
+          vm.info.setMap(vm.map)
+        }
+        if (vm.$store.state.mode === 2) {
+          vm.makeOverlay2(Name)
+        }
+        if (vm.$store.state.mode === 3) {
+          vm.makeOverlay3(Name)
+        }
+        if (vm.$store.state.mode === 4) {
+          vm.makeOverlay4(Name)
+        }
+        if (vm.$store.state.mode === 5) {
+          vm.makeOverlay5(Name)
+        }
+        if (vm.$store.state.mode === 6) {
+          vm.makeOverlay6(Name)
+        }
+        if (vm.$store.state.mode === 7) {
+          vm.makeOverlay7(Name)
+        }
+        if (vm.$store.state.mode === 8) {
+          vm.makeOverlay8(Name)
         }
       })
     },
-    CircleMouseClick (mouseEvent) {
+    async CircleMouseClick(mouseEvent) {
       // 지도에 클릭 이벤트를 등록
-
       this.removeCircles()
-      if (this.$store.state.mode === 1) {
+      if (this.$store.state.mode === 1 && this.map.getLevel() < 5) {
         if (this.ChangeBusinessTable !== null) {
           // overay 삭제 매서드
           this.ChangeBusinessTable.setMap(null)
@@ -471,11 +703,78 @@ export default {
             })
           }
         }
+      } else if (this.$store.state.mode === 1 && this.map.getLevel() >= 5) {
+        alert('맵을 확대하고 이용해주세요')
+      }
+      if (this.drawingFlag) {
+        if (this.hashover) {
+          this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+          this.polyline = new kakao.maps.Polyline({
+            // 원의 반경을 표시할 선 객체를 생성합니다
+            path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+            strokeWeight: 1, // 선의 두께 입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+          })
+          this.circle = new kakao.maps.Circle({
+            // 원 객체를 생성합니다
+            center: this.centerPosition, // 원의 중심좌표입니다
+            radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+            strokeWeight: 0, // 선의 두께입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid', // 선의 스타일입니다
+            fillColor: '#00a0e9', // 채우기 색깔입니다
+            fillOpacity: 0.2 // 채우기 불투명도입니다
+          })
+          var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+          this.range = radius
+          await this.getDataCircle()
+
+          this.centerPosition = null // 중심 좌표를 초기화 합니다
+          this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+          this.drawingLine.setMap(null)
+          this.drawingOverlay.setMap(null)
+        }
+      }
+      if (this.drawingFlag) {
+        if (this.hashover) {
+          this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
+          this.polyline = new kakao.maps.Polyline({
+            // 원의 반경을 표시할 선 객체를 생성합니다
+            path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
+            strokeWeight: 1, // 선의 두께 입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+          })
+          this.circle = new kakao.maps.Circle({
+            // 원 객체를 생성합니다
+            center: this.centerPosition, // 원의 중심좌표입니다
+            radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
+            strokeWeight: 0, // 선의 두께입니다
+            strokeColor: '#00a0e9', // 선의 색깔입니다
+            strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid', // 선의 스타일입니다
+            fillColor: '#00a0e9', // 채우기 색깔입니다
+            fillOpacity: 0.2 // 채우기 불투명도입니다
+          })
+          var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
+          this.range = radius
+          await this.getDataCircle()
+
+          this.centerPosition = null // 중심 좌표를 초기화 합니다
+          this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
+          this.drawingLine.setMap(null)
+          this.drawingOverlay.setMap(null)
+        }
       }
     },
-    CircleMoveClick (mouseEvent) {
+    CircleMoveClick(mouseEvent) {
       if (this.drawingFlag) {
         // 마우스무브 이벤트가 발생했을 때 원을 그리고있는 상태이면
+        this.hashover = true
         var mousePosition = mouseEvent.latLng // 마우스 커서의 현재 위치를 얻어옵니다
         var linePath = [this.centerPosition, mousePosition] // 그려지고 있는 선을 표시할 좌표 배열입니다. 클릭한 중심좌표와 마우스커서의 위치로 설정합니다
         this.drawingLine.setPath(linePath) // 그려지고 있는 선을 표시할 선 객체에 좌표 배열을 설정합니다
@@ -504,40 +803,8 @@ export default {
         }
       }
     },
-    async RightMouseClick (mouseEvent) {
-      if (this.drawingFlag) {
-        this.rClickPosition = mouseEvent.latLng // 마우스로 오른쪽 클릭한 위치입니다
-        this.polyline = new kakao.maps.Polyline({
-          // 원의 반경을 표시할 선 객체를 생성합니다
-          path: [this.centerPosition, this.rClickPosition], // 선을 구성하는 좌표 배열입니다. 원의 중심좌표와 클릭한 위치로 설정합니다
-          strokeWeight: 1, // 선의 두께 입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid' // 선의 스타일입니다
-        })
-        this.circle = new kakao.maps.Circle({
-          // 원 객체를 생성합니다
-          center: this.centerPosition, // 원의 중심좌표입니다
-          radius: this.polyline.getLength(), // 원의 반지름입니다 m 단위 이며 선 객체를 이용해서 얻어옵니다
-          strokeWeight: 0, // 선의 두께입니다
-          strokeColor: '#00a0e9', // 선의 색깔입니다
-          strokeOpacity: 0, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'solid', // 선의 스타일입니다
-          fillColor: '#00a0e9', // 채우기 색깔입니다
-          fillOpacity: 0.2 // 채우기 불투명도입니다
-        })
-        var radius = Math.round(this.circle.getRadius()) // 원의 반경 정보를 얻어옵니다
-        this.range = radius
-        await this.getDataCircle()
-
-        this.centerPosition = null // 중심 좌표를 초기화 합니다
-        this.drawingCircle.setMap(null) // 그려지고 있는 원, 선, 커스텀오버레이를 지도에서 제거합니다
-        this.drawingLine.setMap(null)
-        this.drawingOverlay.setMap(null)
-      }
-    },
     // 원 html 만들기
-    getOverlay (html, rClickPosition) {
+    getOverlay(html, rClickPosition) {
       let radiusOverlay = new kakao.maps.CustomOverlay({
         // 반경정보를 표시할 커스텀 오버레이를 생성합니다
         content: html, // 표시할 내용입니다
@@ -548,36 +815,22 @@ export default {
       })
       return radiusOverlay
     },
+
     // ------------------------------------------------
     // 표 만들기 시간별 유동인구
     // ------------------------------------------------
-    async makeOverlay2 (mouseEvent, Name, coords) {
+    async makeOverlay2(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      this.ChangeBusinessTable.setMap(this.map)
+      if (this.name == null) return
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+
+      // =======================
       await axios
         .get('/population/getPopulationByTime/' + this.name)
         .then(res => {
@@ -645,33 +898,16 @@ export default {
     // ------------------------------------------------
     // 표 만들기 상권 변화 지수
     // ------------------------------------------------
-    async makeOverlay3 (mouseEvent, Name, coords) {
+    async makeOverlay3(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      this.ChangeBusinessTable.setMap(this.map)
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+      // =======================
       axios
         .get('/change/getHistory/' + this.name)
         .then(res => {
@@ -743,34 +979,16 @@ export default {
     // -----------------------------------------------
     // 연령별 매출 정보
     // ------------------------------------------------
-    async makeOverlay4 (mouseEvent, Name, coords) {
+    async makeOverlay4(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      // this.ChangeBusinessTable.setContent(content)
-      this.ChangeBusinessTable.setMap(this.map)
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+      // =======================
 
       let sumOf10 = 0
       let sumOf20 = 0
@@ -854,34 +1072,16 @@ export default {
     // ------------------------------------------------
     // 표 만들기 연령별 유동인구
     // ------------------------------------------------
-    async makeOverlay5 (mouseEvent, Name, coords) {
+    async makeOverlay5(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        clickable: true,
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      this.ChangeBusinessTable.setMap(this.map)
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+      // =======================
       axios
         .get('/population/getPopulationByLocation/' + this.name)
         .then(res => {
@@ -965,33 +1165,16 @@ export default {
     // ------------------------------------------------
     // 표 만들기 요일별 유동인구
     // ------------------------------------------------
-    async makeOverlay6 (mouseEvent, Name, coords) {
+    async makeOverlay6(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      this.ChangeBusinessTable.setMap(this.map)
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+      // =======================
       axios
         .get('/population/getPopulationByTime/' + this.name)
         .then(res => {
@@ -1061,33 +1244,16 @@ export default {
     // ------------------------------------------------
     // 표 만들기 시간별 매출정보
     // ------------------------------------------------
-    async makeOverlay7 (mouseEvent, Name, coords) {
+    async makeOverlay7(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      this.ChangeBusinessTable.setMap(this.map)
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+      // =======================
       let sum1 = 0
       let sum2 = 0
       let sum3 = 0
@@ -1177,33 +1343,16 @@ export default {
     // ------------------------------------------------
     // 표 만들기 요일별 매출 정보
     // ------------------------------------------------
-    async makeOverlay8 (mouseEvent, Name, coords) {
+    async makeOverlay8(Name) {
       this.name = Name
-      let pos = mouseEvent.latLng
-      var content =
-              '<div class="overlaybox"' +
-              '    style="position:relative;background:#023359;' +
-              '      width:360px; height:220px;border-radius:10px;">' +
-              '       <canvas id=horizontalbarChart' +
-              '          width="340" height="200"' +
-              '       style="position:relative;margin:auto;top:50%;transform:translateY(-50%);background:white;">' +
-              '       </canvas>' +
-              '</div>'
-      // 이미 그려져 있다면 삭제하고 다시 그리기
-      if (this.ChangeBusinessTable !== null) {
-        // overay 삭제 매서드
-        this.ChangeBusinessTable.setMap(null)
-      }
-      // eslint-disable-next-line no-undef
-      var posi = this.marker.getPosition()
-      this.ChangeBusinessTable = new kakao.maps.CustomOverlay({
-        content: content,
-        map: this.Map,
-        position: posi,
-        xAnchor: 0.3,
-        yAnchor: 0.91
-      })
-      this.ChangeBusinessTable.setMap(this.map)
+      // === 요소 삭제했다가 추가 ==
+      var header = document.getElementById('horizontalbarChart') // 제거하고자 하는 엘리먼트
+      header.parentNode.removeChild(header)
+      var node = document.createElement('canvas')
+      var para = document.getElementById('graph-info').appendChild(node)
+      para.id = 'horizontalbarChart'
+      para.style = 'height: 190px; width: 350px;'
+      // =======================
 
       let sum1 = 0
       let sum2 = 0
@@ -1284,10 +1433,10 @@ export default {
           })
         })
     },
-    async getBoxHTML () {
-      let a = this.CountInfo.소매
-      if (a === undefined) {
-        a = 0
+    async getBoxHTML() {
+      let 소매 = this.CountInfo.소매
+      if (소매 === undefined) {
+        소매 = 0
       }
       let 학문교육 = this.CountInfo.학문교육
       if (학문교육 === undefined) {
@@ -1328,7 +1477,7 @@ export default {
       content +=
         '        <img style="margin:auto;width:80px;height:80px;display:block;" src="/img/store.5c0694f4.png">' +
         '<span style="width:100%;">' +
-        a
+        소매
       content += '</span></div>'
       content += '    <div style="width:80px;height:93px;">'
       content +=
@@ -1381,7 +1530,7 @@ export default {
 
       return content
     }, // 범위내 상가정보 받아오는 매서드
-    async getDataCircle () {
+    async getDataCircle() {
       this.loadingStatus = true
       axios
         .get(
@@ -1419,8 +1568,11 @@ export default {
             .finally(() => {
               let vm = this
               vm.loadingStatus = false
+              vm.hashover = false
               vm.$store.state.mode = 0
               vm.drawingFlag = false // 그리기 상태를 그리고 있지 않는 상태로 바꿉니다
+              vm.loadingStatus = false
+              vm.hashover = false
               this.radiusObj = {
                 // 배열에 담을 객체입니다. 원, 선, 커스텀오버레이 객체를 가지고 있습니다
                 polyline: vm.polyline,
@@ -1431,11 +1583,11 @@ export default {
             })
         })
     },
-    getData3 () {
+    getData3() {
       axios
         .get('/change/getHistory' + '/' + this.name)
         .then(res => {
-          var jsonlarge = res.data.large
+          var jsonlarge = res.data
           this.CountInfo.소매 = jsonlarge.소매
           this.CountInfo.학문교육 = jsonlarge.학문교육
           this.CountInfo.숙박 = jsonlarge.숙박
@@ -1447,7 +1599,7 @@ export default {
         })
         .catch(err => alert(err, '검색어를 확인해주세요'))
     },
-    removeCircles () {
+    removeCircles() {
       for (var i = 0; i < this.circles.length; i++) {
         this.circles[i].circle.setMap(null)
         this.circles[i].polyline.setMap(null)
@@ -1458,7 +1610,7 @@ export default {
   }
 }
 </script>
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .map {
   position: absolute;
   top: 0;
@@ -1475,8 +1627,7 @@ export default {
   top: -25%;
   left: -50%;
   width: 200%;
-  height: 150%;
-  overflow: hidden;
+  height: 125%;
 }
 .ssearchbox {
   position: fixed;
@@ -1541,11 +1692,35 @@ button {
 :-ms-input-placeholder {
   color: tomato;
 }
-.ImgLoader {
-  z-index: -1;
-  height: 200px;
+.ssss {
+  width: 460px;
+  height: 260px;
+  z-index: 2;
+  position: fixed;
+  top: 400px;
+  left: 50px;
+  border-radius: 3px;
+}
+.addbt {
+  display: inline-block;
+  z-index: 2;
+  position: fixed;
+  width: 370px;
+  height: 40px;
+  top: 350px;
+  left: 49px;
+  border-radius: 3px;
+}
+.addinput {
+  color: tomato;
 }
 // element.style {
 //   background: white;
 // }
+#graph-info {
+  width: 360px !important;
+  height: 190px !important;
+  background: white !important;
+  border-radius: 3px;
+}
 </style>

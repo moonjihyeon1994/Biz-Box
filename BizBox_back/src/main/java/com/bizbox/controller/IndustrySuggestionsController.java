@@ -1,7 +1,5 @@
 package com.bizbox.controller;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,17 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.ChangeBusinessService;
-import com.bizbox.Service.IndustrySuggestionsService;
 import com.bizbox.Service.JusoService;
-import com.bizbox.Service.PopulationByService;
 import com.bizbox.Service.SalesService;
 import com.bizbox.vo.BusinessLank;
 import com.bizbox.vo.Changebusiness;
-import com.bizbox.vo.PopulationByLocation;
-import com.bizbox.vo.PopulationByTime;
 import com.bizbox.vo.SalesInformation;
-import com.bizbox.utils.*;
-import net.bytebuddy.dynamic.scaffold.MethodGraph.Linked;
 import com.bizbox.apis.*;
 
 @CrossOrigin({ "*" })
@@ -42,9 +34,6 @@ public class IndustrySuggestionsController {
 	
 	@Autowired
 	JusoService jusoService;
-	
-	@Autowired
-	IndustrySuggestionsService suggestionservice;
 	
 	@Autowired
 	SalesService saliesservice;

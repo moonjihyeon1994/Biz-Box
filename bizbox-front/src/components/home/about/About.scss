@@ -343,4 +343,23 @@ $color2: rgb(15, 66, 95);
     }
   }
 
+  /* 410px */
+  @media only screen and (max-width: 410px) {
+    > div {
+      height: 300px;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+    
+    .bz-aboutTitle {
+      font-size: 1.75em;
+    }
+
+    .bz-aboutText {
+      top: 120px;
+      font-size: 1.2em;
+      padding: 0 10px;
+    }
+  }
+
 }
