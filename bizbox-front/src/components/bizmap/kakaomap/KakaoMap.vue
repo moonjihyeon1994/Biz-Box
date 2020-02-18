@@ -300,11 +300,6 @@ export default {
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         //if (vm.$store.state.mode === 0) {
         if (vm.$store.state.mode !== 1) {
-          //  각 폴리곤에 마우스 클릭 이벤트 등록
-          // polygon.setOptions({
-          //   //fillColor: color,
-          //   fillOpacity: 0.5
-          // })
           vm.unDetail()
           vm.setPolygon(polygon) // 현재 선택된 폴리곤 기억
           vm.eventbus(name)
@@ -388,6 +383,7 @@ export default {
     },
     unDetail() {
       this.map.setLevel(6, { anchor: this.ME })
+      this.showModal = false
       if (this.polygon != null) {
         this.polygon.setOptions({ fillOpacity: 0.13 })
       }
@@ -501,7 +497,7 @@ export default {
       return posi
     },
     eventbus(name) {
-      eventBus.$emit('clickmap', name)
+      if (this.showModal) { eventBus.$emit('clickmap', name) }
     },
     myevent() {
       this.saveMouseEvent(this.ME, 1)
