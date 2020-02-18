@@ -59,7 +59,7 @@ public class OpenCloseController {
 				String Loc = (String) jo.get("address");
 				String middleCategory = (String) jo.get("indu");
 				List<Long> closecnt = (List<Long>) jo.get("closecnt");
-				List<Long> opencnt = (List<Long>) jo.get("closecnt");
+				List<Long> opencnt = (List<Long>) jo.get("opencnt");
 				List<Long> totalcnt = (List<Long>) jo.get("storecnt");
 				long totalStart = totalcnt.get(0);
 				long totalEnd = totalcnt.get(totalcnt.size()-1);
