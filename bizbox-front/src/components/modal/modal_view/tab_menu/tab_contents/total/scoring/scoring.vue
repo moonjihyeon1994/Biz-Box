@@ -320,7 +320,7 @@ export default {
     }
   },
   mounted () {
-    this.getScoreData()
+    // this.getScoreData()
     eventBus.$on('clickmap', name => {
       this.getScoreData()
     })
@@ -333,17 +333,12 @@ export default {
       let requestSalesUrl = '/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat + '/'
       axios.get(requestSalesUrl)
         .then(res => {
-          console.log('lng: ' + this.$store.state.Coords.lng)
-          console.log('lat: ' + this.$store.state.Coords.lat)
-          console.log(res.data)
           let data2018 = res.data['2018']
           let data2017 = res.data['2017']
           let data2016 = res.data['2016']
 
           vm.sgCode = data2018[0].trdar_cd
           vm.sgName = data2018[0].trdar_cd_nm
-          console.log('vm.sgCode: ' + vm.sgCode)
-          console.log('vm.sgName: ' + vm.sgName)
 
           // 집객력 > 주거인구, 직장인구
           for (let index = 0; index < data2018.length; index++) {
@@ -444,7 +439,6 @@ export default {
           let requestPopulationUrl = '/population/getPopulationByBusiness/' + vm.sgCode
           axios.get(requestPopulationUrl)
             .then(res => {
-              console.log(res.data.data[0])
               vm.populations.living = Number(res.data.data[0].total_mv_co)
               vm.score.집객력.주거인구 = Number((vm.populations.living * 5 / 4400).toFixed(2))
               vm.populations.working = Number(res.data.data[0].total_bz_co)
@@ -462,9 +456,6 @@ export default {
               if (vm.score.집객력.유동인구 > 10) {
                 vm.score.집객력.유동인구 = 10
               }
-              console.log('주거인구 : ', vm.score.집객력.주거인구)
-              console.log('직장인구 : ', vm.score.집객력.직장인구)
-              console.log('유동인구 : ', vm.score.집객력.유동인구)
             })
             .then(() => {
               let resquestHistoryUrl = '/change/getHistory/' + vm.key
@@ -478,7 +469,6 @@ export default {
                   if (vm.score.안정성.운영연수 > 5) {
                     vm.score.안정성.운영연수 = 5
                   }
-                  console.log('운영연수 : ', vm.score.안정성.운영연수)
                 })
                 .then(() => {
                 // 성장성 > 매출 증감률
@@ -564,19 +554,6 @@ export default {
                   if (vm.score.영업력.공급대비수요 > 10) {
                     vm.score.영업력.공급대비수요 = 10
                   }
-
-                  console.log('매출증감률 : ', vm.score.성장성.매출증감률)
-                  console.log('예상성장률 : ', vm.score.성장성.예상성장률)
-
-                  console.log('점포변동률 : ', vm.score.안정성.점포변동률)
-                  console.log('매출변동률 : ', vm.score.안정성.매출변동률)
-
-                  console.log('분기별매출편차 : ', vm.score.영업력.분기별매출편차)
-                  console.log('요일별매출편차 : ', vm.score.영업력.요일별매출편차)
-                  console.log('공급대비수요 : ', vm.score.영업력.공급대비수요)
-
-                  console.log('평균 매출 규모 : ', vm.score.구매력.상권매출규모)
-                  console.log('건당 평균 결제금액 : ', vm.score.구매력.건당결제금액)
                 })
                 .then(() => {
                   vm.score.성장성.점수 = Number((vm.score.성장성.매출증감률 + vm.score.성장성.예상성장률).toFixed(1))
@@ -587,7 +564,6 @@ export default {
                 })
                 .then(() => {
                   vm.score.합계 = Number((vm.score.성장성.점수 + vm.score.안정성.점수 + vm.score.영업력.점수 + vm.score.구매력.점수 + vm.score.집객력.점수).toFixed(1))
-                  // console.log("합계: " + vm.score)
                   vm.$emit('childs-event', vm.score.합계, vm.sgName)
                   vm.$emit('childs-loading-event', false)
                 })

@@ -1,12 +1,13 @@
 <template>
-  <div id='bz-container' :style='chartStyle'>
-    <line-chart id='chart' :chart-data="chartdata" :options="chartoptions"></line-chart>
+  <div id='bz-container'>
+    <line-chart id='chart' :chart-data="chartdata" :options="chartoptions" :width='chartWidth' :height='chartHeight'></line-chart>
   </div>
 </template>
 
 <script>
 import LineChart from '@/lib/LineChart'
 import axios from '@/js/http-commons.js'
+import { eventBus } from '@/js/bus'
 
 export default {
   components: {
@@ -21,20 +22,14 @@ export default {
   data () {
     return {
       chartdata: null,
-      chartoptions: null,
-      chartStyle: {
-        width: this.chartWidth,
-        height: this.chartHeight
-      },
-      lat: this.$store.state.Coords.lat,
-      lng: this.$store.state.Coords.lng
+      chartoptions: null
     }
   },
   methods: {
     renderChart () {
-      axios.get('/predict/findBusiness/127.050826/37.507118')
+      this.$emit('loadingEvent', true)
+      axios.get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
         .then(res => {
-          console.log(res.data)
           let year2016 = {}
           let year2017 = {}
           let year2018 = {}
@@ -49,6 +44,68 @@ export default {
           console.log(year2016)
           console.log(year2017)
           console.log(year2018)
+
+          this.chartdata = {
+            labels: [
+              '2016-1',
+              '2016-2',
+              '2016-3',
+              '2016-4',
+              '2017-1',
+              '2017-2',
+              '2017-3',
+              '2017-4',
+              '2018-1',
+              '2018-2',
+              '2018-3'
+            ],
+            datasets: [
+              {
+                label: '매출',
+                fill: false,
+                borderColor: 'red',
+                data: [
+                  year2016.first,
+                  year2016.second,
+                  year2016.third,
+                  year2016.fourth,
+                  year2017.first,
+                  year2017.second,
+                  year2017.third,
+                  year2017.fourth,
+                  year2018.first,
+                  year2018.second,
+                  year2018.third
+                ]
+              }
+            ]
+          }
+
+          this.chartoptions = {
+            responsive: false,
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: false
+                  },
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ]
+            }
+          }
+        }).finally(() => {
+          this.$emit('loadingEvent', false)
         })
     },
     getData (arr, large, mid) {
@@ -89,6 +146,18 @@ export default {
   },
   mounted () {
     this.renderChart()
+
+    eventBus.$on('clickmap', name => {
+      this.renderChart()
+    })
+
+    eventBus.$on('cateSelected', () => {
+      this.renderChart()
+    })
+
+    eventBus.$on('clickDetail', () => {
+      this.renderChart()
+    })
   }
 }
 </script>
