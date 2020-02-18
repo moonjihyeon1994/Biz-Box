@@ -103,6 +103,7 @@ export default {
     parentsMethod (score, name) {
       this.totalScore = score
       this.sgName = name
+      this.$store.state.sgName = name
     },
     loadingMethod (status) {
       this.loadingStatus = status

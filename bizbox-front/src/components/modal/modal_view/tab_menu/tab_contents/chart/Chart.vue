@@ -1,6 +1,6 @@
 <template>
   <div id='bz-container'>
-    <div id='title'>상세 차트</div>
+    <div id='title'>원클릭 컨설트</div>
 
     <div id='chart-box'>
       <div id='chart-box-flex-container'>
@@ -21,14 +21,18 @@
       </div>
 
       <div class='bz-each-title'>창업/폐업 현황</div>
+      <open-close></open-close>
 
       <div class='bz-each-title'>원클릭 컨설팅</div>
+      <one-click></one-click>
     </div>
   </div>
 </template>
 
 <script>
 import SelectBox from './selectbox/SelectBox'
+import OpenClose from './businessStatus/OpenClose.vue'
+import OneClick from './businessStatus/OneClickConsult.vue'
 import LineChart from './linechart/LineChart'
 import ListJson from '@/assets/json/Select.json'
 import Loading from '@/components/common/loading/Loading'
@@ -37,7 +41,9 @@ export default {
   components: {
     SelectBox,
     LineChart,
-    Loading
+    Loading,
+    OpenClose,
+    OneClick
   },
   data () {
     return {
