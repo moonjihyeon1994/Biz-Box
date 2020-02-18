@@ -91,9 +91,6 @@ public class KakaoApi {
 
 			conn.setRequestProperty("Authorization", "Bearer " + access_Token);
 
-			int responseCode = conn.getResponseCode();
-			System.out.println("responseCode : " + responseCode);
-
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String line = "";
@@ -102,7 +99,6 @@ public class KakaoApi {
 			while ((line = br.readLine()) != null) {
 				result += line;
 			}
-			System.out.println("response body : " + result);
 
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
@@ -137,7 +133,6 @@ public class KakaoApi {
 			conn.setRequestProperty("Authorization", "Bearer " + access_Token);
 
 			int responseCode = conn.getResponseCode();
-			System.out.println("responseCode : " + responseCode);
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -147,9 +142,38 @@ public class KakaoApi {
 			while ((line = br.readLine()) != null) {
 				result += line;
 			}
-			System.out.println(result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 카카오 좌표로 지도얻기
+	 * @param access_Token
+	 */
+	public String kakaoCoord2regioncode(String x, String y) {
+		String result = "";
+		String reqURL = "https://dapi.kakao.com/v2/local/geo/coord2address.json?"
+				+"x=" + y
+				+"&y=" + x
+				+"&input_coord=WGS84";
+		try {
+			URL url = new URL(reqURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Authorization", "KakaoAK " + client_id);
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			
+			String line = "";
+
+			while ((line = br.readLine()) != null) {
+				result += line;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 }

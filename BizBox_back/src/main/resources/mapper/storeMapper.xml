@@ -21,7 +21,9 @@
 		<![CDATA[
 		SELECT *
 		FROM storelist 
-		WHERE #{distance} > any (SELECT ( 6371 * acos( cos( radians( #{lat} ) ) * cos( radians( lat) ) * cos( radians( lot ) - radians(#{lot}) ) + sin( radians(#{lat}) ) * sin( radians(lat) ) ) ) 
+		WHERE #{distance} > 
+		any (SELECT ( 6371 * acos( cos( radians( #{lat} ) ) * cos( radians( lat) ) * cos( radians( lot ) 
+		- radians(#{lot}) ) + sin( radians(#{lat}) ) * sin( radians(lat) ) ) ) 
 		FROM storelist ) and flag = true 
 		]]>
 	</select>

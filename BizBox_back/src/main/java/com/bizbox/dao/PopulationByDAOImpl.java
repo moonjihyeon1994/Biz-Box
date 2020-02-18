@@ -43,12 +43,10 @@ public class PopulationByDAOImpl implements PopulationByDAO {
 	}
 	@Override
 	public PopulationByLocation getByDongCode(String dongcode) {
-		// TODO Auto-generated method stub
 		return session.selectOne(name+"getByDongCode",dongcode);
 	}
 	@Override
 	public List<PopulationBytimeByDongCode> populationByTimeByDongCode(String dongcode) {
-		// TODO Auto-generated method stub
 		return session.selectList(name+"getTimeByDongCode",dongcode);
 	}
 }

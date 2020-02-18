@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NaverNewsCrawler {
-
+	/**
+	 * 네이버 부동산 뉴스 크롤링
+	 * @return
+	 */
 	public String getNaverNews() {
 		String URL = "https://land.naver.com/news/headline.nhn";
 		Document doc = null;

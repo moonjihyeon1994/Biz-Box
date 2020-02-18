@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 export default axios.create({
-  // baseURL: 'http://70.12.246.137:8080',
-  baseURL: 'http://13.125.20.125:80',
-  // baseURL: 'http://70.12.127.78:8080',
+  // baseURL: 'http://localhost:8080',
+  baseURL: 'local://13.125.20.125:80'
+  //  baseURL: 'http://70.12.246.137:8080'
   // baseURL: 'http://70.12.247.78:8080',
-  headers: {
-    'Content-type': 'application/json'
-  }
+  // headers: {
+  //   'Content-type': 'application/json'
+  // }
 })

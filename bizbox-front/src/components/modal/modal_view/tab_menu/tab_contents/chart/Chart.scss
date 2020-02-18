@@ -1,0 +1,52 @@
+#bz-container {
+  position: relative;
+  width: 100%;
+  letter-spacing: 3px;
+
+  > div {
+    margin-bottom: 10px;
+  }
+
+  .bz-each-title {
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-left: 15px;
+  }
+
+  #title {
+    font-size: 2em;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  #chart-box {
+    width: 100%;
+    height: 100%;
+    #chart-box-flex-container {
+      display: flex;
+      justify-content: space-around;
+      
+      .select-box-wrapper {
+        display: inline-block;
+        width: 210px;
+        margin: 10px 20px;
+        
+        p {
+          text-align: center;
+          margin: 5px 0;
+          font-size: 1.1em;
+          font-weight: bold;
+        }
+      }
+    }
+    
+    #chart-wrapper {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 320px;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 package com.bizbox.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bizbox.Service.JwtService;
+import com.bizbox.Service.StoreService;
 import com.bizbox.Service.UserServiceImpl;
 import com.bizbox.apis.KakaoApi;
+import com.bizbox.vo.Store;
 import com.bizbox.vo.User;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +39,11 @@ public class KakaoController {
 
 	@Autowired
 	private UserServiceImpl userService;
+	
+	@Autowired
+	StoreService storeService;
 
 	@RequestMapping("/login")
-	@Transactional
 	public ResponseEntity<Map<String, Object>> login(@RequestParam("refresh_token") String refresh_token,
 			HttpSession session, HttpServletResponse res) {
 		String access_Token = kakao.getAccessToken(refresh_token);
@@ -59,7 +64,10 @@ public class KakaoController {
 		try {
 			User temp = userService.checkUser(newUser);
 			if (temp != null) { // 기존회원이면
-				String token = jwtService.create(temp);
+				String token = jwtService.create(temp);		
+				List<Store> list = storeService.getStore(temp.getEmail());
+				
+				resultMap.put("storelist", list);
 				res.setHeader("jwt-auth-token", token);
 				resultMap.put("status", true);
 				resultMap.put("data", temp);

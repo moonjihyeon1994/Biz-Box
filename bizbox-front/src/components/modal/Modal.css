@@ -17,8 +17,6 @@
   width: 600px;
   height: 755px;
   /* margin: 60px auto 0; */
-  margin-left: 1065px;
-  margin-top: 75px;
   padding: 10px 30px;
   background-color: #fff;
   border-radius: 2px;
@@ -26,6 +24,9 @@
   transition: all 0.3s ease;
   border-radius: 3px;
   overflow: auto;
+  position: fixed;
+  top: 64px;
+  right: 0px;
 }
 
 .modal-header h3 {

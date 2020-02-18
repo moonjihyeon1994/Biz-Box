@@ -1,5 +1,6 @@
 package com.bizbox.controller;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-//@RequestMapping("/user")
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
@@ -50,9 +52,13 @@ public class UserController {
 		try {
 			userService.singupUser(user);
 			String token = jwtService.create(user);
+			
+			List<Store> list = storeService.getStore(user.getEmail());
+			
 			res.setHeader("jwt-auth-token", token);
 			resultMap.put("status", true);
 			resultMap.put("data", user);
+			resultMap.put("storelist", list);
 			status = HttpStatus.ACCEPTED;
 		}catch (Exception e) {
 			log.error("회원가입 실패", e);
@@ -70,11 +76,14 @@ public class UserController {
 		try {
 			if(userService.loginUser(user)) {
 				User loginuser = userService.checkUser(user);
-				System.out.println(loginuser.toString());
 				String token = jwtService.create(loginuser);
+				
+				List<Store> list = storeService.getStore(user.getEmail());
+				
 				res.setHeader("jwt-auth-token", token);
 				resultMap.put("status", true);
 				resultMap.put("data", loginuser);
+				resultMap.put("storelist", list);
 				status = HttpStatus.ACCEPTED;
 			}else {
 				resultMap.put("status", false);
@@ -90,13 +99,14 @@ public class UserController {
 	}
 	
 	@PostMapping("/info")
-	public ResponseEntity<Map<String, Object>> getInfo(HttpServletRequest req, @RequestBody User user){
+	public ResponseEntity<Map<String, Object>> getInfo(@RequestBody User user, HttpServletRequest req){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = null;
 		try {
-			resultMap.putAll(jwtService.get(req.getHeader("jwt-auth-token")));
+			Map<String, Object> headers = jwtService.get(req.getHeader("jwt"));
+			List<Store> list = storeService.getStore((String)headers.get("User"));
 			resultMap.put("status", true);
-			resultMap.put("request_body", user);
+			resultMap.put("data", list);
 			status = HttpStatus.ACCEPTED;
 		}catch(RuntimeException e) {
 			log.error("정보조회 실패", e);

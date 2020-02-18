@@ -23,7 +23,6 @@ public class SHA256Util {
 		System.arraycopy(salt, 0, bytes, a.length, salt.length);
 
 		try {
-			// 암호화 방식 지정 메소드
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			md.update(bytes);
 
@@ -50,7 +49,7 @@ public class SHA256Util {
 
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < salt.length; i++) {
-			// byte 값을 Hex 값으로 바꾸기.
+			// byte 값을 Hex 값으로 바꾸기
 			sb.append(String.format("%02x", salt[i]));
 		}
 
