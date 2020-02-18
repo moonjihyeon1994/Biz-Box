@@ -32,7 +32,7 @@ export default {
     let vm = this // vm.$store.state.Coords.lat(lng)
     vm.seen = false
     if (vm.subCategory !== '전체') {
-      let requestSummaryUrl = '/' + vm.$store.state.Coords.lng + '/' + vm.$store.state.Coords.lat + '/' + vm.subCategory
+      let requestSummaryUrl = '/predict/predict_business/' + vm.$store.state.Coords.lng + '/' + vm.$store.state.Coords.lat + '/' + vm.subCategory
       axios.get(requestSummaryUrl)
         .then((res) => {
           vm.receivedData = res.data.prediclist[2]
@@ -68,6 +68,9 @@ export default {
               vm.summary.mainTarget = ages[index]
             }
           }
+        })
+        .finally(() => {
+          vm.seen = true
         })
     } else {
       vm.seen = false
