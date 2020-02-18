@@ -3,7 +3,7 @@
     <div class="modal-mask">
         <div class="modal-container" >
           <button class="close-button" @click="$emit('close')"><v-icon>mdi-close-circle-outline</v-icon></button>
-          <TabMenu />
+          <TabMenu :clickEvent='clickEvent'/>
           <hr />
         </div>
     </div>
@@ -14,6 +14,9 @@ import TabMenu from './tab_menu/TabMenu.vue'
 export default {
   components: {
     TabMenu
+  },
+  props: {
+    clickEvent: Boolean
   }
 }
 </script>
