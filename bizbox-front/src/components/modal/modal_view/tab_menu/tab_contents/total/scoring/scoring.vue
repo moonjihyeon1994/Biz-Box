@@ -40,7 +40,6 @@ export default {
     return {
       sgCode: '',
       sgName: '',
-      dong: '진관동',
       key: this.$store.state.modalsearch,
       sales_2018: {
         'q1': 0,
@@ -312,12 +311,17 @@ export default {
     let requestSalesUrl = '/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat + '/'
     axios.get(requestSalesUrl)
       .then(res => {
+        console.log('lng: ' + this.$store.state.Coords.lng)
+        console.log('lat: ' + this.$store.state.Coords.lat)
+        console.log(res.data)
         let data2018 = res.data['2018']
         let data2017 = res.data['2017']
         let data2016 = res.data['2016']
 
         vm.sgCode = data2018[0].trdar_cd
         vm.sgName = data2018[0].trdar_cd_nm
+        console.log('vm.sgCode: ' + vm.sgCode)
+        console.log('vm.sgName: ' + vm.sgName)
 
         // 집객력 > 주거인구, 직장인구
         for (let index = 0; index < data2018.length; index++) {

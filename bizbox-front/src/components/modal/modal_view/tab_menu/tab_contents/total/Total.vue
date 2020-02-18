@@ -72,8 +72,9 @@ export default {
   created () {
     axios.get('/storecountByLarge/' + this.key + '/100')
       .then(res => {
-        console.log(res)
-        const JsonLarge = res.data.large
+        const JsonLarge = res.data
+        console.log('=============================================================================')
+        console.log(JsonLarge)
         let totalCount = 0
         if (JsonLarge.소매 !== undefined) {
           this.stores.소매 = JsonLarge.소매
