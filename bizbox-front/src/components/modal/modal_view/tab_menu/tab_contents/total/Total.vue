@@ -10,7 +10,7 @@
     </div>
 
     <div id='each-point-box'>
-      <loading :loading='loadingStatus' :transparent='true'></loading>
+      <loading :loading='loadingStatus' transparent='true'></loading>
       <div class='bz-each-title'>상권 항목별 점수</div>
       <scoring @childs-event='parentsMethod'></scoring>
     </div>
@@ -20,7 +20,7 @@
 <script>
 import scoring from './scoring/scoring.vue'
 import Loading from '@/components/bizmap/loading/Loading.vue'
-import axios from 'axios'
+import axios from '@/js/http-commons.js'
 
 export default {
   components: {
@@ -70,10 +70,11 @@ export default {
     }
   },
   created () {
-    axios.get('/storecount/' + this.key + '/1000')
+    axios.get('/storecountByLarge/' + this.key + '/100')
       .then(res => {
-        console.log('success to get storeCount')
-        const JsonLarge = res.data.large
+        const JsonLarge = res.data
+        console.log('=============================================================================')
+        console.log(JsonLarge)
         let totalCount = 0
         if (JsonLarge.소매 !== undefined) {
           this.stores.소매 = JsonLarge.소매
@@ -106,9 +107,6 @@ export default {
       this.totalScore = score
       this.sgName = name
       this.loadingStatus = false
-    },
-    initList () {
-
     }
   }
 }
