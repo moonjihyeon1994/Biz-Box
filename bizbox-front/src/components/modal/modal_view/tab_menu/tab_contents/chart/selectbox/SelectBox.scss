@@ -12,12 +12,13 @@ $color2: rgb(15, 66, 95);
 
   #bz-select-box-selected {
     background-color: rgb(15, 66, 95);
-    font-size: 0.85em;
-    color: $color1;
+    font-size: 0.9em;
+    color:rgb(223, 223, 223);
     text-align: center;
     border-radius: 5px;
     height: 44px;
     line-height: 44px;
+    font-weight: bold;
 
     &:hover {
       cursor: pointer;

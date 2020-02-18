@@ -52,6 +52,7 @@ export default {
       } else if (this.type === 'mid') {
         this.$emit('mid-event', this.selected, false)
         eventBus.$emit('cateSelected')
+        this.$store.state.subCategory = this.selected
       }
     }
   },
