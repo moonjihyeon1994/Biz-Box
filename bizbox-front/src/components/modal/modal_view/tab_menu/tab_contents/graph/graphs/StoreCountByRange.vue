@@ -27,27 +27,40 @@
       </div>
     </div>
     <div class="content-inside">
-      <button @click="getData">눌러줘</button>
-      <ul v-show="drawflag">
-        <li v-for="item in icons" :key="item">
-          <span><v-icon size="15">{{item.keyset}}</v-icon>{{item.nameset}}:{{item.valueset}}</span>
-        </li>
-      </ul>
+      <input type="text" placeholder="대분류" class="namelist-input">
+      <input type="text" placeholder="중분류" class="namelist-input" v-model="middlecategory">
+      <input type="text" placeholder="소분류" class="namelist-input" v-model="smallcategory">
+      <button class="namelist-bt" @click="getData">검색하기</button>
+      <div class="namelist-inside">
+        <ul class="namelist" id="namelist">
+          <li>
+            검색해주세요
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from '@/js/http-commons'
+// import Spinner from '../../../../result/Spinner'
 import './graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
-import { eventBus } from '@/js/bus'
 export default {
   components: {
     // Spinner
   },
   data () {
     return {
+      Category: {
+        address: this.key,
+        middle: this.middlecategory,
+        range: this.range,
+        small: this.smallcategory
+      },
+      middlecategory: null,
+      smallcategory: null,
       largeItems: largeScale,
       icons: [],
       popflag: false,
@@ -114,28 +127,35 @@ export default {
       }
     },
     getData () {
-      if (!this.clickflag) {
-        this.range = this.slidervalue
-      }
-      console.log('click')
       axios
-        .get('/storecountByLarge/' + this.key + '/' + this.range)
-        .then(res => {
-          res.data.large.forEach(el => {
-            let data = new Object()
-            let itemkey = Object.keys(el)[0]
-            let itemValue = Object.values(el)[0]
-            let iconName = this.largeItems.large[itemkey]
-
-            data.keyset = iconName
-            data.valueset = itemValue
-            data.nameset = itemkey
-            this.icons.push(data)
-          })
+        .post('/storeDetailByCategory', {
+          address: this.key,
+          middle: this.middlecategory,
+          range: this.range,
+          small: this.smallcategory
         })
-        .finally(() => {
-          this.drawflag = true
-          console.log(this.icons)
+        .then(res => {
+          let array = res.data.detail
+          console.log(array)
+          var ul = document.getElementById('namelist')
+          let lis = ul.getElementsByTagName('li')
+          while (lis.length > 0) {
+            ul.removeChild(lis[0])
+          }
+          array.forEach(element => {
+            let node = document.createElement('LI')
+            let content = element.name
+            let textnode = document.createTextNode(content)
+            node.appendChild(textnode)
+            document.getElementById('namelist').appendChild(node)
+
+            node = document.createElement('LI')
+            content = element.addr
+            textnode = document.createTextNode(content)
+            node.appendChild(textnode)
+            document.getElementById('namelist').appendChild(node)
+
+          })
         })
     }
   }
