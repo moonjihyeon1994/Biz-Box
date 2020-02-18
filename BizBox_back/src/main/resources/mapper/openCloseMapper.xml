@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bizbox.mapper.OpenCloseMapper">
+	<insert id="putOpenCloseData" parameterType="oc">
+		insert into open_close (location, middleCategory, totalStart, totalEnd, closecnt, opencnt) 
+		values (#{location}, #{middleCategory}, #{totalStart}, #{totalEnd}, #{closeCnt}, #{openCnt})
+	</insert>
+	<select id="getOpenClose" parameterType="ac" resultType="oc">
+		select * from open_close where location like concat('%',#{address},'%') AND middleCategory like concat('%',#{middleCategory},'%')
+	</select>
+</mapper>	
