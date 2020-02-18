@@ -2,6 +2,8 @@
   <div v-if="seen">
     <h2>main Target : {{ summary.mainTarget }}</h2>
     <h2>main Time : {{ summary.mainTime }}</h2>
+
+    <input type="hidden" v-model='subCategory'>
   </div>
 </template>
 
@@ -9,10 +11,12 @@
 import axios from '@/js/http-commons.js'
 
 export default {
+  props: {
+    subCategory: String,
+    sgName: String
+  },
   data () {
     return {
-      sgName: '', // emit
-      subCategory: '', // emit
       seen: false,
       receivedData: '',
       summary: {
@@ -25,10 +29,10 @@ export default {
     this.seen = false
   },
   updated () {
-    let vm = this
+    let vm = this // vm.$store.state.Coords.lat(lng)
     vm.seen = false
     if (vm.subCategory !== '전체') {
-      let requestSummaryUrl = '/' + 'x' + 'y' + vm.subCategory
+      let requestSummaryUrl = '/' + vm.$store.state.Coords.lng + '/' + vm.$store.state.Coords.lat + '/' + vm.subCategory
       axios.get(requestSummaryUrl)
         .then((res) => {
           vm.receivedData = res.data.prediclist[2]
