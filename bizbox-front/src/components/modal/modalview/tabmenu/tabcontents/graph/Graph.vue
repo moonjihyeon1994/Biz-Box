@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import popByAge from './graphs/population_by_age_chart'
-import popByTime from './graphs/population_by_time_chart'
-import salByAge from './graphs/sales_by_age_chart'
-import salBySex from './graphs/sales_by_sex_chart'
+import popByAge from './graphs/PopulationByAgeChart'
+import popByTime from './graphs/PopulationByTimeChart'
+import salByAge from './graphs/SalesByAgeChart'
+import salBySex from './graphs/SalesBySexChart'
 import commercialAreaChangeByYear from './graphs/CommercialAreaChangeByYear'
 import storeCountByRange from './graphs/StoreCountByRange'
 export default {

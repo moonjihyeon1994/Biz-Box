@@ -45,7 +45,7 @@
 
 <script>
 import axios from '@/js/http-commons'
-import './graphs.css'
+import './Graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
 import Loading from '@/components/common/loading/Loading.vue'
 
