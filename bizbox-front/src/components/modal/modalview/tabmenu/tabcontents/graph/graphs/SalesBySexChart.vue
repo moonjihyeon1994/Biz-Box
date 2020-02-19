@@ -31,7 +31,7 @@
 import PieChart from '@/lib/PieChart'
 import axios from '@/js/http-commons'
 import Loading from '@/components/common/loading/Loading'
-import './graphs.css'
+import './Graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {

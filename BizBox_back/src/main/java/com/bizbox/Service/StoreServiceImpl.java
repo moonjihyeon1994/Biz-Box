@@ -1,6 +1,7 @@
 package com.bizbox.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,4 +65,21 @@ public class StoreServiceImpl implements StoreService {
 		return list;
 	}
 
+	@Override
+	public List<Store> getAllStoreByXY(Point point) {
+		List<Store> data = new ArrayList<>();
+		try {
+			List<Store> list = dao.getAllStore();
+			for (int i = 0; i < list.size(); i++) {
+				Point temp = new Point(point.getLat(), point.getLot(), list.get(i).getLat(), list.get(i).getLot(), point.getDistance());
+				int dist = (int)(Double.parseDouble(dao.getDistanceByXY(temp))*1000);
+				if(dist < Integer.parseInt(point.getDistance())) {
+					data.add(list.get(i));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
 }

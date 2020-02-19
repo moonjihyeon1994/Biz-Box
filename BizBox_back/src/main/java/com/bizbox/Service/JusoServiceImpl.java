@@ -23,6 +23,7 @@ import com.bizbox.dao.StoreDAO;
 import com.bizbox.utils.AddressUtil;
 import com.bizbox.vo.Point;
 import com.bizbox.vo.Store;
+
 @Service
 public class JusoServiceImpl implements JusoService{
 	@Autowired
@@ -33,6 +34,8 @@ public class JusoServiceImpl implements JusoService{
 	KakaoApi kakaoapi;
 	@Autowired
 	StoreDAO storedao;
+	@Autowired
+	StoreService storeservice;
 	
 	/**
 	 * 도로명주소로 입력 하여 정보를 String으로 받음
@@ -383,16 +386,10 @@ public class JusoServiceImpl implements JusoService{
 			lot = latlot[0];
 		}
 		
-		String distance = String.valueOf(Double.parseDouble(radius)/1000.0);
+		String distance = String.valueOf(radius);
 		Point point = new Point(lat, lot, distance);
-
-		List<Store> list = null;
-		try {
-			list = storedao.getStoreByXY(point);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
+		List<Store> list = storeservice.getAllStoreByXY(point);
 		
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
 		for (int i = 0; i < list.size(); i++) {
@@ -441,7 +438,8 @@ public class JusoServiceImpl implements JusoService{
 	 */
 	@Override
 	public JSONObject findStoreDetailByCategory(String xy, String range, String middle, String small) throws IOException {
-		JSONArray itemsArray = jusoapi.findStoreToJson(xy, range);
+		String cxcy = xy.split(",")[1] + "," + xy.split(",")[0];
+		JSONArray itemsArray = jusoapi.findStoreToJson(cxcy, range);
 		JSONObject object = new JSONObject();
 		JSONArray array = new JSONArray();
 		
@@ -453,15 +451,9 @@ public class JusoServiceImpl implements JusoService{
 			lot = latlot[0];
 		}
 		
-		String distance = String.valueOf(Double.parseDouble(range)/1000.0);
-		Point point = new Point(lat, lot, distance);
+		Point point = new Point(lat, lot, range);
 
-		List<Store> list = null;
-		try {
-			list = storedao.getStoreByXY(point);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		List<Store> list = storeservice.getAllStoreByXY(point);
 		
 		for (int i = 0; i < list.size(); i++) {
 			if(list.get(i).getCategory_middle().equals(middle) && list.get(i).getCategory_small().equals(small)) {

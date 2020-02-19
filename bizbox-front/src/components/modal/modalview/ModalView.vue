@@ -10,7 +10,7 @@
   </transition>
 </template>
 <script>
-import TabMenu from './tab_menu/TabMenu.vue'
+import TabMenu from './tabmenu/TabMenu.vue'
 export default {
   components: {
     TabMenu

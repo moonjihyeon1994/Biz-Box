@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Detail from '@/components/modal/modal_view/modal_view.vue'
+import Detail from '@/components/modal/modalview/ModalView.vue'
 import './Modal.css'
 export default {
   data: () => {

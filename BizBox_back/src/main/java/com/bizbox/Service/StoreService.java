@@ -10,4 +10,5 @@ public interface StoreService {
 	boolean closeStore(Store store);
 	List<Store> getStore(String email);
 	List<Store> getStoreByXY(Point point);
+	List<Store> getAllStoreByXY(Point point);
 }
