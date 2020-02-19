@@ -22,7 +22,7 @@
           </v-card>
           <condition v-on:myevent="myevent"></condition>
           <div class="ssss" v-show="isonececlick">
-            <div class="info" id="graph-info">
+            <div id="graph-info">
               <canvas class="chart" id="horizontalbarChart"></canvas>
             </div>
           </div>
@@ -53,6 +53,15 @@
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="map" id="map"></div>
+    <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+    <div class="custom_zoomcontrol radius_border">
+      <span @click="zoomIn">
+        <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대" />
+      </span>
+      <span @click="zoomOut">
+        <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소" />
+      </span>
+    </div>
   </div>
 </template>
 
@@ -166,7 +175,6 @@ export default {
     // --마커 생성--------------------------------------------------------------------
     this.marker = new kakao.maps.Marker({
       map: this.map
-      //position: new kakao.maps.LatLng(37.505691, 127.0298106) // 최초 표시되는 마커의 위치
     })
     this.drawMarker()
 
@@ -190,10 +198,10 @@ export default {
     kakao.maps.event.addListener(this.map, 'mousemove', function(mouseEvent) {
       vm.CircleMoveClick(mouseEvent)
     }) // 지도에 무브 이벤트를 등록
-    axios
-      .get('/population/getPopulationByTime/' + this.name)
-      .then(res => {})
-      .finally(() => {})
+    // axios
+    //   .get('/population/getPopulationByTime/' + this.name)
+    //   .then(res => {})
+    //   .finally(() => {})
     // for (var i = 0, len = data.length; i < len; i++) {
     //   var nname = data[i].properties.ADM_DR_NM
     //   console.log(nname)
@@ -311,21 +319,21 @@ export default {
           let Marker = vm.marker
           coords = new kakao.maps.LatLng(vm.ME.getLat(), vm.ME.getLng()) // 결과값으로 받은 위치를 마커의 위치로 적용
           Marker.setPosition(coords)
-          var imageSrc =
-            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
-          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-          var markerImage = new kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize,
-            imageOption
-          )
-          var content =
-            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
-            Name +
-            '</div>'
-          vm.marker.setImage(markerImage)
+          // var imageSrc =
+          //   'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
+          // // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
+          // var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
+          // var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          // var markerImage = new kakao.maps.MarkerImage(
+          //   imageSrc,
+          //   imageSize,
+          //   imageOption
+          // )
+          var content = '<div class="wrap">' + Name + '</div>'
+          // '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
+          // Name +
+          // '</div>'
+          // vm.marker.setImage(markerImage)
           vm.marker.setPosition(coords)
           vm.info.setContent(content)
           vm.info.setPosition(coords)
@@ -382,14 +390,14 @@ export default {
       this.Color = color
     },
     unDetail() {
-      this.map.setLevel(6, { anchor: this.ME })
+      //this.map.setLevel(6, { anchor: this.ME })
       this.showModal = false
       if (this.polygon != null) {
         this.polygon.setOptions({ fillOpacity: 0.13 })
       }
     },
     detail() {
-      this.map.setLevel(3, { anchor: this.ME })
+      //this.map.setLevel(3, { anchor: this.ME })
       this.polygon.setOptions({ fillOpacity: 0 })
     },
     drawMarker() {
@@ -402,9 +410,9 @@ export default {
           imageSize,
           imageOption
         )
-        axi
+        axios
           .post(
-            'http://70.12.246.137:8080/user/info',
+            '/user/info',
             {
               email: 'asdfasdfa',
               pw: 'asdfasdfasdf'
@@ -497,8 +505,10 @@ export default {
       return posi
     },
     eventbus(name) {
-      if (this.showModal) { eventBus.$emit('clickmap', name) }
-      eventBus.$emit('clickmap', name) 
+      if (this.showModal) {
+        eventBus.$emit('clickmap', name)
+      }
+      eventBus.$emit('clickmap', name)
     },
     myevent() {
       this.saveMouseEvent(this.ME, 1)
@@ -598,6 +608,14 @@ export default {
       // 지도 중심을 부드럽게 이동시킵니다
       var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942) // 이동할 위도 경도 위치를 생성합니다
       this.map.panTo(moveLatLon)
+    },
+    zoomIn() {
+      this.map.setLevel(this.map.getLevel() - 1)
+    },
+
+    // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+    zoomOut() {
+      this.map.setLevel(this.map.getLevel() + 1)
     },
     // -- 동이름으로 검색-----------------------------------------------------------------------------
     serch(name) {
@@ -1658,13 +1676,16 @@ button {
   color: tomato;
 }
 .ssss {
-  width: 460px;
-  height: 260px;
+  padding: 5px;
+  width: 370px;
+  height: 200px;
   z-index: 2;
   position: fixed;
   top: 400px;
   left: 50px;
+  background-color: tomato;
   border-radius: 3px;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
 }
 .addbt {
   display: inline-block;
@@ -1683,6 +1704,7 @@ button {
 //   background: white;
 // }
 #graph-info {
+  margin: 0;
   width: 360px !important;
   height: 190px !important;
   background: white !important;
