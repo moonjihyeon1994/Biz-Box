@@ -111,8 +111,11 @@ button {
     list-style: none;
 }
 .namelist-inside{
-    max-height: 195px;
+    position: relative;
+    width: 486px;
+    height: 195px;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 .namelist-input {
     font-family: "Roboto", sans-serif;
