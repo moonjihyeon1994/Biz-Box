@@ -130,7 +130,7 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/predict/findBusiness/127.050826/37.507118')
+        .get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
         .then(res => {
           this.result = res.data['2018']
           // this.road = res.data[0].d

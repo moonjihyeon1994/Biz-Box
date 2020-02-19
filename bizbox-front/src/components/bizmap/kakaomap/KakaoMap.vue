@@ -62,6 +62,21 @@
         <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소" />
       </span>
     </div>
+
+     <div class="ColorEx">
+      <span>
+        <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대" />
+      </span>
+      <span>
+        <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소" />
+      </span>
+      <span>
+        <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대" />
+      </span>
+      <span>
+        <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대" />
+      </span>
+    </div>
   </div>
 </template>
 
@@ -183,12 +198,6 @@ export default {
       vm.detail()
       vm.changeModal()
     })
-
-    // --인포윈도우 생성---------------------------------------------------------------
-    this.infowindow = new kakao.maps.InfoWindow({
-      content: 'name'
-    })
-    // -------------------------------------------------------------------------------------
 
     // 반경 그리는 이벤트 시작-------------------------------------------------------------------
     kakao.maps.event.addListener(this.map, 'click', function(mouseEvent) {
@@ -632,22 +641,7 @@ export default {
           vm.eventbus(Name)
           vm.saveMouseEvent2(coords, 0)
           vm.setSerchkey(Name) // 클릭된 영영ㄱ의 동이름을 기억하는 메서드
-          // vm.setColor(color)
-          var imageSrc =
-            'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
-          // 돋보기 모양 https://cdn.icon-icons.com/icons2/1744/PNG/512/3643762-find-glass-magnifying-search-zoom_113420.png
-          var imageSize = new kakao.maps.Size(55, 55) // 마커이미지의 크기입니다
-          var imageOption = { offset: new kakao.maps.Point(27, 69) } // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-          var markerImage = new kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize,
-            imageOption
-          )
-          var content =
-            '<div style="text-align: center; color:white;margin-top:10px; padding:2px; border:0px; background-color: #fff;border-radius: 3px; background: coral;">' +
-            Name +
-            '</div>'
-          Marker.setImage(markerImage)
+          var content = '<div class="wrap">' + Name + '</div>'
           Marker.setPosition(coords)
           vm.info.setContent(content)
           vm.info.setPosition(coords)
