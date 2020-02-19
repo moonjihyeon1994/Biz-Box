@@ -49,4 +49,14 @@ export default {
   font-family: 'OG';
   src: url('../assets/fonts/OmniGothicL.woff');
 }
+
+@import url('https://fonts.googleapis.com/css?family=Do+Hyeon|Gugi|Nanum+Gothic|Noto+Sans+KR&display=swap');
+
+#inspire {
+  font-family: 'OG';
+  /* font-family: 'Nanum Gothic', sans-serif; */
+  /* font-family: 'Noto Sans KR', sans-serif; */
+  /* font-family: 'Do Hyeon', sans-serif; */
+  /* font-family: 'Gugi', cursive; */
+}
 </style>
