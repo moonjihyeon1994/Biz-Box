@@ -28,4 +28,13 @@
 		]]>
 	</select>
 	
+	<select id="getAllStore" resultType="store">
+		SELECT * FROM storelist 
+	</select>
+	
+	<select id="getDistanceByXY" parameterType="point" resultType="String">
+		SELECT ( 6371 * acos( cos( radians( #{lat} ) ) * cos( radians( #{Oplat}) ) * cos( radians( #{Oplot} ) 
+		- radians(#{lot}) ) + sin( radians(#{lat}) ) * sin( radians( #{Oplat}) ) ) ) 
+	</select>
+	
 </mapper>

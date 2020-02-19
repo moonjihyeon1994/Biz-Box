@@ -70,7 +70,7 @@ public class StoreCountController {
 		}
 	}
 	
-	@PostMapping("/storeDetailByCategory/{Category}")
+	@PostMapping("/storeDetailByCategory")
 	public ResponseEntity<Object> storeDetailByCategory(@RequestBody Category category){
 		try {
 			String num = jusoService.getAddressByName(category.getAddress());
