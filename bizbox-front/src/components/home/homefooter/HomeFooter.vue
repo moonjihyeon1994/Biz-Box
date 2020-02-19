@@ -1,13 +1,14 @@
 <template>
   <div class="foot-container">
     <div class="foot-item">
-      <h1 class="foot-title">Biz Box</h1>
-      <span>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
-        dolorum libero labore quis pariatur officia doloremque distinctio
-        tempore repellat, iste incidunt perferendis aliquid sit, facilis ipsa
-        hic assumenda quidem maxime.
-      </span>
+      <h1 class="foot-title">BizBox</h1>
+      <div style='height: 150px;'>
+        당신의 최고의 비즈니스 파트너 ! <br>
+        당신의 최고의 비즈니스 파트너 ! <br>
+        당신의 최고의 비즈니스 파트너 ! <br>
+        당신의 최고의 비즈니스 파트너 ! <br>
+        당신의 최고의 비즈니스 파트너 ! <br>
+      </div>
       <div class="button-group">
         <a class="foot-button" v-for="(item, idx) in itemList" :key="'i' + idx" :href="item.url" target="_blank">
           {{ item.title }}
