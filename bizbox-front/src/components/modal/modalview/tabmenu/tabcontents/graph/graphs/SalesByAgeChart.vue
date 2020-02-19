@@ -2,7 +2,7 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        연령별 유동인구
+        연령별 소비
         <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
         <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
@@ -12,33 +12,34 @@
     <p class="point-content-area">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">유동인구가 가장 많아요.</span>
+      <span class="point-normal">소비가 가장 많아요.</span>
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <bar-chart
+      <horizontal-bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
         width="500px"
         height="300px"
-      ></bar-chart>
+      ></horizontal-bar-chart>
     </div>
   </div>
 </template>
 
 <script>
-import BarChart from '@/lib/BarChart'
+import HorizontalBarChart from '@/lib/HorizontalBarChart'
 import axios from '@/js/http-commons'
 import Loading from '@/components/common/loading/Loading'
-import './graphs.css'
+import './Graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    BarChart,
+    HorizontalBarChart,
     Loading
   },
   data () {
     return {
+      data: null,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -46,53 +47,34 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '연령별 유동인구',
+      title: '연령별 매출',
       point: 0,
-      btnStyle1: {
-        backgroundColor: '#d9d9d9',
-        cursor: 'pointer'
-      },
-      btnStyle2: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      btnStyle3: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      btnStyle4: {
-        backgroundColor: 'white',
-        cursor: 'pointer'
-      },
-      chartStyle: {
-        display: 'contents'
-      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
-      }
+      },
+      maxIndex: 0,
+      barColors: ['#365673', '#365673', '#365673', '#365673', '#365673', '#365673']
     }
   },
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
-      let totalNum = Math.max.apply(null, total)
-      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '명' + ')'
+      let totalNum = Math.max.apply(null, this.data)
+      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
+      let labels = ['10대', '20대', '30대', '40대', '50대', '60대 이상']
       let maxAge = -1
       let idx = 0
-      for (let index = 0; index < total.length; index++) {
-        if (maxAge < total[index]) {
-          maxAge = total[index]
+      for (let index = 0; index < this.data.length; index++) {
+        if (maxAge < this.data[index]) {
+          maxAge = this.data[index]
           idx = index
         }
       }
-      if (idx === 5) return (idx + 1) * 10 + '대 이상'
-      return (idx + 1) * 10 + '대'
+      return labels[idx]
     }
   },
   mounted () {
@@ -104,6 +86,7 @@ export default {
   },
   methods: {
     popup () {
+      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
@@ -111,11 +94,7 @@ export default {
       this.chartoptions = null
 
       this.searchOption = 1
-      this.title = '연령별 유동인구'
-      this.btnStyle1.backgroundColor = '#d9d9d9'
-      this.btnStyle2.backgroundColor = 'white'
-      this.btnStyle3.backgroundColor = 'white'
-      this.btnStyle4.backgroundColor = 'white'
+      this.title = '연령별 매출'
 
       if (this.key !== '') {
         this.getData()
@@ -124,56 +103,65 @@ export default {
     getData () {
       this.loadingStatus = true
       this.allowDiv.display = 'block'
-      this.btnStyle1.cursor = 'not-allowed'
-      this.btnStyle2.cursor = 'not-allowed'
-      this.btnStyle3.cursor = 'not-allowed'
-      this.btnStyle4.cursor = 'not-allowed'
+
+      let sumOf10 = 0
+      let sumOf20 = 0
+      let sumOf30 = 0
+      let sumOf40 = 0
+      let sumOf50 = 0
+      let sumOf60 = 0
 
       axios
-        .get('/population/getPopulationByLocation/' + this.key)
+        // .get('/sales/' + this.key)
+        .get('/predict/findBusiness/127.050826/37.507118')
         .then(res => {
-          this.result = res.data.pbl
-          this.road = this.result.f
-          this.point = res.data.point
+          this.result = res.data['2018']
+          // this.road = res.data[0].d
+          // this.point = res.data.point
+
+          for (let index = 0; index < this.result.length; index++) {
+            sumOf10 += Number(this.result[index].agrde_10_selng_amt)
+            sumOf20 += Number(this.result[index].agrde_20_selng_amt)
+            sumOf30 += Number(this.result[index].agrde_30_selng_amt)
+            sumOf40 += Number(this.result[index].agrde_40_selng_amt)
+            sumOf50 += Number(this.result[index].agrde_50_selng_amt)
+            sumOf60 += Number(this.result[index].agrde_60_above_selng_amt)
+          }
+          this.data = [sumOf10, sumOf20, sumOf30, sumOf40, sumOf50, sumOf60]
+          sumOf10 /= 100000000
+          sumOf20 /= 100000000
+          sumOf30 /= 100000000
+          sumOf40 /= 100000000
+          sumOf50 /= 100000000
+          sumOf60 /= 100000000
         })
+        // .then(() => {
+        //   let maxData = this.data[0]
+        //   for (let index = 1; index < this.data.length; index++) {
+        //     if (maxData < this.data[index]) {
+        //       maxData = this.data[index]
+        //       this.maxIndex = index
+        //     }
+        //   }
+        // })
+        // .then(() => {
+        //   this.barColors[this.maxIndex] = '#ff4d4d'
+        // })
         .finally(() => {
           this.chartdata = {
             labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
             datasets: [
               {
-                label: '전체',
+                label: '단위(억원)',
+                // backgroundColor: this.barColors,
                 backgroundColor: '#365673',
                 data: [
-                  this.result.j,
-                  this.result.k,
-                  this.result.l,
-                  this.result.m,
-                  this.result.n,
-                  this.result.o
-                ]
-              },
-              {
-                label: '남자',
-                backgroundColor: '#74ddf7',
-                data: [
-                  this.result.p,
-                  this.result.q,
-                  this.result.r,
-                  this.result.s,
-                  this.result.t,
-                  this.result.u
-                ]
-              },
-              {
-                label: '여자',
-                backgroundColor: '#ff6390',
-                data: [
-                  this.result.v,
-                  this.result.w,
-                  this.result.x,
-                  this.result.y,
-                  this.result.z,
-                  this.result.aa
+                  sumOf10.toFixed(2),
+                  sumOf20.toFixed(2),
+                  sumOf30.toFixed(2),
+                  sumOf40.toFixed(2),
+                  sumOf50.toFixed(2),
+                  sumOf60.toFixed(2)
                 ]
               }
             ]
@@ -205,10 +193,6 @@ export default {
 
           this.loadingStatus = false
           this.allowDiv.display = 'none'
-          this.btnStyle1.cursor = 'pointer'
-          this.btnStyle2.cursor = 'pointer'
-          this.btnStyle3.cursor = 'pointer'
-          this.btnStyle4.cursor = 'pointer'
         })
     }
   }
@@ -216,6 +200,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+[v-cloak] {
+    display: none;
+}
+
 #chart {
   position: relative;
   width: 500px;
@@ -231,16 +219,8 @@ export default {
   background-color: rgb(255, 255, 255);
 }
 
-#point {
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 500px;
-  height: 40px;
-  line-height: 40px;
-  top: 5px;
-  font-size: 24px;
-  margin-top: 10px;
-  background-color: white;
+#back:hover {
+  cursor: not-allowed;
 }
 
 #searchOptions {
@@ -261,10 +241,6 @@ export default {
       font-weight: bold;
     }
   }
-}
-
-#searchOptions button:hover {
-  background-color: #e38fe3;
 }
 
 #search input {

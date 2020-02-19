@@ -2,45 +2,41 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        성별 매출
-        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
-        <span v-show="popflag" class="icon-popup-tri"/></span>
+        연도별 상권 변화 지표
+        <span class="icon-question" @click="popup">
+          <v-icon size="15">mdi-help-circle-outline</v-icon>
+          <span v-show="popflag" class="icon-popup-tri" />
+        </span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
-      <div class="section-content-update">2020-02-05 업데이트</div>
+      <div class="section-content-update">2019-2분기 업데이트</div>
     </div>
     <p class="point-content-area">
+      <span class="point-normal">전년대비</span>
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">소비가 가장 많아요.</span>
+      <span class="point-normal">했습니다</span>
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <pie-chart
-        :chart-data="chartdata"
-        :options="chartoptions"
-        width="500px"
-        height="300px"
-      ></pie-chart>
+      <bar-chart :chart-data="chartdata" :options="chartoptions" width="500px" height="300px"></bar-chart>
     </div>
   </div>
 </template>
 
 <script>
-import PieChart from '@/lib/PieChart'
+import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
 import Loading from '@/components/common/loading/Loading'
-import './graphs.css'
+import './Graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    PieChart,
+    BarChart,
     Loading
   },
   data () {
     return {
-      totalWoman: 0,
-      totalMan: 0,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -48,10 +44,8 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '성별 매출',
+      title: '연도별 상권 변화 지표',
       point: 0,
-      sumWoman: 0,
-      sumMan: 0,
       btnStyle1: {
         backgroundColor: '#d9d9d9',
         cursor: 'pointer'
@@ -68,6 +62,9 @@ export default {
         backgroundColor: 'white',
         cursor: 'pointer'
       },
+      chartStyle: {
+        display: 'contents'
+      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
@@ -77,20 +74,19 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let woman = this.totalWoman
-      let man = this.totalMan
-      if (woman >= man) {
-        return '(' + woman.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
-      } else {
-        return '(' + man.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
-      }
+      let preYear = this.result[4].g
+      let thisYear = this.result[5].g * 2
+      let percent = ((thisYear - preYear) / preYear) * 100
+      return '(' + Math.round(percent * 100) / 100 + '%' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      if (this.sumWoman >= this.sumMan) {
-        return '여성'
+      let preYear = this.result[4].g
+      let thisYear = this.result[5].g * 2
+      if (preYear >= thisYear) {
+        return '하강'
       } else {
-        return '남성'
+        return '상승'
       }
     }
   },
@@ -101,8 +97,14 @@ export default {
       this.draw()
     })
   },
+  created () {
+    // eventBus.$on('clickmap', name => {
+    //   this.draw()
+    // })
+  },
   methods: {
     popup () {
+      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
@@ -110,7 +112,7 @@ export default {
       this.chartoptions = null
 
       this.searchOption = 4
-      this.title = '성별 매출'
+      this.title = '연도별 상권 변화 지표'
       this.btnStyle1.backgroundColor = 'white'
       this.btnStyle2.backgroundColor = 'white'
       this.btnStyle3.backgroundColor = 'white'
@@ -127,44 +129,75 @@ export default {
       this.btnStyle2.cursor = 'not-allowed'
       this.btnStyle3.cursor = 'not-allowed'
       this.btnStyle4.cursor = 'not-allowed'
-
       axios
-        .get('/predict/findBusiness/127.050826/37.507118')
+        .get('/change/getHistory/' + this.key)
         .then(res => {
-          this.result = res.data['2018']
-          // this.road = res.data[0].d
-
-          for (let index = 0; index < this.result.length; index++) {
-            this.sumWoman += Number(this.result[index].fml_selng_amt)
-            this.sumMan += Number(this.result[index].ml_selng_amt)
-          }
-        })
-        .then(() => {
-          this.totalWoman = this.sumWoman
-          this.totalMan = this.sumMan
-
-          this.sumWoman /= 100000000
-          this.sumMan /= 100000000
+          this.result = res.data.cblist
+          this.road = this.result[0].d
+          this.point = res.data.point
         })
         .finally(() => {
           this.chartdata = {
-            labels: ['여성', '남성'],
+            labels: ['2014', '2015', '2016', '2017', '2018', '2019-2'],
             datasets: [
               {
-                fill: true,
-                data: [this.sumWoman.toFixed(2), this.sumMan.toFixed(2)],
-                backgroundColor: ['#ff2483', '#1c8aff']
+                label: '운영 영업 개월 평균',
+                backgroundColor: '#74ddf7',
+                data: [
+                  this.result[0].g,
+                  this.result[1].g,
+                  this.result[2].g,
+                  this.result[3].g,
+                  this.result[4].g,
+                  this.result[5].g * 2
+                ]
+              },
+              {
+                label: '폐업 영업 개월 평균',
+                backgroundColor: '#ff6390',
+                data: [
+                  this.result[0].h,
+                  this.result[1].h,
+                  this.result[2].h,
+                  this.result[3].h,
+                  this.result[4].h,
+                  this.result[5].h * 2
+                ]
               }
             ]
           }
 
           this.chartoptions = {
             responsive: true,
-            maintainAspectRatio: true
+            maintainAspectRatio: true,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  },
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ]
+            }
           }
 
           this.loadingStatus = false
           this.allowDiv.display = 'none'
+
+          this.btnStyle1.cursor = 'pointer'
+          this.btnStyle2.cursor = 'pointer'
+          this.btnStyle3.cursor = 'pointer'
+          this.btnStyle4.cursor = 'pointer'
         })
     }
   }
@@ -172,10 +205,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-[v-cloak] {
-    display: none;
-}
-
 #chart {
   position: relative;
   width: 500px;
@@ -191,8 +220,16 @@ export default {
   background-color: rgb(255, 255, 255);
 }
 
-#back:hover {
-  cursor: not-allowed;
+#point {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 500px;
+  height: 40px;
+  line-height: 40px;
+  top: 5px;
+  font-size: 24px;
+  margin-top: 10px;
+  background-color: white;
 }
 
 #searchOptions {
@@ -213,6 +250,10 @@ export default {
       font-weight: bold;
     }
   }
+}
+
+#searchOptions button:hover {
+  background-color: #e38fe3;
 }
 
 #search input {

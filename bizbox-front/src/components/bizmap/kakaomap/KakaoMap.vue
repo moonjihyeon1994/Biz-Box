@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import Detail from '@/components/modal/modal_view/modal_view.vue'
+import Detail from '@/components/modal/modalview/ModalView.vue'
 import '@/components/modal/Modal.css'
 import Dong from '@/assets/json/newcolor.json'
 import color from '@/assets/json/color.json'

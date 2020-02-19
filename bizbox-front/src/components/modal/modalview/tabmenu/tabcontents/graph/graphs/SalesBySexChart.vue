@@ -2,7 +2,7 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        연령별 소비
+        성별 매출
         <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
         <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
@@ -16,30 +16,31 @@
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <horizontal-bar-chart
+      <pie-chart
         :chart-data="chartdata"
         :options="chartoptions"
         width="500px"
         height="300px"
-      ></horizontal-bar-chart>
+      ></pie-chart>
     </div>
   </div>
 </template>
 
 <script>
-import HorizontalBarChart from '@/lib/HorizontalBarChart'
+import PieChart from '@/lib/PieChart'
 import axios from '@/js/http-commons'
 import Loading from '@/components/common/loading/Loading'
-import './graphs.css'
+import './Graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    HorizontalBarChart,
+    PieChart,
     Loading
   },
   data () {
     return {
-      data: null,
+      totalWoman: 0,
+      totalMan: 0,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -47,34 +48,50 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '연령별 매출',
+      title: '성별 매출',
       point: 0,
+      sumWoman: 0,
+      sumMan: 0,
+      btnStyle1: {
+        backgroundColor: '#d9d9d9',
+        cursor: 'pointer'
+      },
+      btnStyle2: {
+        backgroundColor: 'white',
+        cursor: 'pointer'
+      },
+      btnStyle3: {
+        backgroundColor: 'white',
+        cursor: 'pointer'
+      },
+      btnStyle4: {
+        backgroundColor: 'white',
+        cursor: 'pointer'
+      },
       loadingStatus: false,
       allowDiv: {
         display: 'none'
-      },
-      maxIndex: 0,
-      barColors: ['#365673', '#365673', '#365673', '#365673', '#365673', '#365673']
+      }
     }
   },
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let totalNum = Math.max.apply(null, this.data)
-      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' + ')'
+      let woman = this.totalWoman
+      let man = this.totalMan
+      if (woman >= man) {
+        return '(' + woman.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
+      } else {
+        return '(' + man.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
+      }
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      let labels = ['10대', '20대', '30대', '40대', '50대', '60대 이상']
-      let maxAge = -1
-      let idx = 0
-      for (let index = 0; index < this.data.length; index++) {
-        if (maxAge < this.data[index]) {
-          maxAge = this.data[index]
-          idx = index
-        }
+      if (this.sumWoman >= this.sumMan) {
+        return '여성'
+      } else {
+        return '남성'
       }
-      return labels[idx]
     }
   },
   mounted () {
@@ -86,15 +103,18 @@ export default {
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
       this.chartdata = null
       this.chartoptions = null
 
-      this.searchOption = 1
-      this.title = '연령별 매출'
+      this.searchOption = 4
+      this.title = '성별 매출'
+      this.btnStyle1.backgroundColor = 'white'
+      this.btnStyle2.backgroundColor = 'white'
+      this.btnStyle3.backgroundColor = 'white'
+      this.btnStyle4.backgroundColor = '#d9d9d9'
 
       if (this.key !== '') {
         this.getData()
@@ -103,92 +123,44 @@ export default {
     getData () {
       this.loadingStatus = true
       this.allowDiv.display = 'block'
-
-      let sumOf10 = 0
-      let sumOf20 = 0
-      let sumOf30 = 0
-      let sumOf40 = 0
-      let sumOf50 = 0
-      let sumOf60 = 0
+      this.btnStyle1.cursor = 'not-allowed'
+      this.btnStyle2.cursor = 'not-allowed'
+      this.btnStyle3.cursor = 'not-allowed'
+      this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        // .get('/sales/' + this.key)
         .get('/predict/findBusiness/127.050826/37.507118')
         .then(res => {
           this.result = res.data['2018']
           // this.road = res.data[0].d
-          // this.point = res.data.point
 
           for (let index = 0; index < this.result.length; index++) {
-            sumOf10 += Number(this.result[index].agrde_10_selng_amt)
-            sumOf20 += Number(this.result[index].agrde_20_selng_amt)
-            sumOf30 += Number(this.result[index].agrde_30_selng_amt)
-            sumOf40 += Number(this.result[index].agrde_40_selng_amt)
-            sumOf50 += Number(this.result[index].agrde_50_selng_amt)
-            sumOf60 += Number(this.result[index].agrde_60_above_selng_amt)
+            this.sumWoman += Number(this.result[index].fml_selng_amt)
+            this.sumMan += Number(this.result[index].ml_selng_amt)
           }
-          this.data = [sumOf10, sumOf20, sumOf30, sumOf40, sumOf50, sumOf60]
-          sumOf10 /= 100000000
-          sumOf20 /= 100000000
-          sumOf30 /= 100000000
-          sumOf40 /= 100000000
-          sumOf50 /= 100000000
-          sumOf60 /= 100000000
         })
-        // .then(() => {
-        //   let maxData = this.data[0]
-        //   for (let index = 1; index < this.data.length; index++) {
-        //     if (maxData < this.data[index]) {
-        //       maxData = this.data[index]
-        //       this.maxIndex = index
-        //     }
-        //   }
-        // })
-        // .then(() => {
-        //   this.barColors[this.maxIndex] = '#ff4d4d'
-        // })
+        .then(() => {
+          this.totalWoman = this.sumWoman
+          this.totalMan = this.sumMan
+
+          this.sumWoman /= 100000000
+          this.sumMan /= 100000000
+        })
         .finally(() => {
           this.chartdata = {
-            labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+            labels: ['여성', '남성'],
             datasets: [
               {
-                label: '단위(억원)',
-                // backgroundColor: this.barColors,
-                backgroundColor: '#365673',
-                data: [
-                  sumOf10.toFixed(2),
-                  sumOf20.toFixed(2),
-                  sumOf30.toFixed(2),
-                  sumOf40.toFixed(2),
-                  sumOf50.toFixed(2),
-                  sumOf60.toFixed(2)
-                ]
+                fill: true,
+                data: [this.sumWoman.toFixed(2), this.sumMan.toFixed(2)],
+                backgroundColor: ['#ff2483', '#1c8aff']
               }
             ]
           }
 
           this.chartoptions = {
             responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true
-                  },
-                  gridLines: {
-                    display: true
-                  }
-                }
-              ],
-              xAxes: [
-                {
-                  gridLines: {
-                    display: true
-                  }
-                }
-              ]
-            }
+            maintainAspectRatio: true
           }
 
           this.loadingStatus = false
