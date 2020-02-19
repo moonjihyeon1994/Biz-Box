@@ -27,7 +27,7 @@
             </div>
           </div>
           <!-- <div class="map" id="map"></div> -->
-          <v-btn class="addbt" v-on:click="addMyStore" icon>
+          <v-btn class="addbt" v-on:click="addMyStore" icon style="font-weight:bold;font-size: 1.1em">
             현재 위치에 내 점포 추가하기
             <v-icon>mdi-magnify</v-icon>
           </v-btn>

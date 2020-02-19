@@ -187,6 +187,7 @@ export default {
   position: fixed;
   top: 180px;
   left: 64px;
+  font-weight: bold;
 }
 #sheet {
   width: 370px;

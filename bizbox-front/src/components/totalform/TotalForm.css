@@ -20,6 +20,8 @@ div.v-tab {
 
 .closeButton {
   background-color: #0f425f;
+  padding: 12px 0;
+  font-sizE: 1.5em;
 }
 
 div.v-tab.v-tab--active span {
