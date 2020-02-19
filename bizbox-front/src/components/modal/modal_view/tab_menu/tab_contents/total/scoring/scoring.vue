@@ -3,7 +3,7 @@
     <table>
       <caption>{{ sgName }}</caption>
       <tbody>
-        <tr>
+        <tr >
           <th>성장성</th>
           <td>{{ score.성장성.점수 }}</td>
         </tr>

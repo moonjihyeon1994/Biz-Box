@@ -9,7 +9,8 @@
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
     </div>
-    <p class="point-content-area">
+    <p class="point-content-area Content" style="font-size: 1.2em;
+    font-weight: bold;">
       <span class="point-title">{{maxAgeMaker}}</span>
       <span class="point-percent">{{percentMaker}}</span>
       <span class="point-normal">소비가 가장 많아요.</span>
@@ -262,5 +263,28 @@ export default {
 
 #search-result {
   margin-top: 5px;
+}
+
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
+.Content {
+  width: 100%;
+  padding: 10px 20px;
+  margin: 20px 0;
+  background-color: $color2;
+  border-radius: 5px;
+  color: $color1;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
+  text-align: center;
+
+  .strong {
+    color: rgb(223, 223, 223);
+  }
+
+  h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
 }
 </style>

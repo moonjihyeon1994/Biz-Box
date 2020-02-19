@@ -57,10 +57,12 @@ button {
     box-sizing: border-box;
     border: 5px;
     padding: 6px;
-    border: 1px solid #f5f7f7;
+    border: 1px solid rgb(15, 66, 95);
     border-width: 1px;
     border-style: solid;
-    border-color: rgb(233, 236, 236);
+    border-color:rgb(15, 66, 95);
+    margin-bottom: 40px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
 }
 
 .section-content-title {
@@ -170,3 +172,4 @@ button {
     width: 100%;
     border-radius: 3px;
 }
+
