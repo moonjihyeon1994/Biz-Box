@@ -398,7 +398,7 @@ export default {
     },
     detail() {
       //this.map.setLevel(3, { anchor: this.ME })
-      this.polygon.setOptions({ fillOpacity: 0 })
+      this.polygon.setOptions({ fillOpacity: 1 })
     },
     drawMarker() {
       if (this.$store.state.auth.token) {
