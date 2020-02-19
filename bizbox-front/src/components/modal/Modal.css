@@ -15,12 +15,14 @@
 
 .modal-container {
   width: 600px;
-  height: 755px;
+  height: 645px;
   /* margin: 60px auto 0; */
-  padding: 10px 30px;
-  background-color: #fff;
+  padding: 7px 11px;
+  background-color: white;
   border-radius: 2px;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.432);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.432);
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   border-radius: 3px;
   overflow: auto;

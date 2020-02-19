@@ -53,7 +53,7 @@
       <!-- 마커 클릭시 모달 표시되는 부분입니다 -->
     </Detail>
     <div class="map" id="map"></div>
-    <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+    <!-- 지도 확대, 축소 컨트롤 div 입니다 --> 
     <div class="custom_zoomcontrol radius_border">
       <span @click="zoomIn">
         <img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대" />

@@ -114,3 +114,28 @@ export default {
 </script>
 
 <style scoped src='./Total.scss' lang='scss'></style>
+<style scoped lang="scss">
+
+$color1: rgb(232, 113, 91);
+$color2: rgb(15, 66, 95);
+
+.Content {
+  width: 100%;
+  padding: 10px 20px;
+  margin: 20px 0;
+  background-color: $color2;
+  border-radius: 5px;
+  color: $color1;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
+  text-align: center;
+
+  .strong {
+    color: rgb(223, 223, 223);
+  }
+
+  h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+}
+</style>
