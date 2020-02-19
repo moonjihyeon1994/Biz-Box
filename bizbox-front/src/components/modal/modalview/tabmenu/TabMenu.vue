@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import graphItem from './tab_contents/graph/Graph.vue'
-import totalView from './tab_contents/total/Total.vue'
-import Chart from './tab_contents/chart/Chart'
+import graphItem from './tabcontents/graph/Graph.vue'
+import totalView from './tabcontents/total/Total.vue'
+import Chart from './tabcontents/chart/Chart'
 
 export default {
   components: {

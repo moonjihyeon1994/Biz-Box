@@ -2,9 +2,11 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        연령별 유동인구
-        <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
-        <span v-show="popflag" class="icon-popup-tri"/></span>
+        시간별 유동인구
+        <span class="icon-question" @click="popup">
+          <v-icon size=15>mdi-help-circle-outline</v-icon>
+          <span v-show="popflag" class="icon-popup-tri"/>
+        </span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
@@ -17,25 +19,25 @@
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <bar-chart
+      <line-chart
         :chart-data="chartdata"
         :options="chartoptions"
         width="500px"
         height="300px"
-      ></bar-chart>
+      ></line-chart>
     </div>
   </div>
 </template>
 
 <script>
-import BarChart from '@/lib/BarChart'
+import LineChart from '@/lib/LineChart'
 import axios from '@/js/http-commons'
 import Loading from '@/components/common/loading/Loading'
-import './graphs.css'
+import './Graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    BarChart,
+    LineChart,
     Loading
   },
   data () {
@@ -83,6 +85,7 @@ export default {
     },
     maxAgeMaker: function () {
       if (this.result == null) return
+      let labels = ['24~06시', '06~11시', '11~14시', '14~17시', '17~21시', '21~24시']
       let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
       let maxAge = -1
       let idx = 0
@@ -92,8 +95,7 @@ export default {
           idx = index
         }
       }
-      if (idx === 5) return (idx + 1) * 10 + '대 이상'
-      return (idx + 1) * 10 + '대'
+      return labels[idx]
     }
   },
   mounted () {
@@ -111,10 +113,10 @@ export default {
       this.chartdata = null
       this.chartoptions = null
 
-      this.searchOption = 1
-      this.title = '연령별 유동인구'
-      this.btnStyle1.backgroundColor = '#d9d9d9'
-      this.btnStyle2.backgroundColor = 'white'
+      this.searchOption = 2
+      this.title = '시간별 유동인구'
+      this.btnStyle1.backgroundColor = 'white'
+      this.btnStyle2.backgroundColor = '#d9d9d9'
       this.btnStyle3.backgroundColor = 'white'
       this.btnStyle4.backgroundColor = 'white'
 
@@ -131,19 +133,27 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/population/getPopulationByLocation/' + this.key)
+        .get('/population/getPopulationByTime/' + this.key)
         .then(res => {
-          this.result = res.data.pbl
+          this.result = res.data.pbt
           this.road = this.result.f
           this.point = res.data.point
         })
         .finally(() => {
           this.chartdata = {
-            labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+            labels: [
+              '24~06시',
+              '06~11시',
+              '11~14시',
+              '14~17시',
+              '17~21시',
+              '21~24시'
+            ],
             datasets: [
               {
-                label: '전체',
-                backgroundColor: '#365673',
+                label: '정보',
+                fill: false,
+                borderColor: 'red',
                 data: [
                   this.result.j,
                   this.result.k,
@@ -151,30 +161,6 @@ export default {
                   this.result.m,
                   this.result.n,
                   this.result.o
-                ]
-              },
-              {
-                label: '남자',
-                backgroundColor: '#74ddf7',
-                data: [
-                  this.result.p,
-                  this.result.q,
-                  this.result.r,
-                  this.result.s,
-                  this.result.t,
-                  this.result.u
-                ]
-              },
-              {
-                label: '여자',
-                backgroundColor: '#ff6390',
-                data: [
-                  this.result.v,
-                  this.result.w,
-                  this.result.x,
-                  this.result.y,
-                  this.result.z,
-                  this.result.aa
                 ]
               }
             ]
@@ -187,7 +173,7 @@ export default {
               yAxes: [
                 {
                   ticks: {
-                    beginAtZero: true
+                    beginAtZero: false
                   },
                   gridLines: {
                     display: true
@@ -264,8 +250,8 @@ export default {
   }
 }
 
-#searchOptions button:hover {
-  background-color: #e38fe3;
+#searchOptions button:hover{
+    background-color: #E38FE3;
 }
 
 #search input {

@@ -33,6 +33,8 @@ public class JusoServiceImpl implements JusoService{
 	KakaoApi kakaoapi;
 	@Autowired
 	StoreDAO storedao;
+	@Autowired
+	StoreService storeservice;
 	
 	/**
 	 * 도로명주소로 입력 하여 정보를 String으로 받음
@@ -383,16 +385,10 @@ public class JusoServiceImpl implements JusoService{
 			lot = latlot[0];
 		}
 		
-		String distance = String.valueOf(Double.parseDouble(radius)/1000.0);
+		String distance = String.valueOf(radius);
 		Point point = new Point(lat, lot, distance);
-
-		List<Store> list = null;
-		try {
-			list = storedao.getStoreByXY(point);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
+		List<Store> list = storeservice.getAllStoreByXY(point);
 		
 		HashMap<String, Integer> LNm = new HashMap<String, Integer>();
 		for (int i = 0; i < list.size(); i++) {
