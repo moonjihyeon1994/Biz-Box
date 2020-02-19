@@ -12,6 +12,8 @@ form {
 
 div.v-tab.v-tab--active {
   background-color: #ffffff;
+  border-bottom: 2px solid rgb(232, 113, 91);;
+  z-index: 2;
 }
 
 div.v-tab {
@@ -26,5 +28,6 @@ div.v-tab {
 
 div.v-tab.v-tab--active span {
   color: #34256b;
+  font-weight: bold;
 }
 
