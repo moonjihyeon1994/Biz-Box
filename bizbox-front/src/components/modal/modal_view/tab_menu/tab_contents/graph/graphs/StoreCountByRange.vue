@@ -32,6 +32,7 @@
       <input type="text" placeholder="소분류" class="namelist-input" v-model="smallcategory">
       <button class="namelist-bt" @click="getData">검색하기</button>
       <div class="namelist-inside">
+        <loading :loading='loadingStatus' :transparent='true'></loading>
         <ul class="namelist" id="namelist">
           <li>
             검색해주세요
@@ -44,12 +45,13 @@
 
 <script>
 import axios from '@/js/http-commons'
-// import Spinner from '../../../../result/Spinner'
 import './graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
+import Loading from '@/components/common/loading/Loading.vue'
+
 export default {
   components: {
-    // Spinner
+    Loading
   },
   data () {
     return {
@@ -73,7 +75,8 @@ export default {
       key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연도별 상권 변화 지표',
-      point: 0
+      point: 0,
+      loadingStatus: false
     }
   },
   computed: {
@@ -127,6 +130,8 @@ export default {
       }
     },
     getData () {
+      this.loadingStatus = true
+
       axios
         .post('/storeDetailByCategory', {
           address: this.key,
@@ -136,7 +141,6 @@ export default {
         })
         .then(res => {
           let array = res.data.detail
-          console.log(array)
           var ul = document.getElementById('namelist')
           let lis = ul.getElementsByTagName('li')
           while (lis.length > 0) {
@@ -156,6 +160,8 @@ export default {
             document.getElementById('namelist').appendChild(node)
 
           })
+        }).finally(() => {
+          this.loadingStatus = false
         })
     }
   }
