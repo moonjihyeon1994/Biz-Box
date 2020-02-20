@@ -289,10 +289,10 @@ export default {
         // 각 폴리곤에 마우스 오버 이벤트 등록
         let Name = name
         let position = mouseEvent.latLng
-        polygon.setOptions({
-          //fillColor: '#ffbf00',
-          fillOpacity: 0.5
-        })
+        // polygon.setOptions({
+        //   //fillColor: '#ffbf00',
+        //   fillOpacity: 0.5
+        // })
         customOverlay.setContent(
           '<div class="area" style="font-size: 16px; border-radius: 3px; background: #fff; top: -5px; border: 1px solid #888; position: absolute; left:30px; padding:2px;">' +
             name +
@@ -327,6 +327,11 @@ export default {
           vm.setColor(color) // 현재 선택된 폴리곤의 색 기억
           let Marker = vm.marker
           coords = new kakao.maps.LatLng(vm.ME.getLat(), vm.ME.getLng()) // 결과값으로 받은 위치를 마커의 위치로 적용
+          vm.detail()
+           polygon.setOptions({
+          
+          fillOpacity: 0.0
+        })
           Marker.setPosition(coords)
           // var imageSrc =
           //   'https://post-phinf.pstatic.net/MjAxODEwMjlfMjIy/MDAxNTQwNzg4MzE3MjY5.LLHhYLh1j1_nHjfolzukFd3SgwPeusVXJFmUJ3voADcg.ir556-ycrlzdjx1QZ14LA73RHXamNw3Z6-abjpyrEvsg.GIF/%EC%9E%90%EC%84%B8%ED%9E%88%EB%B3%B4%EA%B8%B0.gif?type=w500_q75' // https://image.flaticon.com/icons/svg/1322/1322263.svg
@@ -407,7 +412,7 @@ export default {
     },
     detail() {
       //this.map.setLevel(3, { anchor: this.ME })
-      this.polygon.setOptions({ fillOpacity: 1 })
+      this.polygon.setOptions({ fillOpacity: 0 })
     },
     drawMarker() {
       if (this.$store.state.auth.token) {

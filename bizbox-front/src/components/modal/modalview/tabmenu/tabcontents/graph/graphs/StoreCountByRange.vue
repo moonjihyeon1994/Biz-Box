@@ -12,7 +12,7 @@
     </div>
     <p class="sub-content-title-area">
       <span class="sub-content-title">
-      <v-icon size="15">mdi-map-marker</v-icon>{{ key }}</span>
+      <v-icon size="15">mdi-map-marker</v-icon>{{ this.$store.state.modalsearch }}</span>
     </p>
     <ul class="list-distance">
       <li><button class="list-distance-items" @click="checkBtn(0)">500m</button></li>
