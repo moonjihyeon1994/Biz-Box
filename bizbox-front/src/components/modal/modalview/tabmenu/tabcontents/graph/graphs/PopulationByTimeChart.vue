@@ -19,12 +19,14 @@
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <line-chart
-        :chart-data="chartdata"
-        :options="chartoptions"
-        width="500px"
-        height="300px"
-      ></line-chart>
+      <div>
+        <line-chart
+          :chart-data="chartdata"
+          :options="chartoptions"
+          width="480px"
+          height="300px"
+        ></line-chart>
+      </div>
     </div>
   </div>
 </template>
@@ -167,8 +169,8 @@ export default {
           }
 
           this.chartoptions = {
-            responsive: true,
-            maintainAspectRatio: true,
+            responsive: false,
+            maintainAspectRatio: false,
             scales: {
               yAxes: [
                 {
