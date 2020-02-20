@@ -11,7 +11,19 @@
 
     <div id='each-point-box'>
       <loading :loading='loadingStatus' :transparent='true'></loading>
-      <div class='bz-each-title'>상권 항목별 점수</div>
+      <div class='bz-each-title'>상권 항목별 점수
+        <span class="icon-question" @click="popup">
+          <v-icon size="15">mdi-help-circle-outline</v-icon>
+          <span v-show="popflag" class="icon-popup-tri" />
+        </span>
+        <span v-show="popflag" class="icon-popup">
+          성장성: 매출증감률(10점 만점)+예상성장률(10점 만점)<br>
+          안정성: 변동성(10점 만점)+운영 연수(5점 만점)+휴/폐업률(5점 만점)<br>
+          영업력: 공급대비 수요(10점)+분기별 매출 편차(5점)+요일별 매출 편차(5점)<br>
+          구매력: 상권 매출규모(10점)+건당 결제금액(10점)<br>
+          집객력: 유동인구(10점)+주거인구(5점)+직장인구(5점)
+        </span>
+      </div>
       <scoring @childs-event='parentsMethod' :clickEvent='clickEvent' @childs-loading-event='loadingMethod'></scoring>
     </div>
   </div>
@@ -32,6 +44,7 @@ export default {
   },
   data () {
     return {
+      popflag: false,
       key: this.$store.state.modalsearch,
       x: this.$store.state.Coords.lat,
       y: this.$store.state.Coords.lng,
@@ -100,6 +113,9 @@ export default {
       })
   },
   methods: {
+    popup () {
+      this.popflag = !this.popflag
+    },
     parentsMethod (score, name) {
       this.totalScore = score
       this.sgName = name
@@ -137,5 +153,14 @@ $color2: rgb(15, 66, 95);
     font-size: 1.2em;
     font-weight: bold;
   }
+}
+.icon-popup-tri {
+  left: 39%;
+  top: 20px;
+}
+.icon-popup {
+  top: 25px;
+  width: 525px;
+  font-size: 11px;
 }
 </style>
