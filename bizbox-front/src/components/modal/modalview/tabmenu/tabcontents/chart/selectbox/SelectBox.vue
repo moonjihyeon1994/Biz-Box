@@ -24,7 +24,7 @@ export default {
     }
   },
   props: {
-    list: [],
+    list: Array,
     init: Boolean,
     type: String
   },

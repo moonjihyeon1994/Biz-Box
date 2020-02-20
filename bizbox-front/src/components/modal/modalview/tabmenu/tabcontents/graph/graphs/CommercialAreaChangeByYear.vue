@@ -20,7 +20,7 @@
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <bar-chart :chart-data="chartdata" :options="chartoptions" width="500px" height="300px"></bar-chart>
+      <bar-chart :chart-data="chartdata" :options="chartoptions" width="480px" height="300px"></bar-chart>
     </div>
   </div>
 </template>
@@ -168,8 +168,8 @@ export default {
           }
 
           this.chartoptions = {
-            responsive: true,
-            maintainAspectRatio: true,
+            responsive: false,
+            maintainAspectRatio: false,
             scales: {
               yAxes: [
                 {

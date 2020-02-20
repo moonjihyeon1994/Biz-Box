@@ -17,12 +17,14 @@
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
-      <bar-chart
-        :chart-data="chartdata"
-        :options="chartoptions"
-        width="500px"
-        height="300px"
-      ></bar-chart>
+      <div>
+        <bar-chart
+          :chart-data="chartdata"
+          :options="chartoptions"
+          width="480px"
+          height="300px"
+        ></bar-chart>
+      </div>
     </div>
   </div>
 </template>
@@ -181,8 +183,8 @@ export default {
           }
 
           this.chartoptions = {
-            responsive: true,
-            maintainAspectRatio: true,
+            responsive: false,
+            maintainAspectRatio: false,
             scales: {
               yAxes: [
                 {
@@ -288,7 +290,6 @@ export default {
 #search-result {
   margin-top: 5px;
 }
-
 
 $color1: rgb(232, 113, 91);
 $color2: rgb(15, 66, 95);
