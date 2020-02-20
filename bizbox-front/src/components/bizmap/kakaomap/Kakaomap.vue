@@ -499,6 +499,7 @@ export default {
     },
     eventbus(name) {
       if (this.showModal) { eventBus.$emit('clickmap', name) }
+      eventBus.$emit('clickmap', name)
     },
     myevent() {
       this.saveMouseEvent(this.ME, 1)

@@ -48,7 +48,7 @@ export default {
       Kakao.Auth.loginForm({
         success: (authObj) => {
           const refreshToken = authObj.refresh_token
-          const getUrl = 'http://70.12.246.137:8080/kakao/login?refresh_token=' + refreshToken
+          const getUrl = 'http://13.125.20.125:80/kakao/login?refresh_token=' + refreshToken
           this.loginWithKakao(getUrl)
         },
         fail: function (err) {
