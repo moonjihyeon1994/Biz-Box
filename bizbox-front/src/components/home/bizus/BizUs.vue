@@ -4,7 +4,7 @@
 
     <div id="row-container">
       <div class='eachCard bz-col-lg-4 bz-col-md-6'>
-        <person-card name="오승완" role="Backend Developer" img="osw.jpg" git=''></person-card>
+        <person-card name="오승완" role="Fullstack Developer" img="osw.jpg" git='https://github.com/wan-oh' insta='https://www.instagram.com/waannjaa/'></person-card>
       </div>
 
       <div class='eachCard bz-col-lg-4 bz-col-md-6'>
