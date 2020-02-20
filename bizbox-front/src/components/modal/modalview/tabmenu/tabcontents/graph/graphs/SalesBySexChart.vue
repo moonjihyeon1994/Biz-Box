@@ -20,7 +20,7 @@
       <pie-chart
         :chart-data="chartdata"
         :options="chartoptions"
-        width="500px"
+        width="480px"
         height="300px"
       ></pie-chart>
     </div>
@@ -160,8 +160,8 @@ export default {
           }
 
           this.chartoptions = {
-            responsive: true,
-            maintainAspectRatio: true
+            responsive: false,
+            maintainAspectRatio: false
           }
 
           this.loadingStatus = false

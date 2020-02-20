@@ -3,14 +3,14 @@
     <div id='title'>상권 종합평가</div>
 
     <div id='bz-score-box'>
-      <loading :loading='loadingStatus' transparent='true'></loading>
+      <loading :loading='loadingStatus' :transparent='true'></loading>
       <div id='bz-score-box-pretext'>{{ sgName }}의 종합 점수는...</div>
       <div id='bz-score-box-score'>{{ totalScore }}</div>
       <div id='bz-score-box-posttext'>입니다.</div>
     </div>
 
     <div id='each-point-box'>
-      <loading :loading='loadingStatus' transparent='true'></loading>
+      <loading :loading='loadingStatus' :transparent='true'></loading>
       <div class='bz-each-title'>상권 항목별 점수</div>
       <scoring @childs-event='parentsMethod' :clickEvent='clickEvent' @childs-loading-event='loadingMethod'></scoring>
     </div>
