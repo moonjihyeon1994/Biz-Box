@@ -84,19 +84,11 @@ export default {
       return this.$store.state.Coords.lat
     }
   },
-  watch: {
-    lng () {
-      this.getData()
-    },
-    lat () {
-      this.getData()
-    }
-  },
   mounted () {
     this.draw()
     eventBus.$on('clickmap', name => {
-      this.key = name
       this.draw()
+      this.getData()
     })
   },
   methods: {
@@ -105,15 +97,8 @@ export default {
       this.popflag = !this.popflag
     },
     draw () {
-      this.chartdata = null
-      this.chartoptions = null
-
       this.searchOption = 1
       this.title = '연령별 매출'
-
-      if (this.key !== '') {
-        this.getData()
-      }
     },
     getData () {
       this.loadingStatus = true
