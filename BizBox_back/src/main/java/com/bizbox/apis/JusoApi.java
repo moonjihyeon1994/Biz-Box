@@ -137,7 +137,7 @@ public class JusoApi {
 		StringBuilder urlBuilder = new StringBuilder(
 				"http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius"); /* URL */
 		urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8")
-				+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); 
+				+ "=T%2Fw0BcGePxVMSrVazqTuA%2F9nT71RJNcY%2F6xMK0kYqOsMiJ%2FEUy4OCK0ilT3KmRXy8hNQkU90H22LRlSHTid%2BUQ%3D%3D"); 
 		urlBuilder.append(
 				"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8"));
 		urlBuilder.append(
@@ -191,7 +191,7 @@ public class JusoApi {
 			StringBuilder urlBuilder = new StringBuilder(
 					"http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius"); /* URL */
 			urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8")
-			+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); 
+			+ "=T%2Fw0BcGePxVMSrVazqTuA%2F9nT71RJNcY%2F6xMK0kYqOsMiJ%2FEUy4OCK0ilT3KmRXy8hNQkU90H22LRlSHTid%2BUQ%3D%3D"); 
 			urlBuilder.append(
 					"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8"));
 			urlBuilder.append(
@@ -255,13 +255,13 @@ public class JusoApi {
 	 */
 	public JSONObject findBusiness(String cx,String cy) throws IOException {
 		String resultType = "json";
-		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
+		String ServiceKey = "T%2Fw0BcGePxVMSrVazqTuA%2F9nT71RJNcY%2F6xMK0kYqOsMiJ%2FEUy4OCK0ilT3KmRXy8hNQkU90H22LRlSHTid%2BUQ%3D%3D";//"h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
 		int radius = 0;
 		int radiusincrease = 1; 
 		JSONObject data = new JSONObject();
 		while(true) {
-			if(radius == 10000) break;
-			if(radius == 0) {radius = 100;}
+			if(radius == 4000) break;
+			if(radius == 0) {radius = 150;}
 			else {radius +=radiusincrease*100; radiusincrease++;}
 			
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"

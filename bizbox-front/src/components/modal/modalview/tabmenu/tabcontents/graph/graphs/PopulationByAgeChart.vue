@@ -133,8 +133,9 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/population/getPopulationByLocation2/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
+        .get('/population/getPopulationByLocation/' + this.key)
         .then(res => {
+          console.log()
           this.result = res.data.pbl
           this.road = this.result.f
           this.point = res.data.point
@@ -153,30 +154,6 @@ export default {
                   this.result.m,
                   this.result.n,
                   this.result.o
-                ]
-              },
-              {
-                label: '남자',
-                backgroundColor: '#74ddf7',
-                data: [
-                  this.result.p,
-                  this.result.q,
-                  this.result.r,
-                  this.result.s,
-                  this.result.t,
-                  this.result.u
-                ]
-              },
-              {
-                label: '여자',
-                backgroundColor: '#ff6390',
-                data: [
-                  this.result.v,
-                  this.result.w,
-                  this.result.x,
-                  this.result.y,
-                  this.result.z,
-                  this.result.aa
                 ]
               }
             ]
