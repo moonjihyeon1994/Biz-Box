@@ -135,7 +135,7 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/population/getPopulationByTime/' + this.key)
+        .get('/population/getPopulationByTime2/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
         .then(res => {
           this.result = res.data.pbt
           this.road = this.result.f
