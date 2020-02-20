@@ -24,7 +24,14 @@ public class PredictionServiceImpl implements PredictionService {
 	public JSONObject findAllPrediction(String cx, String cy) throws Exception {
 		JSONObject jsondata = api.findBusiness(cx, cy);
 		String address = (String) jsondata.get("mainTrarNm");
-
+		String [] addresslist = address.split(" ");
+		if(addresslist[0].contains("서울")) {
+			address="";
+			for(int i=1 ; i< addresslist.length; i++) {
+				if(i==addresslist.length-1) {address+=addresslist[i];}
+				else {address+=addresslist[i]+" ";}
+			}
+		}
 		System.out.println(address);
 		
 		JSONObject data = new JSONObject();
@@ -48,25 +55,8 @@ public class PredictionServiceImpl implements PredictionService {
 		JSONObject data = new JSONObject();
 		
 		int[] population_age = new int[6];
-		//해당 상권이름으로 가장 높은 유동인구 가져옵니다.
-//		PopulationByLocation pbl =dao.getpopulation(address);
-//		population_age[0]=Integer.parseInt(pbl.getJ());
-//		population_age[1]=Integer.parseInt(pbl.getK());
-//		population_age[2]=Integer.parseInt(pbl.getL());
-//		population_age[3]=Integer.parseInt(pbl.getM());
-//		population_age[4]=Integer.parseInt(pbl.getN());
-//		population_age[5]=Integer.parseInt(pbl.getO());
-//		int MaxAge=0;
-//		for (int i = 0; i < population_age.length-1; i++) {
-//			if(population_age[i]<population_age[i+1]) {
-//				MaxAge=i+2;// 유동인구가 가장 큰 나이대
-//			}
-//		}
-		//경쟁사 수
-		//해당 상권의 매출점수를 증감률을 가져옵니다
-		//세일즈 인포에서 점포수 증감률 가져와서 생존률 계산
+
 		List<Prediction> prediclist =dao.predict_business(address,business);
-		//data.put("maxpopulation", MaxAge);
 		data.put("prediclist", prediclist);
 		return data;
 	}

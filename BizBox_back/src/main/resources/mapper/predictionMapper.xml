@@ -5,13 +5,13 @@
 <mapper namespace="com.bizbox.mapper.predictionMapper">
 
 	<select id="find2018Prediction" parameterType="String" resultType="prediction">
-		select * from expect2018 where trdar_cd_nm = #{address}
+		select * from expect2018 where trdar_cd_nm like concat('%',#{address},'%') 
 	</select>
 	<select id="find2017Prediction" parameterType="String" resultType="prediction">
-		select * from expect2017 where trdar_cd_nm = #{address}
+		select * from expect2017 where trdar_cd_nm like concat('%',#{address},'%') 
 	</select>
 	<select id="find2016Prediction" parameterType="String" resultType="prediction">
-		select * from expect2016 where trdar_cd_nm = #{address}
+		select * from expect2016 where trdar_cd_nm like concat('%',#{address},'%') 
 	</select>
  	
  	<select id="predict_business_2016" parameterType="java.util.Map" resultType="prediction">

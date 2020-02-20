@@ -125,6 +125,85 @@ public class PopulationByController {
 		}
 	}
 
+	@GetMapping("/getPopulationByTime2/{cx}/{cy}")
+	public ResponseEntity<Object> getPopulationByTime2(@PathVariable String cx, @PathVariable String cy) {
+		PopulationByTime pbt;
+		List<String> adlist = new LinkedList<String>();
+		int Point = 0;
+		try {
+
+			JSONObject jsonObject = new JSONObject();
+			JSONObject jsondata = jusoApi.findBusiness(cx, cy);
+			String address = (String) jsondata.get("mainTrarNm");
+			String predoroname = address;
+			String [] addresslist = address.split(" ");
+			if(addresslist[0].contains("서울")) {
+				address="";
+				for(int i=1 ; i< addresslist.length; i++) {
+					if(i==addresslist.length-1) {address+=addresslist[i];}
+					else {address+=addresslist[i]+" ";}
+				}
+			}
+			
+			System.out.println(address);
+			pbt = service.populationByTime(address);
+//			if (pbt == null) {
+//				for (String string : adlist) {
+//					pbt = service.populationByTime(string);
+//					if (pbt != null) {
+//						break;
+//					}
+//				}
+//				if (pbt == null) {// 끝까지 정보 없으면 address테이블에서 동코드 가져옴
+//					List<PopulationBytimeByDongCode> list = new LinkedList<PopulationBytimeByDongCode>();
+//					predoroname = jusoService.getAddressByName(address).split(",")[5];
+//					String realname = predoroname;
+//					String dongcode = service.getDongCodeList(predoroname);
+//					while (dongcode == null && predoroname.length() > 0) {
+//						predoroname = predoroname.substring(0, predoroname.length() - 2);
+//						dongcode = service.getDongCodeList(predoroname);
+//					}
+//					dongcode = dongcode.substring(0, dongcode.length() - 2);
+//					list = service.getTimeByDongCode(dongcode);
+//					double j = 0, k = 0, l = 0, m = 0, n = 0, o = 0;
+//					String J = null, K = null, L = null, M = null, N = null, O = null, P = null;
+//					for (int i = 1; i < 7; i++) {
+//						J = (j + Double.parseDouble(list.get(i).getD())) + "";
+//					}
+//					for (int i = 7; i < 12; i++) {
+//						K = (k + Double.parseDouble(list.get(i).getD())) + "";
+//					}
+//					for (int i = 12; i < 15; i++) {
+//						L = (l + Double.parseDouble(list.get(i).getD())) + "";
+//					}
+//					for (int i = 15; i < 18; i++) {
+//						M = (m + Double.parseDouble(list.get(i).getD())) + "";
+//					}
+//					for (int i = 18; i < 22; i++) {
+//						N = (n + Double.parseDouble(list.get(i).getD())) + "";
+//					}
+//					for (int i = 22; i < 24; i++) {
+//						O = (o + Double.parseDouble(list.get(i).getD())) + "";
+//					}
+//					pbt = new PopulationByTime("", "", "", "", "", realname, "", "", "", J, K, L, M, N, O, "", "", "",
+//							"", "", "", "");
+//					jsonObject.put("pbt", pbt);
+//					jsonObject.put("point", Point);
+//					return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
+//				}
+//			}
+			jsonObject.put("pbt", pbt);
+			jsonObject.put("point", Point);
+			if (pbt == null) {
+				return new ResponseEntity<Object>("해당주소의 데이터가 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return new ResponseEntity<Object>("해당주소가 존재하지않습니다.", HttpStatus.NOT_FOUND);
+		}
+	}
 	@GetMapping("/getPopulationByLocation/{address}")
 	public ResponseEntity<Object> getPopulationByLocation(@PathVariable String address) {
 		PopulationByLocation pbl = new PopulationByLocation();
@@ -172,7 +251,63 @@ public class PopulationByController {
 			return new ResponseEntity<Object>("error", HttpStatus.BAD_REQUEST);
 		}
 	}
+	@GetMapping("/getPopulationByLocation2/{cx}/{cy}")
+	public ResponseEntity<Object> getPopulationByLocation(@PathVariable String cx, @PathVariable String cy) {
+		PopulationByLocation pbl = new PopulationByLocation();
+		List<String> adlist = new LinkedList<String>();
+		int Point = 0;
+		try {
+			JSONObject jsondata = jusoApi.findBusiness(cx, cy);
+			JSONObject jsonObject = new JSONObject();
+			String address = (String) jsondata.get("mainTrarNm");
+			String predoroname = address;
+			String [] addresslist = address.split(" ");
+			if(addresslist[0].contains("서울")) {
+				address="";
+				for(int i=1 ; i< addresslist.length; i++) {
+					if(i==addresslist.length-1) {address+=addresslist[i];}
+					else {address+=addresslist[i]+" ";}
+				}
+			}
+			System.out.println(address);
+			
+			pbl = service.populationByLocation(address);
 
+//			if (pbl == null) {
+//
+//				for (String string : adlist) {
+//					pbl = service.populationByLocation(string);
+//					if (pbl != null) {
+//						break;
+//					}
+//				}
+//				if (pbl == null) {// 끝까지 정보 없으면 address테이블에서 동코드 가져옴
+//					predoroname = jusoService.getAddressByName(address).split(",")[5];
+//					String realname = predoroname;
+//					String dongcode = service.getDongCodeList(predoroname);
+//
+//					while (dongcode == null && predoroname.length() > 0) {
+//						predoroname = predoroname.substring(0, predoroname.length() - 2);
+//						dongcode = service.getDongCodeList(predoroname);
+//					}
+//					dongcode = dongcode.substring(0, dongcode.length() - 2);
+//					pbl = service.getByDongCode(dongcode);
+//					pbl.setF(realname);
+//					jsonObject.put("pbl", pbl);
+//					jsonObject.put("point", Point);
+//					return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
+//				}
+//			}
+
+			jsonObject.put("pbl", pbl);
+			jsonObject.put("point", Point);
+			return new ResponseEntity<Object>(jsonObject, HttpStatus.OK);
+			
+			
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("error", HttpStatus.BAD_REQUEST);
+		}
+	}
 	@GetMapping("/getPopulationByDong/{address}")
 	public ResponseEntity<Object> getPopulationByDong(@PathVariable String address) {
 		List<PopulationByDong> pbd;
