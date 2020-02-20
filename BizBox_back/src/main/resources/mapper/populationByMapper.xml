@@ -5,11 +5,11 @@
 <mapper namespace="com.bizbox.mapper.populationByMapper">
 
 	<select id="selectByTimeAdress" parameterType="String" resultType="pobt">
-		select * from population_time where f like concat('%',#{address},'%')  order by a DESC  limit 1
+		select * from population_time2 where f like concat('%',#{address},'%')  order by a DESC  limit 1
 	</select>
 	
 	<select id="populationByLocation" parameterType="String" resultType="pobl">
-		select * from population_location where F like 	concat('%',#{address},'%')  order by a DESC  limit 1
+		select * from population_location2 where F like 	concat('%',#{address},'%')  order by a DESC  limit 1
 	</select>
 	<select id="getByDongCode" parameterType="String" resultType="pobl">
 		select  
