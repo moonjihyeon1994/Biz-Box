@@ -76,6 +76,20 @@ export default {
         }
       }
       return labels[idx]
+    },
+    lng () {
+      return this.$store.state.Coords.lng
+    },
+    lat () {
+      return this.$store.state.Coords.lat
+    }
+  },
+  watch: {
+    lng () {
+      this.getData()
+    },
+    lat () {
+      this.getData()
     }
   },
   mounted () {
@@ -114,7 +128,7 @@ export default {
 
       axios
         // .get('/sales/' + this.key)
-        .get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
+        .get('/predict/findBusiness/' + this.lng + '/' + this.lat)
         .then(res => {
           this.result = res.data['2018']
           // this.road = res.data[0].d
