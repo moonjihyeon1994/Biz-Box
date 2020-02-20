@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=X-UA-Compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=google-signin-client_id
+	content=402768993336-jlarqrqlbog026b55uvf0nbv9ao5r67h.apps.googleusercontent.com>
+<link rel=icon href=/favicon.ico>
+<title>BizBox</title>
+<link rel=stylesheet
+	href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+<link rel=stylesheet
+	href=https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css>
+<script src=//developers.kakao.com/sdk/js/kakao.min.js></script>
+<script
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=84b050274e5e1c6da8d55c7ad12c0feb&libraries=services"></script>
+<link
+	href="https://fonts.googleapis.com/css?family=Odibee+Sans&display=swap"
+	rel=stylesheet>
+<script src=https://kit.fontawesome.com/11b53ce928.js
+	crossorigin=anonymous></script>
+<style>
+* {
+	box-sizing: border-box;
+}
+
+.wrap {
+	font-family: 'OG';
+	position: absolute;
+	left: 0;
+	bottom: 40px;
+	width: 114px;
+	height: 28px;
+	margin-left: -55px;
+	text-align: center;
+	overflow: hidden;
+	font-size: 22px;
+	/* font-family: 'Malgun Gothic', dotum, '돋움', sans-serif; */
+	line-height: 1.5;
+	background-color: coral;
+	border-radius: 5px;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+	margin-bottom: 3px;
+}
+
+.wrap * {
+	padding: 0;
+	margin: 0;
+}
+
+.wrap .infow {
+	border-radius: 5px;
+	position: absolute;
+	left: 0;
+	background-color: tomato;
+	bottom: 40px;
+	width: 153px;
+	height: 28px;
+	margin-left: -75px;
+	text-align: center;
+	overflow: hidden;
+	font-size: 20px;
+	font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+	line-height: 1.5;
+}
+
+.wrap .infow:nth-child(1) {
+	border: 0;
+	box-shadow: 0px 1px 2px #888;
+}
+
+.infow .titlee {
+	padding: 5px 0 0 10px;
+	background: tomato;
+	border-bottom: 1px solid blue;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.infow .close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: #888;
+	width: 17px;
+	height: 17px;
+	background:
+		url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+
+.infow .close:hover {
+	cursor: pointer;
+}
+
+.infow .body {
+	position: relative;
+	overflow: hidden;
+}
+
+.infow .desc {
+	position: relative;
+	margin: 13px 0 0 90px;
+	height: 75px;
+}
+
+.desc .ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.desc .jibun {
+	font-size: 11px;
+	color: #888;
+	margin-top: -2px;
+}
+
+.infow .img {
+	position: absolute;
+	top: 6px;
+	left: 5px;
+	width: 73px;
+	height: 71px;
+	border: 1px solid #ddd;
+	color: #888;
+	overflow: hidden;
+}
+
+.info :after {
+	content: '';
+	position: absolute;
+	margin-left: -12px;
+	left: 50%;
+	bottom: 0;
+	width: 22px;
+	height: 12px;
+	background:
+		url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+}
+
+.infow .link {
+	color: #5085BB;
+}
+
+.custom_zoomcontrol {
+	right: 26%;
+	position: absolute;
+	top: 31%;
+	width: 37px;
+	height: 80px;
+	overflow: hidden;
+	z-index: 4;
+	background-color: #f5f5f5;
+}
+
+.custom_zoomcontrol span {
+	display: block;
+	width: 36px;
+	height: 40px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.custom_zoomcontrol span img {
+	width: 15px;
+	height: 15px;
+	border: none;
+	margin-top: 12px;
+}
+
+.custom_zoomcontrol span:first-child {
+	border-bottom: 1px solid #bfbfbf;
+}
+
+.radius_border {
+	border-radius: 5px;
+}
+</style>
+<link href=/css/app.42410f98.css rel=preload as=style>
+<link href=/css/chunk-vendors.738a6aaf.css rel=preload as=style>
+<link href=/js/app.5910292b.js rel=preload as=script>
+<link href=/js/chunk-vendors.efa96771.js rel=preload as=script>
+<link href=/css/chunk-vendors.738a6aaf.css rel=stylesheet>
+<link href=/css/app.42410f98.css rel=stylesheet>
+</head>
+<body>
+	<noscript>
+		<strong>We're sorry but test-front doesn't work properly
+			without JavaScript enabled. Please enable it to continue.</strong>
+	</noscript>
+	<script>
+		Kakao.init('0574c7ce26ff4134a0dc5f831d6edd37')
+	</script>
+	<div id=app></div>
+	<script src=/js/chunk-vendors.efa96771.js></script>
+	<script src=/js/app.5910292b.js></script>
+</body>
+</html>

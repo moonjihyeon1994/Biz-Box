@@ -32,6 +32,6 @@
    <mapper resource="mapper/predictionMapper.xml"/>
    <mapper resource="mapper/storeMapper.xml"/>
    <mapper resource="mapper/populationByBusinessMapper.xml"/>
-   <mapper resource="mapper/openCLoseMapper.xml"/>
+   <mapper resource="mapper/openCloseMapper.xml"/>
   </mappers>
 </configuration>
