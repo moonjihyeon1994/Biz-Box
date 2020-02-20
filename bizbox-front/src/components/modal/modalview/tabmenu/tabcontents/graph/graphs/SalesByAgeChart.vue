@@ -128,7 +128,7 @@ export default {
 
       axios
         // .get('/sales/' + this.key)
-        .get('/predict/findBusiness/' + this.lng + '/' + this.lat)
+        .get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
         .then(res => {
           this.result = res.data['2018']
           // this.road = res.data[0].d

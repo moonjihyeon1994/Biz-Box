@@ -317,7 +317,7 @@ export default {
       kakao.maps.event.addListener(polygon, 'click', mouseEvent => {
         //if (vm.$store.state.mode === 0) {
         if (vm.$store.state.mode !== 1) {
-          vm.unDetail()
+          //vm.unDetail()
           vm.setPolygon(polygon) // 현재 선택된 폴리곤 기억
           vm.eventbus(name)
           vm.saveMouseEvent(mouseEvent.latLng, 0)

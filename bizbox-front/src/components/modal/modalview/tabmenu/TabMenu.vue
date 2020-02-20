@@ -1,11 +1,11 @@
 <template>
   <div class="tabcontainer">
     <div class="tab">
-      <button class="tablinks" @click="openContents($event, 'Total')" id="defaultOpen">
-        보고서
-      </button>
-      <button class="tablinks" @click="openContents($event, 'Graph')">
+      <button class="tablinks" @click="openContents($event, 'Graph')" id="defaultOpen" >
         그래프
+      </button>
+      <button class="tablinks" @click="openContents($event, 'Total')" >
+        보고서
       </button>
       <button class='tablinks' @click="openContents($event, 'Chart')">
         원설팅
