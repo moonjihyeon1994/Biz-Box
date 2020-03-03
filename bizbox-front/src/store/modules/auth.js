@@ -1,6 +1,6 @@
 import router from '../../router'
+import axios from '@/js/http-commons'
 
-const axios = require('axios')
 
 const state = {
   token: null,
@@ -82,7 +82,7 @@ const actions = {
     } else {
       // console.log(credentials)
       axios
-        .post('http://70.12.246.137:8080/user/login/', credentials)
+        .post('/user/login/', credentials)
         .then(res => {
           if (res.data.status === true) {
             commit('setToken', res.headers['jwt-auth-token'])
@@ -130,7 +130,7 @@ const actions = {
       })
   },
   signup: ({ commit }, credentials) => {
-    const postUrl = 'http://70.12.246.137:8080/user/signup'
+    const postUrl = '/user/signup'
     // const postUrl = 'http://70.12.247.78:8080/user/signup'
     axios.post(postUrl, credentials)
       .then(res => {

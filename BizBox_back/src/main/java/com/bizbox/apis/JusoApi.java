@@ -36,7 +36,6 @@ public class JusoApi {
 	 */
 	@Cacheable(cacheNames = "DoroNameApi")
 	public String DoroNameApi(String name) throws IOException {
-		System.out.println("=============start : DoroNameApi=============== ");
 		String currentPage = "0";
 		String countPerPage = "100";
 		String resultType = "json";
@@ -68,7 +67,6 @@ public class JusoApi {
 	 */
 	@Cacheable(cacheNames = "XYtoLatLong")
 	public String XYtoLatLong(String num) throws IOException {
-		System.out.println("======================start : XYtoLatLong===============");
 		// 요청변수 설정
 		String[] nums = num.split(",");
 		String admCd = nums[0];
@@ -131,13 +129,12 @@ public class JusoApi {
 	 * @throws IOException
 	 */
 	public String findStore(String xy, String radius, String pageNo) throws IOException {
-		System.out.println("------start---findStore---------");
 		String[] cxcy = xy.split(",");
 
 		StringBuilder urlBuilder = new StringBuilder(
 				"http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius"); /* URL */
 		urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8")
-				+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); 
+				+ "=T%2Fw0BcGePxVMSrVazqTuA%2F9nT71RJNcY%2F6xMK0kYqOsMiJ%2FEUy4OCK0ilT3KmRXy8hNQkU90H22LRlSHTid%2BUQ%3D%3D"); 
 		urlBuilder.append(
 				"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8"));
 		urlBuilder.append(
@@ -191,7 +188,7 @@ public class JusoApi {
 			StringBuilder urlBuilder = new StringBuilder(
 					"http://apis.data.go.kr/B553077/api/open/sdsc/storeListInRadius"); /* URL */
 			urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8")
-			+ "=h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D"); 
+			+ "=T%2Fw0BcGePxVMSrVazqTuA%2F9nT71RJNcY%2F6xMK0kYqOsMiJ%2FEUy4OCK0ilT3KmRXy8hNQkU90H22LRlSHTid%2BUQ%3D%3D"); 
 			urlBuilder.append(
 					"&" + URLEncoder.encode("radius", "UTF-8") + "=" + URLEncoder.encode(radius, "UTF-8"));
 			urlBuilder.append(
@@ -255,15 +252,15 @@ public class JusoApi {
 	 */
 	public JSONObject findBusiness(String cx,String cy) throws IOException {
 		String resultType = "json";
-		String ServiceKey = "h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
+		String ServiceKey = "T%2Fw0BcGePxVMSrVazqTuA%2F9nT71RJNcY%2F6xMK0kYqOsMiJ%2FEUy4OCK0ilT3KmRXy8hNQkU90H22LRlSHTid%2BUQ%3D%3D";//"h5CUnUDTM85ZI2cIPt4%2FIi6OA08RKDUIfE7%2BDxZ65vsXZ1tPLvGr0a4LI8bj4Ad86ISzZiLH1tu3f4n5wnb2NA%3D%3D";
 		int radius = 0;
 		int radiusincrease = 1; 
 		JSONObject data = new JSONObject();
 		while(true) {
-			if(radius == 10000) break;
-			if(radius == 0) {radius = 100;}
-			else {radius +=radiusincrease*100; radiusincrease++;}
 			
+			if(radius == 2500) break;
+			if(radius == 0) {radius = 500;}
+			else {radius=radius+radiusincrease*300; radiusincrease++;}
 			String apiUrl = "http://apis.data.go.kr/B553077/api/open/sdsc/storeZoneInRadius?"
 					+ "radius=" + radius 
 					+ "&ServiceKey=" + ServiceKey 
@@ -277,6 +274,7 @@ public class JusoApi {
 			String tempStr = null;
 			while (true) {
 				tempStr = br.readLine();
+				//System.out.println(tempStr);
 				if (tempStr == null)
 					break;
 				sb.append(tempStr);

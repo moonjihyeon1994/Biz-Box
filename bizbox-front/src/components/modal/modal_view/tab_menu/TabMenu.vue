@@ -1,44 +1,31 @@
 <template>
   <div class="tabcontainer">
     <div class="tab">
-      <button class="tablinks" @click="openContents($event, 'Graph')" id="defaultOpen" >
-        그래프
-      </button>
-      <button class="tablinks" @click="openContents($event, 'Total')" >
+      <button class="tablinks" @click="openContents($event, 'Total')" id="defaultOpen">
         보고서
       </button>
-      <button class='tablinks' @click="openContents($event, 'Chart')">
-        원설팅
+      <button class="tablinks" @click="openContents($event, 'Graph')">
+        그래프
       </button>
     </div>
 
     <div id="Total" class="tabcontent">
-      <totalView :clickEvent='clickEvent'></totalView>
+      <totalView></totalView>
     </div>
 
     <div id="Graph" class="tabcontent">
       <graphItem />
     </div>
-
-    <div id="Chart" class="tabcontent">
-      <chart />
-    </div>
   </div>
 </template>
 
 <script>
-import graphItem from './tabcontents/graph/Graph.vue'
-import totalView from './tabcontents/total/Total.vue'
-import Chart from './tabcontents/chart/Chart'
-
+import graphItem from './tab_contents/graph.vue'
+import totalView from './tab_contents/total.vue'
 export default {
   components: {
     graphItem,
-    totalView,
-    Chart
-  },
-  props: {
-    clickEvent: Boolean
+    totalView
   },
   mounted () {
     document.getElementById('defaultOpen').click()

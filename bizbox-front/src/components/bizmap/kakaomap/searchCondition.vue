@@ -91,7 +91,7 @@ export default {
   data: () => ({
     selected: 0,
     choose1: false,
-    choose2: false,
+    choose2: true,
     choose3: false,
     choose4: false,
     choose5: false,
@@ -202,7 +202,7 @@ export default {
   display: flex;
   z-index: 3;
   align-items: center;
-
+  
   .mapRow {
     display: flex;
     justify-content: space-around;

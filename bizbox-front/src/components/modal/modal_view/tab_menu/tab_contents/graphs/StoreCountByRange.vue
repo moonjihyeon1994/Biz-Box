@@ -12,7 +12,7 @@
     </div>
     <p class="sub-content-title-area">
       <span class="sub-content-title">
-      <v-icon size="15">mdi-map-marker</v-icon>{{ this.$store.state.modalsearch }}</span>
+      <v-icon size="15">mdi-map-marker</v-icon>{{ key }}</span>
     </p>
     <ul class="list-distance">
       <li><button class="list-distance-items" @click="checkBtn(0)">500m</button></li>
@@ -27,42 +27,28 @@
       </div>
     </div>
     <div class="content-inside">
-      <input type="text" placeholder="대분류" class="namelist-input">
-      <input type="text" placeholder="중분류" class="namelist-input" v-model="middlecategory">
-      <input type="text" placeholder="소분류" class="namelist-input" v-model="smallcategory">
-      <button class="namelist-bt" @click="getData">검색하기</button>
-      <div class="namelist-inside">
-        <loading :loading='loadingStatus' :transparent='true'></loading>
-        <ul class="namelist" id="namelist">
-          <li>
-            검색해주세요
-          </li>
-        </ul>
-      </div>
+      <button @click="getData">눌러줘</button>
+      <ul v-show="drawflag">
+        <li v-for="item in icons" :key="item">
+          <span><v-icon size="15">{{item.keyset}}</v-icon>{{item.nameset}}:{{item.valueset}}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 import axios from '@/js/http-commons'
-import './Graphs.css'
+// import Spinner from '../../../../result/Spinner'
+import './graphs.css'
 import largeScale from '@/assets/json/largeScale.json'
-import Loading from '@/components/common/loading/Loading.vue'
-
+import { eventBus } from '@/js/bus'
 export default {
   components: {
-    Loading
+    // Spinner
   },
   data () {
     return {
-      Category: {
-        address: this.$store.state.Coords.lat + ',' + this.$store.state.Coords.lng,
-        middle: this.middlecategory,
-        range: this.range,
-        small: this.smallcategory
-      },
-      middlecategory: null,
-      smallcategory: null,
       largeItems: largeScale,
       icons: [],
       popflag: false,
@@ -75,8 +61,7 @@ export default {
       key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연도별 상권 변화 지표',
-      point: 0,
-      loadingStatus: false
+      point: 0
     }
   },
   computed: {
@@ -130,38 +115,28 @@ export default {
       }
     },
     getData () {
-      this.loadingStatus = true
-
+      if (!this.clickflag) {
+        this.range = this.slidervalue
+      }
+      console.log('click')
       axios
-        .post('/storeDetailByCategory', {
-          address: this.$store.state.Coords.lat + ',' + this.$store.state.Coords.lng,
-          middle: this.middlecategory,
-          range: this.range,
-          small: this.smallcategory
-        })
+        .get('/storecountByLarge/' + this.key + '/' + this.range)
         .then(res => {
-          let array = res.data.detail
-          var ul = document.getElementById('namelist')
-          let lis = ul.getElementsByTagName('li')
-          while (lis.length > 0) {
-            ul.removeChild(lis[0])
-          }
-          array.forEach(element => {
-            let node = document.createElement('LI')
-            let content = element.name
-            let textnode = document.createTextNode(content)
-            node.appendChild(textnode)
-            document.getElementById('namelist').appendChild(node)
+          res.data.large.forEach(el => {
+            let data = new Object()
+            let itemkey = Object.keys(el)[0]
+            let itemValue = Object.values(el)[0]
+            let iconName = this.largeItems.large[itemkey]
 
-            node = document.createElement('LI')
-            content = element.addr
-            textnode = document.createTextNode(content)
-            node.appendChild(textnode)
-            document.getElementById('namelist').appendChild(node)
-
+            data.keyset = iconName
+            data.valueset = itemValue
+            data.nameset = itemkey
+            this.icons.push(data)
           })
-        }).finally(() => {
-          this.loadingStatus = false
+        })
+        .finally(() => {
+          this.drawflag = true
+          console.log(this.icons)
         })
     }
   }

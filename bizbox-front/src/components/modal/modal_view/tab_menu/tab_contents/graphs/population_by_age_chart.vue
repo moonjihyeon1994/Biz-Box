@@ -9,23 +9,20 @@
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
     </div>
-    <p class="point-content-area Content" style="font-size: 1.2em;
-    font-weight: bold;">
-      <span class="point-title" v-if="isOk">{{maxAgeMaker}}</span>
-      <span class="point-percent" v-if="isOk" >{{percentMaker}}</span>
-      <span class="point-normal" v-if="isOk" >유동인구가 가장 많아요.</span>
-      <span class="point-normal" v-if="!isOk">데이터 업데이트 예정입니다</span>
+    <p class="point-content-area">
+      <span class="point-title">{{maxAgeMaker}}</span>
+      <span class="point-percent">{{percentMaker}}</span>
+      <span class="point-normal">유동인구가 가장 많아요.</span>
     </p>
     <div id="chart">
-      <loading :loading="loadingStatus" :transparent='true'></loading>
-      <div>
-        <bar-chart
-          :chart-data="chartdata"
-          :options="chartoptions"
-          width="480px"
-          height="300px"
-        ></bar-chart>
-      </div>
+      <div id="back" :style="allowDiv"></div>
+      <spinner :loading="loadingStatus"></spinner>
+      <bar-chart
+        :chart-data="chartdata"
+        :options="chartoptions"
+        width="500px"
+        height="300px"
+      ></bar-chart>
     </div>
   </div>
 </template>
@@ -33,23 +30,22 @@
 <script>
 import BarChart from '@/lib/BarChart'
 import axios from '@/js/http-commons'
-import Loading from '@/components/common/loading/Loading'
-import './Graphs.css'
+import Spinner from '../../../../result/Spinner'
+import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
     BarChart,
-    Loading
+    Spinner
   },
   data () {
     return {
-      isOk:true,
       popflag: false,
       chartdata: null,
       chartoptions: null,
       result: null,
       road: '',
-      key: this.$store.state.place,
+      key: this.$store.state.modalsearch,
       searchOption: 1,
       title: '연령별 유동인구',
       point: 0,
@@ -83,7 +79,7 @@ export default {
       if (this.result == null) return
       let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
       let totalNum = Math.max.apply(null, total)
-      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '명' + ')'
+      return '(' + totalNum + '명' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
@@ -100,11 +96,11 @@ export default {
       return (idx + 1) * 10 + '대'
     }
   },
-  mounted () {
+  created () {
     this.draw()
+    alert('asdsad')
     eventBus.$on('clickmap', name => {
-      this.key = this.$store.state.place
-       this.isOk=true
+      this.key = name
       this.draw()
     })
   },
@@ -134,28 +130,13 @@ export default {
       this.btnStyle2.cursor = 'not-allowed'
       this.btnStyle3.cursor = 'not-allowed'
       this.btnStyle4.cursor = 'not-allowed'
+
       axios
-        .get('/population/getPopulationByLocation2/' + this.key)
+        .get('/population/getPopulationByLocation/' + this.key)
         .then(res => {
           this.result = res.data.pbl
-          if( this.result === null){
-            this.result= {
-              j:0,
-              k:0,
-              l:0,
-              m:0,
-              n:0,
-              o:0
-            }
-            this.road = 'Nodata'
-            this.isOk = false
-          }
-          else{
           this.road = this.result.f
           this.point = res.data.point
-          this.isOk = true
-          }
-          
         })
         .finally(() => {
           this.chartdata = {
@@ -172,13 +153,37 @@ export default {
                   this.result.n,
                   this.result.o
                 ]
+              },
+              {
+                label: '남자',
+                backgroundColor: '#74ddf7',
+                data: [
+                  this.result.p,
+                  this.result.q,
+                  this.result.r,
+                  this.result.s,
+                  this.result.t,
+                  this.result.u
+                ]
+              },
+              {
+                label: '여자',
+                backgroundColor: '#ff6390',
+                data: [
+                  this.result.v,
+                  this.result.w,
+                  this.result.x,
+                  this.result.y,
+                  this.result.z,
+                  this.result.aa
+                ]
               }
             ]
           }
 
           this.chartoptions = {
-            responsive: false,
-            maintainAspectRatio: false,
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
               yAxes: [
                 {
@@ -283,28 +288,5 @@ export default {
 
 #search-result {
   margin-top: 5px;
-}
-
-$color1: rgb(232, 113, 91);
-$color2: rgb(15, 66, 95);
-
-.Content {
-  width: 100%;
-  padding: 10px 20px;
-  margin: 20px 0;
-  background-color: $color2;
-  border-radius: 5px;
-  color: $color1;
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
-  text-align: center;
-
-  .strong {
-    color: rgb(223, 223, 223);
-  }
-
-  h2 {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
 }
 </style>

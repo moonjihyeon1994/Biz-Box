@@ -4,8 +4,8 @@
       <h2 class="section-content-title">
         시간별 유동인구
         <span class="icon-question" @click="popup">
-          <v-icon size=15>mdi-help-circle-outline</v-icon>
-          <span v-show="popflag" class="icon-popup-tri"/>
+          <v-icon size="15">mdi-help-circle-outline</v-icon>
+          <span v-show="popflag" class="icon-popup-tri" />
         </span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
@@ -13,19 +13,15 @@
     </div>
     <p class="point-content-area Content" style="font-size: 1.2em;
     font-weight: bold;">
-      <span class="point-title">{{maxAgeMaker}}</span>
-      <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">유동인구가 가장 많아요.</span>
+      <span class="point-title" v-if="isOk">{{maxAgeMaker}}</span>
+      <span class="point-percent" v-if="isOk">{{percentMaker}}</span>
+      <span class="point-normal" v-if="isOk">유동인구가 가장 많아요.</span>
+      <span class="point-normal" v-if="!isOk">데이터 업데이트 예정입니다</span>
     </p>
     <div id="chart">
-      <loading :loading="loadingStatus" :transparent='true'></loading>
+      <loading :loading="loadingStatus" :transparent="true"></loading>
       <div>
-        <line-chart
-          :chart-data="chartdata"
-          :options="chartoptions"
-          width="480px"
-          height="300px"
-        ></line-chart>
+        <line-chart :chart-data="chartdata" :options="chartoptions" width="480px" height="300px"></line-chart>
       </div>
     </div>
   </div>
@@ -42,8 +38,9 @@ export default {
     LineChart,
     Loading
   },
-  data () {
+  data() {
     return {
+      isOk : true,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -79,16 +76,42 @@ export default {
     }
   },
   computed: {
-    percentMaker: function () {
+    percentMaker: function() {
       if (this.result == null) return
-      let total = [this.result.j, this.result.k, this.result.l, this.result.m, this.result.n, this.result.o]
+      let total = [
+        this.result.j,
+        this.result.k,
+        this.result.l,
+        this.result.m,
+        this.result.n,
+        this.result.o
+      ]
       let totalNum = Math.max.apply(null, total)
-      return '(' + totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '명' + ')'
+      return (
+        '(' +
+        totalNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
+        '명' +
+        ')'
+      )
     },
-    maxAgeMaker: function () {
+    maxAgeMaker: function() {
       if (this.result == null) return
-      let labels = ['24~06시', '06~11시', '11~14시', '14~17시', '17~21시', '21~24시']
-      let total = [Number(this.result.j), Number(this.result.k), Number(this.result.l), Number(this.result.m), Number(this.result.n), Number(this.result.o)]
+      let labels = [
+        '24~06시',
+        '06~11시',
+        '11~14시',
+        '14~17시',
+        '17~21시',
+        '21~24시'
+      ]
+      let total = [
+        Number(this.result.j),
+        Number(this.result.k),
+        Number(this.result.l),
+        Number(this.result.m),
+        Number(this.result.n),
+        Number(this.result.o)
+      ]
       let maxAge = -1
       let idx = 0
       for (let index = 0; index < total.length; index++) {
@@ -100,18 +123,19 @@ export default {
       return labels[idx]
     }
   },
-  mounted () {
+  mounted() {
     this.draw()
     eventBus.$on('clickmap', name => {
-      this.key = name
+      this.key = this.$store.state.place
+      this.isOk=true
       this.draw()
     })
   },
   methods: {
-    popup () {
+    popup() {
       this.popflag = !this.popflag
     },
-    draw () {
+    draw() {
       this.chartdata = null
       this.chartoptions = null
 
@@ -126,7 +150,7 @@ export default {
         this.getData()
       }
     },
-    getData () {
+    getData() {
       this.loadingStatus = true
       this.allowDiv.display = 'block'
       this.btnStyle1.cursor = 'not-allowed'
@@ -135,11 +159,29 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        .get('/population/getPopulationByTime2/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
+        .get('/population/getPopulationByTime2/' + this.key)
+        .catch(function(error) {
+      
+        })
         .then(res => {
+          console.log(res)
           this.result = res.data.pbt
-          this.road = this.result.f
-          this.point = res.data.point
+          if (this.result === null) {
+            this.result = {
+              j: 0,
+              k: 0,
+              l: 0,
+              m: 0,
+              n: 0,
+              o: 0
+            }
+            this.road = 'Nodata'
+            this.isOk = false
+          } else {
+            this.road = this.result.f
+            this.point = res.data.point
+            this.isOk = true
+          }
         })
         .finally(() => {
           this.chartdata = {
@@ -252,8 +294,8 @@ export default {
   }
 }
 
-#searchOptions button:hover{
-    background-color: #E38FE3;
+#searchOptions button:hover {
+  background-color: #e38fe3;
 }
 
 #search input {
@@ -276,7 +318,6 @@ export default {
 #search-result {
   margin-top: 5px;
 }
-
 
 $color1: rgb(232, 113, 91);
 $color2: rgb(15, 66, 95);

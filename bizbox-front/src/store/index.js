@@ -8,19 +8,21 @@ const store = new Vuex.Store({
   state: {
     Map: {
       center: {
-        lat: 37.505691, lng: 127.0298106
+        lat: '37.505691', lng: '127.0298106'
       }
     },
-    mode: 0,
+    mode: 2,
     level: false,
-    modalsearch: '역삼동',
+    modalsearch: '역삼1동',
     Coords: {
-      lat: 37.505691, lng: 127.0298106
+      lat: '37.505691', lng: '127.0298106'
     },
     isShowModal: false,
     opencontents: 3,
     sgName: '',
-    subCategory: ''
+    subCategory: '',
+    showModal:false,
+    place:'역삼1동'
   },
   actions: {
     'ChangeCenter': (store, payload) => {
