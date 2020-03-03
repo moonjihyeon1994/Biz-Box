@@ -11,9 +11,10 @@
     </div>
     <p class="point-content-area Content" style="font-size: 1.2em;
     font-weight: bold;">
-      <span class="point-title">{{maxAgeMaker}}</span>
-      <span class="point-percent">{{percentMaker}}</span>
-      <span class="point-normal">소비가 가장 많아요.</span>
+      <span class="point-title" v-if="isOk">{{maxAgeMaker}}</span>
+      <span class="point-percent" v-if="isOk">{{percentMaker}}</span>
+      <span class="point-normal" v-if="isOk">소비가 가장 많아요.</span>
+       <span class="point-normal" v-if="!isOk">데이터 업데이트 예정입니다.</span>
     </p>
     <div id="chart">
       <loading :loading="loadingStatus" :transparent='true'></loading>
@@ -84,36 +85,21 @@ export default {
       return this.$store.state.Coords.lat
     }
   },
-  watch: {
-    lng () {
-      this.getData()
-    },
-    lat () {
-      this.getData()
-    }
-  },
   mounted () {
     this.draw()
     eventBus.$on('clickmap', name => {
-      this.key = name
       this.draw()
+       this.isOk=true
+      this.getData()
     })
   },
   methods: {
     popup () {
-      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
-      this.chartdata = null
-      this.chartoptions = null
-
       this.searchOption = 1
       this.title = '연령별 매출'
-
-      if (this.key !== '') {
-        this.getData()
-      }
     },
     getData () {
       this.loadingStatus = true
@@ -128,11 +114,14 @@ export default {
 
       axios
         // .get('/sales/' + this.key)
-        .get('/predict/findBusiness/' + this.lng + '/' + this.lat)
+       // .get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
+        .get('/predict/findBusiness2/' + this.$store.state.place )
         .then(res => {
+          if(res.data['2018'].length===0){
+            this.isOk=false
+          }
+          else{this.isOk=true}
           this.result = res.data['2018']
-          // this.road = res.data[0].d
-          // this.point = res.data.point
 
           for (let index = 0; index < this.result.length; index++) {
             sumOf10 += Number(this.result[index].agrde_10_selng_amt)

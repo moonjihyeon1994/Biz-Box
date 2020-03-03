@@ -2,48 +2,45 @@
   <div class="secition-content">
     <div class="secition-content-title-area">
       <h2 class="section-content-title">
-        성별 매출
+        연령별 소비
         <span class="icon-question" @click="popup"><v-icon size=15>mdi-help-circle-outline</v-icon>
         <span v-show="popflag" class="icon-popup-tri"/></span>
         <span v-show="popflag" class="icon-popup">공공데이터 상권 관련 데이터를 분석해서 생성한 정보입니다.</span>
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
     </div>
-    <p class="point-content-area Content" style="font-size: 1.2em;
-    font-weight: bold;">
-      <span class="point-title" v-if="isOk">{{maxAgeMaker}}</span>
-      <span class="point-percent" v-if="isOk">{{percentMaker}}</span>
-      <span class="point-normal" v-if="isOk">소비가 가장 많아요.</span>
-      <span class="point-normal" v-if="!isOk">데이터 업데이트 예정입니다.</span>
+    <p class="point-content-area">
+      <span class="point-title">{{maxAgeMaker}}</span>
+      <span class="point-percent">{{percentMaker}}</span>
+      <span class="point-normal">소비가 가장 많아요.</span>
     </p>
     <div id="chart">
-      <loading :loading="loadingStatus" :transparent='true'></loading>
-      <pie-chart
+      <div id="back" :style="allowDiv"></div>
+      <spinner :loading="loadingStatus"></spinner>
+      <horizontal-bar-chart
         :chart-data="chartdata"
         :options="chartoptions"
-        width="480px"
+        width="500px"
         height="300px"
-      ></pie-chart>
+      ></horizontal-bar-chart>
     </div>
   </div>
 </template>
 
 <script>
-import PieChart from '@/lib/PieChart'
+import HorizontalBarChart from '@/lib/HorizontalBarChart'
 import axios from '@/js/http-commons'
-import Loading from '@/components/common/loading/Loading'
-import './Graphs.css'
+import Spinner from '../../../../result/Spinner'
+import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
-    PieChart,
-    Loading
+    HorizontalBarChart,
+    Spinner
   },
   data () {
     return {
-      isOk:true,
-      totalWoman: 0,
-      totalMan: 0,
+      data: null,
       popflag: false,
       chartdata: null,
       chartoptions: null,
@@ -51,10 +48,8 @@ export default {
       road: '',
       key: this.$store.state.modalsearch,
       searchOption: 1,
-      title: '성별 매출',
+      title: '연령별 매출',
       point: 0,
-      sumWoman: 0,
-      sumMan: 0,
       btnStyle1: {
         backgroundColor: '#d9d9d9',
         cursor: 'pointer'
@@ -80,45 +75,45 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let woman = this.totalWoman
-      let man = this.totalMan
-      if (woman >= man) {
-        return '(' + woman.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
-      } else {
-        return '(' + man.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
-      }
+      let totalNum = Math.max.apply(null, this.data)
+      return '(' + totalNum + '원' + ')'
     },
     maxAgeMaker: function () {
       if (this.result == null) return
-      if (this.sumWoman >= this.sumMan) {
-        return '여성'
-      } else {
-        return '남성'
+      let labels = ['10대', '20대', '30대', '40대', '50대', '60대 이상']
+      let maxAge = -1
+      let idx = 0
+      for (let index = 0; index < this.data.length; index++) {
+        if (maxAge < this.data[index]) {
+          maxAge = this.data[index]
+          idx = index
+        }
       }
+      return labels[idx]
     }
   },
   mounted () {
     this.draw()
     eventBus.$on('clickmap', name => {
       this.key = name
-      this.isOk=true
       this.draw()
     })
   },
   methods: {
     popup () {
+      console.log('popup')
       this.popflag = !this.popflag
     },
     draw () {
       this.chartdata = null
       this.chartoptions = null
 
-      this.searchOption = 4
-      this.title = '성별 매출'
-      this.btnStyle1.backgroundColor = 'white'
+      this.searchOption = 1
+      this.title = '연령별 매출'
+      this.btnStyle1.backgroundColor = '#d9d9d9'
       this.btnStyle2.backgroundColor = 'white'
       this.btnStyle3.backgroundColor = 'white'
-      this.btnStyle4.backgroundColor = '#d9d9d9'
+      this.btnStyle4.backgroundColor = 'white'
 
       if (this.key !== '') {
         this.getData()
@@ -132,48 +127,85 @@ export default {
       this.btnStyle3.cursor = 'not-allowed'
       this.btnStyle4.cursor = 'not-allowed'
 
+      let sumOf10 = 0
+      let sumOf20 = 0
+      let sumOf30 = 0
+      let sumOf40 = 0
+      let sumOf50 = 0
+      let sumOf60 = 0
+
       axios
-        //.get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
-        .get('/predict/findBusiness2/' + this.$store.state.place)
+        .get('/sales/' + this.key)
         .then(res => {
-           if(res.data['2018'].length===0){
-            this.isOk=false
-          }
-          else{this.isOk=true}
-          this.result = res.data['2018']
-          // this.road = res.data[0].d
+          this.result = res.data
+          this.road = res.data[0].d
+          this.point = res.data.point
 
           for (let index = 0; index < this.result.length; index++) {
-            this.sumWoman += Number(this.result[index].fml_selng_amt)
-            this.sumMan += Number(this.result[index].ml_selng_amt)
+            sumOf10 += Number(this.result[index].z)
+            sumOf20 += Number(this.result[index].aa)
+            sumOf30 += Number(this.result[index].ab)
+            sumOf40 += Number(this.result[index].ac)
+            sumOf50 += Number(this.result[index].ad)
+            sumOf60 += Number(this.result[index].ae)
           }
-        })
-        .then(() => {
-          this.totalWoman = this.sumWoman
-          this.totalMan = this.sumMan
-
-          this.sumWoman /= 100000000
-          this.sumMan /= 100000000
+          this.data = [sumOf10, sumOf20, sumOf30, sumOf40, sumOf50, sumOf60]
+          sumOf10 /= 100000000
+          sumOf20 /= 100000000
+          sumOf30 /= 100000000
+          sumOf40 /= 100000000
+          sumOf50 /= 100000000
+          sumOf60 /= 100000000
         })
         .finally(() => {
           this.chartdata = {
-            labels: ['여성', '남성'],
+            labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
             datasets: [
               {
-                fill: true,
-                data: [this.sumWoman.toFixed(2), this.sumMan.toFixed(2)],
-                backgroundColor: ['#ff2483', '#1c8aff']
+                label: '전체',
+                backgroundColor: '#365673',
+                data: [
+                  sumOf10.toFixed(2),
+                  sumOf20.toFixed(2),
+                  sumOf30.toFixed(2),
+                  sumOf40.toFixed(2),
+                  sumOf50.toFixed(2),
+                  sumOf60.toFixed(2)
+                ]
               }
             ]
           }
 
           this.chartoptions = {
-            responsive: false,
-            maintainAspectRatio: false
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true
+                  },
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    display: true
+                  }
+                }
+              ]
+            }
           }
 
           this.loadingStatus = false
           this.allowDiv.display = 'none'
+          this.btnStyle1.cursor = 'pointer'
+          this.btnStyle2.cursor = 'pointer'
+          this.btnStyle3.cursor = 'pointer'
+          this.btnStyle4.cursor = 'pointer'
         })
     }
   }
@@ -243,29 +275,5 @@ export default {
 
 #search-result {
   margin-top: 5px;
-}
-
-
-$color1: rgb(232, 113, 91);
-$color2: rgb(15, 66, 95);
-
-.Content {
-  width: 100%;
-  padding: 10px 20px;
-  margin: 20px 0;
-  background-color: $color2;
-  border-radius: 5px;
-  color: $color1;
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
-  text-align: center;
-
-  .strong {
-    color: rgb(223, 223, 223);
-  }
-
-  h2 {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
 }
 </style>

@@ -45,7 +45,6 @@ public class JusoServiceImpl implements JusoService{
 	 */
 	public String getAddressByName(String name) throws IOException {
 		String sb = jusoapi.DoroNameApi(name);
-		System.out.println(sb);
 		int size = 0;
 		StringBuilder temp = new StringBuilder();
 		try {

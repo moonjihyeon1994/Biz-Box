@@ -51,9 +51,6 @@ public class OpenCloseController {
 		try {
 			CheckJSON cjson = new CheckJSON();
 			JSONArray ja = cjson.check();
-//	        cjson.check();
-//	        System.out.println(cjson);
-//			System.out.println(param.size());
 			for (int i = 0; i < ja.size(); i++) {
 				JSONObject jo = (JSONObject) ja.get(i);
 				String Loc = (String) jo.get("address");

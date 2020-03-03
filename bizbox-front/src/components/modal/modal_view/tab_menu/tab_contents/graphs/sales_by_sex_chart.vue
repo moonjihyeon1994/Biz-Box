@@ -9,19 +9,18 @@
       </h2>
       <div class="section-content-update">2020-02-05 업데이트</div>
     </div>
-    <p class="point-content-area Content" style="font-size: 1.2em;
-    font-weight: bold;">
-      <span class="point-title" v-if="isOk">{{maxAgeMaker}}</span>
-      <span class="point-percent" v-if="isOk">{{percentMaker}}</span>
-      <span class="point-normal" v-if="isOk">소비가 가장 많아요.</span>
-      <span class="point-normal" v-if="!isOk">데이터 업데이트 예정입니다.</span>
+    <p class="point-content-area">
+      <span class="point-title">{{maxAgeMaker}}</span>
+      <span class="point-percent">{{percentMaker}}</span>
+      <span class="point-normal">소비가 가장 많아요.</span>
     </p>
     <div id="chart">
-      <loading :loading="loadingStatus" :transparent='true'></loading>
+      <div id="back" :style="allowDiv"></div>
+      <spinner :loading="loadingStatus"></spinner>
       <pie-chart
         :chart-data="chartdata"
         :options="chartoptions"
-        width="480px"
+        width="500px"
         height="300px"
       ></pie-chart>
     </div>
@@ -31,17 +30,16 @@
 <script>
 import PieChart from '@/lib/PieChart'
 import axios from '@/js/http-commons'
-import Loading from '@/components/common/loading/Loading'
-import './Graphs.css'
+import Spinner from '../../../../result/Spinner'
+import './graphs.css'
 import { eventBus } from '@/js/bus'
 export default {
   components: {
     PieChart,
-    Loading
+    Spinner
   },
   data () {
     return {
-      isOk:true,
       totalWoman: 0,
       totalMan: 0,
       popflag: false,
@@ -80,12 +78,12 @@ export default {
   computed: {
     percentMaker: function () {
       if (this.result == null) return
-      let woman = this.totalWoman
-      let man = this.totalMan
+      let woman = this.sumWoman * 100000000
+      let man = this.sumMan * 100000000
       if (woman >= man) {
-        return '(' + woman.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
+        return '(' + woman + '원)'
       } else {
-        return '(' + man.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원)'
+        return '(' + man + '원)'
       }
     },
     maxAgeMaker: function () {
@@ -101,7 +99,6 @@ export default {
     this.draw()
     eventBus.$on('clickmap', name => {
       this.key = name
-      this.isOk=true
       this.draw()
     })
   },
@@ -133,24 +130,17 @@ export default {
       this.btnStyle4.cursor = 'not-allowed'
 
       axios
-        //.get('/predict/findBusiness/' + this.$store.state.Coords.lng + '/' + this.$store.state.Coords.lat)
-        .get('/predict/findBusiness2/' + this.$store.state.place)
+        .get('/sales/' + this.key)
         .then(res => {
-           if(res.data['2018'].length===0){
-            this.isOk=false
-          }
-          else{this.isOk=true}
-          this.result = res.data['2018']
-          // this.road = res.data[0].d
+          this.result = res.data
+          this.road = res.data[0].d
 
           for (let index = 0; index < this.result.length; index++) {
-            this.sumWoman += Number(this.result[index].fml_selng_amt)
-            this.sumMan += Number(this.result[index].ml_selng_amt)
+            this.sumWoman += Number(this.result[index].y)
+            this.sumMan += Number(this.result[index].x)
           }
-        })
-        .then(() => {
           this.totalWoman = this.sumWoman
-          this.totalMan = this.sumMan
+          this.totalMaN = this.sumMan
 
           this.sumWoman /= 100000000
           this.sumMan /= 100000000
@@ -168,12 +158,16 @@ export default {
           }
 
           this.chartoptions = {
-            responsive: false,
-            maintainAspectRatio: false
+            responsive: true,
+            maintainAspectRatio: true
           }
 
           this.loadingStatus = false
           this.allowDiv.display = 'none'
+          this.btnStyle1.cursor = 'pointer'
+          this.btnStyle2.cursor = 'pointer'
+          this.btnStyle3.cursor = 'pointer'
+          this.btnStyle4.cursor = 'pointer'
         })
     }
   }
@@ -243,29 +237,5 @@ export default {
 
 #search-result {
   margin-top: 5px;
-}
-
-
-$color1: rgb(232, 113, 91);
-$color2: rgb(15, 66, 95);
-
-.Content {
-  width: 100%;
-  padding: 10px 20px;
-  margin: 20px 0;
-  background-color: $color2;
-  border-radius: 5px;
-  color: $color1;
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
-  text-align: center;
-
-  .strong {
-    color: rgb(223, 223, 223);
-  }
-
-  h2 {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
 }
 </style>
