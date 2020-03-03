@@ -5,7 +5,7 @@
       <div class="flip-card-inner">
         <div class="flip-card-front">
           <v-card>
-            <v-toolbar class="searchBox">
+            <v-toolbar class="searchBox">    
               <v-text-field
                 Elevation="14"
                 hide-details
