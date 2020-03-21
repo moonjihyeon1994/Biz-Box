@@ -28,4 +28,4 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-This project is [MIT](https://github.com/kefranabg/readme-md-generator/blob/master/LICENSE) licensed.
+This project is) MIT licensed.
