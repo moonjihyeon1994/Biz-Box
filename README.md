@@ -9,8 +9,8 @@
 
 
 ### 🏠 [Homepage](http://i02a207.p.ssafy.io/)
-
-
+![img1](./img1.PNG)
+![img2](./img2.PNG)
 
 ## Author
 
