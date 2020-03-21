@@ -1,11 +1,7 @@
 <h1 align="center">Welcome to Biz-Box 👋</h1>
 
 <p>
-<a href="#" target="_blank">
-
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-
- </a>
+ 
 </p>
 
  상권분석 서비스
