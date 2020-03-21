@@ -28,4 +28,4 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-This project is) MIT licensed.
+This project is MIT licensed.
