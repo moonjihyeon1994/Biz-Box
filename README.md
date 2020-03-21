@@ -12,6 +12,9 @@
 ![img1](./img1.PNG)
 ![img2](./img2.PNG)
 
+### skill
+spring, vue, mysql, Ehcache, 카카오api
+
 ## Author
 
 👤 문지현
