@@ -4,46 +4,24 @@
 
 </p>
 
-
-
-\> 상권분석 서비스
-
-
-
-**### 🏠 [Homepage](asdf)**
+ 상권분석 서비스
 
 
 
-**### ✨ [Demo](fasdfasd)**
+### 🏠 [Homepage](asdf)
 
 
 
-**## Install**
+## Author
+
+👤 문지현
 
 
 
-\```sh
-
-npm install
-
-\```
+Github: [@moonjihyeon1994](https://github.com/moonjihyeon1994)
 
 
 
-**## Author**
-
-
-
-👤 ***\*문지현\****
-
-
-
-\* Github: [@moonjihyeon1994](https://github.com/moonjihyeon1994)
-
-
-
-**## Show your support**
-
-
+## Show your support
 
 Give a ⭐️ if this project helped you!
