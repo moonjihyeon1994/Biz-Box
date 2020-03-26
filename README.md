@@ -6,7 +6,6 @@
 
  서울시 공공데이터를 이용하여 주요상권분석 웹 서비스
 ## 상권 분석 웹 서비스
-주요 상권 분석 및 업소 관리 웹 서비스
 ![version](https://img.shields.io/badge/version-0.0.1-orange?)
 ![vue](https://img.shields.io/badge/vue-3.0.0-blue?logo=Vue.js)
 ![spring](https://img.shields.io/badge/spring-4.0.0-yellow?logo=spring)
