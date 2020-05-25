@@ -22,8 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin({ "*" })
 @Slf4j
 public class KakaoApi {
-	private final String client_id = "64c7963937495c25ab3d30bc9f6e65e7";
-
 	/**
 	 * front에서 받아오는 refresh_token으로 access_token발급받기
 	 * @param refresh_token
